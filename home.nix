@@ -19,10 +19,10 @@
   #     xxx
   # '';
 
-  # set cursor size and dpi for 4k monitor
+  # set cursor size and dpi
   xresources.properties = {
-    "Xcursor.size" = 16;
-    "Xft.dpi" = 172;
+    "Xcursor.size" = 24;
+    "Xft.dpi" = 96;
   };
 
   # basic configuration of git, please change to your own

@@ -37,16 +37,22 @@
   i18n.defaultLocale = "en_US.utf8";
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the KDE Plasma Desktop Environment.
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.desktopManager.plasma5.enable = true;
-
-  # Configure keymap in X11
   services.xserver = {
+    enable = true;
+    dpi = 96;
+
+    # Configure keymap in X11
     layout = "us";
     xkbVariant = "colemak";
+
+    # services.xserver.xrandrHeads.Virtual-1.monitorConfig = ''
+    #   DisplaySize 2560 1600
+    #   Option dpi 96
+    # '';
+
+    # Enable the KDE Plasma Desktop Environment.
+    displayManager.sddm.enable = true;
+    desktopManager.plasma5.enable = true;
   };
 
   # Enable CUPS to print documents.

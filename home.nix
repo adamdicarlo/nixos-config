@@ -50,8 +50,10 @@
 
     # utils
     exa # A modern replacement for ‘ls’
+    fd
     fzf # A command-line fuzzy finder
     jq
+    procs
     ripgrep
     yq-go # yaml processer https://github.com/mikefarah/yq
 
@@ -64,6 +66,10 @@
     mtr # A network diagnostic tool
     nmap # A utility for network discovery and security auditing
     socat # replacement of openbsd-netcat
+
+    # build
+    gcc
+    gnumake
 
     # misc
     cowsay
@@ -81,6 +87,9 @@
     # it provides the command `nom` works just like `nix`
     # with more details log output
     nix-output-monitor
+
+    # lsp: https://github.com/oxalica/nil
+    nil
 
     # productivity
     glow # markdown previewer in terminal

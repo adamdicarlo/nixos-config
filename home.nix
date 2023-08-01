@@ -37,6 +37,8 @@
   home.packages = with pkgs; [
 
     kitty
+    kitty-img
+    kitty-themes
 
     neofetch
     neovim
@@ -142,6 +144,12 @@
     ];
   };
 
+  programs.kitty = {
+    enable = true;
+    shellIntegration.enableFishIntegration = true;
+    theme = "Dracula";
+  };
+
   # starship - an customizable prompt for any shell
   programs.starship = {
     enable = true;
@@ -149,7 +157,7 @@
     # custom settings
     settings = {
       add_newline = false;
-      aws.disabled = true;
+      aws.disabled = false;
       gcloud.disabled = true;
       line_break.disabled = true;
     };

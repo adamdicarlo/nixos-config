@@ -103,12 +103,12 @@
           # Note: configuration.nix itself is also a Nix Module.
           ./configuration.nix
 
-	  home-manager.nixosModules.home-manager
-	  {
-	    home-manager.useGlobalPkgs = true;
-	    home-manager.useUserPackages = true;
-	    home-manager.users.adam = import ./home.nix;
-	  }
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.adam = import ./home.nix;
+          }
         ];
       };
     };

@@ -45,10 +45,8 @@
     layout = "us";
     xkbVariant = "colemak";
 
-    # services.xserver.xrandrHeads.Virtual-1.monitorConfig = ''
-    #   DisplaySize 2560 1600
-    #   Option dpi 96
-    # '';
+    autoRepeatDelay = 250;
+    autoRepeatInterval = 40;
 
     # Enable the KDE Plasma Desktop Environment.
     displayManager.sddm.enable = true;
@@ -87,7 +85,9 @@
       firefox
       kate
     ];
+    shell = pkgs.fish;
   };
+  programs.fish.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -99,7 +99,9 @@
   environment.systemPackages = with pkgs; [
     # Flakes use Git to pull dependencies from data sources, so Git must be installed first
     git
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+
+    fish
+    neovim
     wget
     curl
   ];
@@ -115,11 +117,11 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [ 22 ];
+  networking.firewall.allowedUDPPorts = [ 22 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

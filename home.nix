@@ -4,6 +4,14 @@
   home.username = "adam";
   home.homeDirectory = "/home/adam";
 
+  home.keyboard.layout = "us";
+  home.keyboard.variant = "colemak";
+
+  home.shellAliases = {
+    urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";
+    urlencode = "python3 -c 'import sys, urllib.parse as ul; print(ul.quote_plus(sys.stdin.read()))'";
+  };
+
   # link the configuration file in current directory to the specified location in home directory
   # home.file.".config/i3/wallpaper.jpg".source = ./wallpaper.jpg;
 
@@ -23,14 +31,6 @@
   xresources.properties = {
     "Xcursor.size" = 24;
     "Xft.dpi" = 96;
-  };
-
-  # basic configuration of git, please change to your own
-  programs.git = {
-    enable = true;
-    # defaultBranch = "main";
-    userName = "Adam DiCarlo";
-    userEmail = "adam@bikko.org";
   };
 
   # Packages that should be installed to the user profile.
@@ -111,9 +111,41 @@
     usbutils # lsusb
   ];
 
+  # basic configuration of git, please change to your own
+  programs.git = {
+    enable = true;
+    # defaultBranch = "main";
+    userName = "Adam DiCarlo";
+    userEmail = "adam@bikko.org";
+  };
+
+  programs.bash = {
+    enable = true;
+    # enableCompletion = true;
+    # TODO add your cusotm bashrc here
+    bashrcExtra = ''
+      export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/go/bin"
+    '';
+  };
+
+  programs.fish = {
+    enable = true;
+    plugins = [
+      {
+        name = "done";
+        src = pkgs.fishPlugins.done.src;
+      }
+      {
+        name = "plugin-git";
+        src = pkgs.fishPlugins.plugin-git.src;
+      }
+    ];
+  };
+
   # starship - an customizable prompt for any shell
   programs.starship = {
     enable = true;
+    enableFishIntegration = true;
     # custom settings
     settings = {
       add_newline = false;
@@ -137,33 +169,6 @@
   #    selection.save_to_clipboard = true;
   #  };
   #};
-
-  programs.bash = {
-    enable = true;
-    # enableCompletion = true;
-    # TODO add your cusotm bashrc here
-    bashrcExtra = ''
-      export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/go/bin"
-    '';
-
-    # set some aliases, feel free to add more or remove some
-    shellAliases = {
-      urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";
-      urlencode = "python3 -c 'import sys, urllib.parse as ul; print(ul.quote_plus(sys.stdin.read()))'";
-    };
-  };
-
-  programs.fish = {
-    enable = true;
-    shellAbbrs = {
-      gs = "git status";
-      gco = "git checkout";
-    };
-    shellAliases = {
-      urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";
-      urlencode = "python3 -c 'import sys, urllib.parse as ul; print(ul.quote_plus(sys.stdin.read()))'";
-    };
-  };
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage

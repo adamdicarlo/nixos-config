@@ -95,8 +95,8 @@
         # Only these parameters can be passed by default.
         # If you need to pass other parameters,
         # you must use `specialArgs` by uncomment the following line:
-        #
-        # specialArgs = {...}  # pass custom arguments into all sub module.
+
+        specialArgs = inputs;
         modules = [
           # Import the configuration.nix here, so that the
           # old configuration file can still take effect.

@@ -102,10 +102,46 @@
     # Flakes use Git to pull dependencies from data sources, so Git must be installed first
     git
 
-    fish
-    neovim
-    wget
+    btop  # replacement of htop/nmon
+    iotop # io monitoring
+    iftop # network monitoring
     curl
+    dnsutils  # `dig` + `nslookup`
+    file
+    fish
+    gawk
+    gcc
+    gnumake
+    gnupg
+    gnused
+    gnutar
+    ipcalc  # calculator for IPv4/v6 addresses
+    iperf3
+    ldns # replacement of `dig`, it provide the command `drill`
+
+    # system call monitoring
+    strace # system call monitoring
+    ltrace # library call monitoring
+    lsof # list open files
+
+    # system tools
+    sysstat
+    lm_sensors # for `sensors` command
+    ethtool
+    pciutils # lspci
+    usbutils # lsusb
+    mtr # A network diagnostic tool
+    neovim
+    nmap # A utility for network discovery and security auditing
+    p7zip
+    socat # replacement of openbsd-netcat
+    tree
+    unzip
+    wget
+    which
+    xz
+    zip
+    zstd
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

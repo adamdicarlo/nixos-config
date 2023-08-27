@@ -44,12 +44,6 @@
     neovim
     nnn # terminal file manager
 
-    # archives
-    p7zip
-    unzip
-    xz
-    zip
-
     # utils
     exa # A modern replacement for ‘ls’
     fd
@@ -57,32 +51,9 @@
     jq
     procs
     ripgrep
-    yq-go # yaml processer https://github.com/mikefarah/yq
 
     # networking tools
     aria2 # A lightweight multi-protocol & multi-source command-line download utility
-    dnsutils  # `dig` + `nslookup`
-    ipcalc  # calculator for IPv4/v6 addresses
-    iperf3
-    ldns # replacement of `dig`, it provide the command `drill`
-    mtr # A network diagnostic tool
-    nmap # A utility for network discovery and security auditing
-    socat # replacement of openbsd-netcat
-
-    # build
-    gcc
-    gnumake
-
-    # misc
-    cowsay
-    file
-    gawk
-    gnupg
-    gnused
-    gnutar
-    tree
-    which
-    zstd
 
     # nix related
     #
@@ -95,30 +66,46 @@
 
     # productivity
     glow # markdown previewer in terminal
-
-    btop  # replacement of htop/nmon
-    iotop # io monitoring
-    iftop # network monitoring
-
-    # system call monitoring
-    strace # system call monitoring
-    ltrace # library call monitoring
-    lsof # list open files
-
-    # system tools
-    sysstat
-    lm_sensors # for `sensors` command
-    ethtool
-    pciutils # lspci
-    usbutils # lsusb
   ];
 
   # basic configuration of git, please change to your own
   programs.git = {
     enable = true;
+    diff-so-fancy.enable = true;
     # defaultBranch = "main";
     userName = "Adam DiCarlo";
-    userEmail = "adam@bikko.org";
+    userEmail = "97462+adamdicarlo@users.noreply.github.com";
+    extraConfig = {
+      # My 2023 GPG key
+      user.signingKey = "C8CB1DB6E4EA5801";
+      pull.rebase = true;
+      core.editor = "nvim";
+      init.defaultbranch = "main";
+      commit.gpgsign = true;
+      url = {
+        "ssh://git@github.com:".insteadOf = [ "gh:" "git://github.com/" ];
+        "ssh://git@github.com:".pushInsteadOf = [ "git://github.com/" "https://github.com/" ];
+        "github-work:adaptivsystems/".insteadOf = "git@github.com:adaptivsystems/";
+      };
+    };
+
+    includes = [
+      { condition = "gitdir:~/work/";
+        contents = {
+          user.email = "adam@adaptiv.systems";
+          user.signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTEAAAAIO1e83u2v7t+ePxp3RXARC3tnXiPcC950LMDi2sdTDAc";
+          gpg = {
+            format = "ssh";
+            program = "/opt/1Password/op-ssh-sign";
+          };
+        };
+      }
+    ];
+  };
+
+  programs.gpg = {
+    enable = true;
+    homedir = "${config.xdg.dataHome}/gnupg";
   };
 
   programs.bash = {
@@ -144,6 +131,9 @@
     ];
   };
 
+  programs.lazygit = {
+    enable = true;
+  };
   programs.kitty = {
     enable = true;
     shellIntegration.enableFishIntegration = true;
@@ -161,6 +151,14 @@
       gcloud.disabled = true;
       line_break.disabled = true;
     };
+  };
+
+  services.gpg-agent = {
+    enable = true;
+    enableExtraSocket = true;
+    enableScDaemon = false;
+    enableSshSupport = true;
+    sshKeys = [ "689797597435372AAE566787A29AFFB7B862D0B6" ];
   };
 
   # alacritty - a cross-platform, GPU-accelerated terminal emulator

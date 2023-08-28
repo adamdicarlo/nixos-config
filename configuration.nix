@@ -95,6 +95,7 @@
   nixpkgs.config.allowUnfree = true;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.trusted-users = [ "adam" ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget

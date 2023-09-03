@@ -1,6 +1,10 @@
 { config, pkgs, ... }:
 
 {
+  imports = [
+    ./modules/default.nix
+  ];
+
   home.username = "adam";
   home.homeDirectory = "/home/adam";
 
@@ -41,7 +45,6 @@
     kitty-themes
 
     neofetch
-    neovim
     nnn # terminal file manager
 
     # utils

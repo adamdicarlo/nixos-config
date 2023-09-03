@@ -10,6 +10,7 @@
 
   home.keyboard.layout = "us";
   home.keyboard.variant = "colemak";
+  home.keyboard.xkbOptions = [ "altwin:swap_lalt_lwin" ];
 
   home.shellAliases = {
     urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";

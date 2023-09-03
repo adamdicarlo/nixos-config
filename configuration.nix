@@ -46,9 +46,10 @@
     # Configure keymap in X11
     layout = "us";
     xkbVariant = "colemak";
+    xkbOptions = "altwin:swap_lalt_lwin";
 
-    autoRepeatDelay = 250;
-    autoRepeatInterval = 40;
+    autoRepeatDelay = 200;
+    autoRepeatInterval = 20;
 
     # Enable the KDE Plasma Desktop Environment.
     displayManager.sddm.enable = true;

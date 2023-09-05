@@ -39,15 +39,19 @@
   # `outputs` are all the build result of the flake.
   #
   # A flake can have many use cases and different types of outputs.
-  # 
+  #
   # parameters in function `outputs` are defined in `inputs` and
   # can be referenced by their names. However, `self` is an exception,
   # this special parameter points to the `outputs` itself(self-reference)
-  # 
+  #
   # The `@` syntax here is used to alias the attribute set of the
   # inputs's parameter, making it convenient to use inside the function.
   outputs = inputs@{ self, nixpkgs, home-manager, ... }: {
-    nixosConfigurations = {
+    nixosConfigurations = let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+    {
       # By default, NixOS will try to refer the nixosConfiguration with
       # its hostname, so the system named `nixos-test` will use this one.
       # However, the configuration name can also be specified using:
@@ -61,7 +65,6 @@
       #   sudo nixos-rebuild switch --flake .#nixos
       "nixos" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-
         # The Nix module system can modularize configuration,
         # improving the maintainability of configuration.
         #
@@ -93,21 +96,53 @@
         #               you can ignore it for now.
         #
         # Only these parameters can be passed by default.
-        # If you need to pass other parameters,
-        # you must use `specialArgs` by uncomment the following line:
+        # If you need to pass other parameters, you must use `specialArgs`.
 
-        specialArgs = inputs;
+        specialArgs = {
+          inherit inputs;
+        };
         modules = [
           # Import the configuration.nix here, so that the
           # old configuration file can still take effect.
           # Note: configuration.nix itself is also a Nix Module.
           ./configuration.nix
 
-          home-manager.nixosModules.home-manager
-          {
+          home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.adam = import ./home.nix;
+
+            home-manager.extraSpecialArgs = {
+              # Adapted from https://github.com/robbert-vdh/dotfiles/blob/129432dab00500eaeaf512b1d5003a102a08c72f/flake.nix#L71-L77
+              mkAbsoluteSymlink =
+                let
+                  # This needs to be set for the `mkAbsolutePath` function
+                  # defined below to work. It's set in the Makefile, and
+                  # requires the nix build to be run with `--impure`.
+                  dotfilesPath =
+                    let
+                      path = builtins.getEnv "NIXOS_CONFIG_PATH";
+                      assertion = nixpkgs.lib.asserts.assertMsg
+                        (path != "" && nixpkgs.lib.filesystem.pathIsDirectory path)
+                        "NIXOS_CONFIG_PATH='${path}' but must be set to this file's directory. Use 'make' to run this build.";
+                    in assert assertion; path;
+                  in
+                  # This is a super hacky way to get absolute paths from a Nix path.
+                  # Flakes intentionally don't allow you to get this information, but we
+                  # need this to be able to use `mkOutOfStoreSymlink` to create regular
+                  # symlinks for configurations that should be mutable, like for Emacs'
+                  # config and for fonts. This relies on `NIXOS_CONFIG_PATH`
+                  # pointing to the directory that contains this file.
+                  # FIXME: I couldn't figure out how to define this in a module so we
+                  #        don't need to pass config in here
+                  config: repoRelativePath:
+                    let
+                      fullPath = "${dotfilesPath}/${repoRelativePath}";
+                      assertion =
+                        nixpkgs.lib.asserts.assertMsg (builtins.pathExists fullPath)
+                        "'${fullPath}' does not exist (make sure --impure is enabled)";
+                    in assert assertion; config.lib.file.mkOutOfStoreSymlink fullPath;
+            };
           }
         ];
       };

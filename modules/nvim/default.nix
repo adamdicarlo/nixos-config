@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, mkAbsoluteSymlink, pkgs, ... }:
 {
   programs.neovim = {
     enable = true;
@@ -8,7 +8,6 @@
 
   xdg.configFile.nvim = {
     recursive = true;
-    source = ./config;
-    target = "nvim";
+    source = mkAbsoluteSymlink config "modules/nvim/config";
   };
 }

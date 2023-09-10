@@ -78,7 +78,7 @@
     diff-so-fancy.enable = true;
     # defaultBranch = "main";
     userName = "Adam DiCarlo";
-    userEmail = "97462+adamdicarlo@users.noreply.github.com";
+    userEmail = "adam@bikko.org";
     extraConfig = {
       # My 2023 GPG key
       user.signingKey = "C8CB1DB6E4EA5801";

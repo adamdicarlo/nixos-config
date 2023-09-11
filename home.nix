@@ -75,7 +75,7 @@
   # basic configuration of git, please change to your own
   programs.git = {
     enable = true;
-    diff-so-fancy.enable = true;
+    difftastic.enable = true;
     # defaultBranch = "main";
     userName = "Adam DiCarlo";
     userEmail = "adam@bikko.org";
@@ -121,6 +121,85 @@
     '';
   };
 
+  # cribbed and adapted from Charlotte Van Petegem's configs
+  # at https://git.chvp.be/chvp/nixos-config
+  programs.firefox = let
+    ff2mpv-host = pkgs.stdenv.mkDerivation rec {
+      pname = "ff2mpv";
+      version = "4.0.0";
+      src = pkgs.fetchFromGitHub {
+        owner = "woodruffw";
+        repo = "ff2mpv";
+        rev = "v${version}";
+        sha256 = "sxUp/JlmnYW2sPDpIO2/q40cVJBVDveJvbQMT70yjP4=";
+      };
+      buildInputs = [ pkgs.python3 ];
+      buildPhase = ''
+        sed -i "s#/home/william/scripts/ff2mpv#$out/bin/ff2mpv.py#" ff2mpv.json
+        sed -i 's#"mpv"#"${pkgs.mpv}/bin/umpv"#' ff2mpv.py
+      '';
+      installPhase = ''
+        mkdir -p $out/bin
+        cp ff2mpv.py $out/bin
+        mkdir -p $out/lib/mozilla/native-messaging-hosts
+        cp ff2mpv.json $out/lib/mozilla/native-messaging-hosts
+      '';
+    };
+    ffPackage = pkgs.firefox.override {
+      extraNativeMessagingHosts = [ ff2mpv-host ];
+      pkcs11Modules = [];
+      extraPolicies = {
+        DisableFirefoxAccounts = true;
+        DisableFirefoxStudies = true;
+        DisablePocket = true;
+        DisableTelemetry = true;
+        FirefoxHome = { Pocket = false; Snippets = false; };
+        OfferToSaveLogins = false;
+        UserMessaging = { SkipOnboarding = true; ExtensionRecommendations = false; };
+      };
+    };
+  in
+  {
+    enable = true;
+    package = ffPackage;
+    profiles.default = {
+      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+        bitwarden
+        decentraleyes
+        don-t-fuck-with-paste
+        dracula-dark-colorscheme
+        facebook-container
+        ff2mpv
+        tree-style-tab
+        ublock-origin
+        umatrix
+      ];
+      settings = {
+        "app.shield.optoutstudies.enabled" = false;
+        "browser.aboutConfig.showWarning" = false;
+        "browser.contentblocking.category" = "custom";
+        "browser.download.dir" = "/home/adam/Downloads";
+        "browser.newtabpage.activity-stream.feeds.recommendationprovider" = false;
+        "browser.newtabpage.activity-stream.showSponsored" = false;
+        "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+        "browser.newtabpage.enabled" = false;
+        "browser.safebrowsing.malware.enabled" = false;
+        "browser.safebrowsing.phishing.enabled" = false;
+        "browser.shell.checkDefaultBrowser" = false;
+        "browser.startup.homepage" = "about:blank";
+        "browser.startup.page" = 3;
+        "dom.security.https_only_mode" = true;
+        "extensions.htmlaboutaddons.recommendations.enabled" = false;
+        "network.cookie.cookieBehavior" = 1;
+        "privacy.annotate_channels.strict_list.enabled" = true;
+        "privacy.trackingprotection.enabled" = true;
+        "privacy.trackingprotection.socialtracking.enabled" = true;
+        "security.identityblock.show_extended_validation" = true;
+        "toolkit.telemetry.cachedClientID" = "c0ffeec0-ffee-c0ff-eec0-ffeec0ffeec0";
+      };
+    };
+  };
+
   programs.fish = {
     enable = true;
     plugins = [
@@ -143,6 +222,8 @@
     shellIntegration.enableFishIntegration = true;
     theme = "Dracula";
   };
+
+  programs.mpv.enable = true;
 
   # starship - an customizable prompt for any shell
   programs.starship = {

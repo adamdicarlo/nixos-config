@@ -34,6 +34,15 @@
       # to avoid problems caused by different versions of nixpkgs.
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+      inputs.darwin.follows = "";
+    };
+
+    nur.url = "github:nix-community/NUR";
   };
 
   # `outputs` are all the build result of the flake.
@@ -46,7 +55,7 @@
   #
   # The `@` syntax here is used to alias the attribute set of the
   # inputs's parameter, making it convenient to use inside the function.
-  outputs = inputs@{ self, nixpkgs, home-manager, ... }: {
+  outputs = inputs@{ self, nixpkgs, agenix, home-manager, nur, ... }: {
     nixosConfigurations = let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -102,12 +111,14 @@
           inherit inputs;
         };
         modules = [
-          # Import the configuration.nix here, so that the
-          # old configuration file can still take effect.
-          # Note: configuration.nix itself is also a Nix Module.
-          ./configuration.nix
+          { nixpkgs.overlays = [ nur.overlay ]; }
 
+          agenix.nixosModules.default
+          nur.nixosModules.nur
+
+          ./configuration.nix
           home-manager.nixosModules.home-manager {
+            home-manager.backupFileExtension = "hm-backup";
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.adam = import ./home.nix;
@@ -144,6 +155,7 @@
                     in assert assertion; config.lib.file.mkOutOfStoreSymlink fullPath;
             };
           }
+
         ];
       };
     };

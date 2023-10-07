@@ -1,4 +1,4 @@
-{ config, pkgs, mkAbsoluteSymlink, ... }:
+{ config, pkgs, ... }:
 
 {
   imports = [

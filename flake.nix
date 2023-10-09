@@ -7,16 +7,18 @@
   nixConfig = {
     experimental-features = [ "nix-command" "flakes" ];
     extra-substituters = [
-      "https://nix-community.cachix.org"
+      "https://cache.privatevoid.net"
+      "https://devenv.cachix.org"
       "https://fufexan.cachix.org"
       "https://hyprland.cachix.org"
-      "https://cache.privatevoid.net"
+      "https://nix-community.cachix.org"
     ];
     extra-trusted-public-keys = [
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "cache.privatevoid.net:SErQ8bvNWANeAvtsOESUwVYr2VJynfuc9JRwlzTTkVg="
+      "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
       "fufexan.cachix.org-1:LwCDjCJNJQf5XD2BV+yamQIMZfcKWR9ISIFy5curUsY="
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-      "cache.privatevoid.net:SErQ8bvNWANeAvtsOESUwVYr2VJynfuc9JRwlzTTkVg="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
 
@@ -24,6 +26,9 @@
   # https://nixos.org/manual/nix/unstable/command-ref/new-cli/nix3-flake.html#flake-inputs
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    devenv.url = "github:cachix/devenv";
+    devenv.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-23.05";
@@ -55,10 +60,17 @@
   #
   # The `@` syntax here is used to alias the attribute set of the
   # inputs's parameter, making it convenient to use inside the function.
-  outputs = inputs@{ self, nixpkgs, agenix, home-manager, nur, ... }: {
-    nixosConfigurations = let
+  outputs = inputs@{ self, devenv, nixpkgs, agenix, home-manager, nur, ... }: {
+    nixosConfigurations =
+    let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+
+      # Use an overlay to add the devenv package into nixpkgs, because I can't
+      # figure out how to get `configuration.nix` to access the `devenv` input
+      devenvOverlay = final: prev: {
+        devenv = devenv.outputs.packages.${system}.default;
+      };
     in
     {
       # By default, NixOS will try to refer the nixosConfiguration with
@@ -73,7 +85,7 @@
       # deploy this configuration on any NixOS system:
       #   sudo nixos-rebuild switch --flake .#nixos
       "nixos" = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+        inherit system;
         # The Nix module system can modularize configuration,
         # improving the maintainability of configuration.
         #
@@ -111,12 +123,13 @@
           inherit inputs;
         };
         modules = [
-          { nixpkgs.overlays = [ nur.overlay ]; }
+          { nixpkgs.overlays = [ devenvOverlay nur.overlay ]; }
 
           agenix.nixosModules.default
           nur.nixosModules.nur
 
           ./configuration.nix
+
           home-manager.nixosModules.home-manager {
             home-manager.backupFileExtension = "hm-backup";
             home-manager.useGlobalPkgs = true;
@@ -133,8 +146,8 @@
                   dotfilesPath =
                     let
                       path = builtins.getEnv "NIXOS_CONFIG_PATH";
-                      assertion = nixpkgs.lib.asserts.assertMsg
-                        (path != "" && nixpkgs.lib.filesystem.pathIsDirectory path)
+                      assertion = pkgs.lib.asserts.assertMsg
+                        (path != "" && pkgs.lib.filesystem.pathIsDirectory path)
                         "NIXOS_CONFIG_PATH='${path}' but must be set to this file's directory. Use 'make' to run this build.";
                     in assert assertion; path;
                   in
@@ -150,7 +163,7 @@
                     let
                       fullPath = "${dotfilesPath}/${repoRelativePath}";
                       assertion =
-                        nixpkgs.lib.asserts.assertMsg (builtins.pathExists fullPath)
+                        pkgs.lib.asserts.assertMsg (builtins.pathExists fullPath)
                         "'${fullPath}' does not exist (make sure --impure is enabled)";
                     in assert assertion; config.lib.file.mkOutOfStoreSymlink fullPath;
             };

@@ -67,6 +67,13 @@
 
     # lsp: https://github.com/oxalica/nil
     nil
+    lua-language-server
+    stylua
+
+    cachix
+
+    # fun
+    nerdfonts
 
     # productivity
     glow # markdown previewer in terminal
@@ -94,7 +101,8 @@
     };
 
     includes = [
-      { condition = "gitdir:~/work/";
+      {
+        condition = "gitdir:~/work/";
         contents = {
           user.email = "adam@adaptiv.systems";
           user.signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTEAAAAIO1e83u2v7t+ePxp3RXARC3tnXiPcC950LMDi2sdTDAc";
@@ -221,9 +229,16 @@
     enable = true;
     shellIntegration.enableFishIntegration = true;
     theme = "Dracula";
+    font = {
+      package = pkgs.nerdfonts;
+      name = "FiraCode Nerd Font Mono";
+      size = 12;
+    };
   };
 
-  programs.mpv.enable = true;
+  programs.mpv = {
+    enable = true;
+  };
 
   # starship - an customizable prompt for any shell
   programs.starship = {

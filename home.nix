@@ -1,6 +1,8 @@
-{ config, pkgs, ... }:
-
 {
+  config,
+  pkgs,
+  ...
+}: {
   imports = [
     ./modules/default.nix
   ];
@@ -10,7 +12,7 @@
 
   home.keyboard.layout = "us";
   home.keyboard.variant = "colemak";
-  home.keyboard.xkbOptions = [ "altwin:swap_lalt_lwin" ];
+  home.keyboard.xkbOptions = ["altwin:swap_lalt_lwin"];
 
   home.shellAliases = {
     urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";
@@ -38,9 +40,7 @@
     "Xft.dpi" = 96;
   };
 
-  # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
-
     kitty
     kitty-img
     kitty-themes
@@ -64,26 +64,22 @@
     # it provides the command `nom` works just like `nix`
     # with more details log output
     nix-output-monitor
+    alejandra
+    cachix
 
     # lsp: https://github.com/oxalica/nil
     nil
     lua-language-server
     stylua
 
-    cachix
-
-    # fun
-    nerdfonts
-
     # productivity
     glow # markdown previewer in terminal
+    nerdfonts
   ];
 
-  # basic configuration of git, please change to your own
   programs.git = {
     enable = true;
     difftastic.enable = true;
-    # defaultBranch = "main";
     userName = "Adam DiCarlo";
     userEmail = "adam@bikko.org";
     extraConfig = {
@@ -94,8 +90,8 @@
       init.defaultbranch = "main";
       commit.gpgsign = true;
       url = {
-        "ssh://git@github.com:".insteadOf = [ "gh:" "git://github.com/" ];
-        "ssh://git@github.com:".pushInsteadOf = [ "git://github.com/" "https://github.com/" ];
+        "ssh://git@github.com:".insteadOf = ["gh:" "git://github.com/"];
+        "ssh://git@github.com:".pushInsteadOf = ["git://github.com/" "https://github.com/"];
         "github-work:adaptivsystems/".insteadOf = "git@github.com:adaptivsystems/";
       };
     };
@@ -141,7 +137,7 @@
         rev = "v${version}";
         sha256 = "sxUp/JlmnYW2sPDpIO2/q40cVJBVDveJvbQMT70yjP4=";
       };
-      buildInputs = [ pkgs.python3 ];
+      buildInputs = [pkgs.python3];
       buildPhase = ''
         sed -i "s#/home/william/scripts/ff2mpv#$out/bin/ff2mpv.py#" ff2mpv.json
         sed -i 's#"mpv"#"${pkgs.mpv}/bin/umpv"#' ff2mpv.py
@@ -154,20 +150,25 @@
       '';
     };
     ffPackage = pkgs.firefox.override {
-      extraNativeMessagingHosts = [ ff2mpv-host ];
+      extraNativeMessagingHosts = [ff2mpv-host];
       pkcs11Modules = [];
       extraPolicies = {
         DisableFirefoxAccounts = true;
         DisableFirefoxStudies = true;
         DisablePocket = true;
         DisableTelemetry = true;
-        FirefoxHome = { Pocket = false; Snippets = false; };
+        FirefoxHome = {
+          Pocket = false;
+          Snippets = false;
+        };
         OfferToSaveLogins = false;
-        UserMessaging = { SkipOnboarding = true; ExtensionRecommendations = false; };
+        UserMessaging = {
+          SkipOnboarding = true;
+          ExtensionRecommendations = false;
+        };
       };
     };
-  in
-  {
+  in {
     enable = true;
     package = ffPackage;
     profiles.default = {
@@ -258,7 +259,7 @@
     enableExtraSocket = true;
     enableScDaemon = false;
     enableSshSupport = true;
-    sshKeys = [ "689797597435372AAE566787A29AFFB7B862D0B6" ];
+    sshKeys = ["689797597435372AAE566787A29AFFB7B862D0B6"];
   };
 
   # alacritty - a cross-platform, GPU-accelerated terminal emulator

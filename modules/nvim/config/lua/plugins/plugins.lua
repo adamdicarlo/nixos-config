@@ -1,266 +1,243 @@
--- since this is just an example spec, don't actually load anything here and return an empty spec
--- stylua: ignore
-if true then return {} end
+local custom_attach = function(client)
+  if client.config.flags then
+    client.config.flags.allow_incremental_sync = true
+  end
+end
 
--- every spec file under the "plugins" directory will be loaded automatically by lazy.nvim
---
--- In your plugin files, you can:
--- * add extra plugins
--- * disable/enabled LazyVim plugins
--- * override the configuration of LazyVim plugins
 return {
-  -- add gruvbox
-  { "ellisonleao/gruvbox.nvim" },
-
-  -- Configure LazyVim to load gruvbox
   {
-    "LazyVim/LazyVim",
+    "echasnovski/mini.surround",
     opts = {
-      colorscheme = "gruvbox",
+      mappings = {
+        add = "gsa", -- Add surrounding in Normal and Visual modes
+        delete = "gsd", -- Delete surrounding
+        find = "gsf", -- Find surrounding (to the right)
+        find_left = "gsF", -- Find surrounding (to the left)
+        highlight = "gsh", -- Highlight surrounding
+        replace = "gsr", -- Replace surrounding
+        update_n_lines = "gsn", -- Update `n_lines`
+      },
     },
   },
 
-  -- change trouble config
   {
-    "folke/trouble.nvim",
-    -- opts will be merged with the parent spec
-    opts = { use_diagnostic_signs = true },
+    "williamboman/mason.nvim",
+    enabled = false,
+    opts = {
+      ensure_installed = {
+        "stylua",
+        "shellcheck",
+        "shfmt",
+      },
+    },
   },
 
-  -- disable trouble
-  { "folke/trouble.nvim", enabled = false },
+  -- @see https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-bracketed.md
+  { "echasnovski/mini.bracketed" },
 
-  -- add symbols-outline
-  {
-    "simrat39/symbols-outline.nvim",
-    cmd = "SymbolsOutline",
-    keys = { { "<leader>cs", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } },
-    config = true,
-  },
+  { "gpanders/editorconfig.nvim", enabled = false },
+  { "folke/lazy.nvim" },
 
-  -- override nvim-cmp and add cmp-emoji
   {
-    "hrsh7th/nvim-cmp",
-    dependencies = { "hrsh7th/cmp-emoji" },
-    ---@param opts cmp.ConfigSchema
+    "ggandor/leap.nvim",
+    keys = {},
     opts = function(_, opts)
-      local cmp = require("cmp")
-      opts.sources = cmp.config.sources(vim.list_extend(opts.sources, { { name = "emoji" } }))
+      vim.notify(opts)
+      opts.mappings = {}
+      return opts
     end,
   },
 
-  -- change some telescope options and a keymap to browse plugin files
+  -- FIND THE CRASH
+  --
+  -- { "echasnovski/mini.bracketed", enabled = false },
+  -- { "echasnovski/mini.comment", enabled = false },
+  { "echasnovski/mini.indentscope", enabled = false },
+  { "echasnovski/mini.pairs", enabled = false },
+  -- { "echasnovski/mini.bufremove", enabled = false },
+  -- { "echasnovski/mini.surround", enabled = false },
+  { "echasnovski/mini.ai", enabled = false },
+
+  -- { "akinsho/bufferline.nvim", enabled = false },
+  -- { "nvim-lualine/lualine.nvim", enabled = false },
+
+  -- { "saadparwaiz1/cmp_luasnip", enabled = false },
+  -- { "hrsh7th/cmp-buffer", enabled = false },
+  -- { "hrsh7th/cmp-path", enabled = false },
+
+  { "hrsh7th/cmp-nvim-lsp" },
+
   {
-    "nvim-telescope/telescope.nvim",
-    keys = {
-      -- add a keymap to browse plugin files
-      -- stylua: ignore
-      {
-        "<leader>fp",
-        function() require("telescope.builtin").find_files({ cwd = require("lazy.core.config").options.root }) end,
-        desc = "Find Plugin File",
-      },
-    },
-    -- change some options
-    opts = {
-      defaults = {
-        layout_strategy = "horizontal",
-        layout_config = { prompt_position = "top" },
-        sorting_strategy = "ascending",
-        winblend = 0,
-      },
-    },
+    "nvim-treesitter/nvim-treesitter",
+    -- enabled = false,
+    opts = function(_, opts)
+      -- vim.notify(opts)
+
+      opts.highlight = { enable = false }
+      opts.context_commentstring = { enable = false }
+      opts.incremental_selection = { enable = false }
+      opts.textobjects = { enable = false }
+      -- opts.indent = { enable = false }
+
+      opts.ensure_installed = { "elm" }
+      -- vim.list_extend(opts.ensure_installed, {
+      --   "css",
+      --   "elm",
+      --   "html",
+      --   "typescript",
+      -- }, nil, nil)
+    end,
   },
 
-  -- add telescope-fzf-native
+  -- { "nvim-treesitter/nvim-treesitter-textobjects", enabled = false },
+
+  -- treesitter "Foo.|" CRASH CAUSER?!?!?!?!? fuhhhh, guess not
+  -- { "RRethy/vim-illuminate", enabled = false },
+  -- { "tpope/vim-repeat", enabled = false },
+
+  -- /FIND THE CRASH
+
+  -- { "nvim-treesitter/nvim-treesitter", enabled = false },
+
   {
-    "telescope.nvim",
-    dependencies = {
-      "nvim-telescope/telescope-fzf-native.nvim",
-      build = "make",
-      config = function()
-        require("telescope").load_extension("fzf")
-      end,
-    },
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = function(_, opts)
+      opts.defaults["gs"] = opts.defaults["gz"]
+      opts.defaults["gz"] = nil
+      return opts
+    end,
   },
 
-  -- add pyright to lspconfig
   {
     "neovim/nvim-lspconfig",
-    ---@class PluginLspOpts
     opts = {
+      -- LSP Server Settings
       ---@type lspconfig.options
+      -- @see https://github.com/elm-tooling/elm-language-server#server-settings
+      -- @see https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/elmls.lua
       servers = {
-        -- pyright will be automatically installed with mason and loaded with lspconfig
-        pyright = {},
+        elmls = {
+          init_options = {
+            elmLS = {
+              disableElmLSDiagnostics = false,
+              elmFormatPath = "",
+              elmPath = "",
+              elmReviewDiagnostics = "error",
+              elmReviewPath = "",
+              onlyUpdateDiagnosticsOnSave = true,
+              elmTestPath = "",
+              elmTestRunner = {
+                showElmTestOutput = true,
+              },
+              skipInstallPackageConfirmation = false,
+              trace = {
+                server = "messages",
+              },
+            },
+          },
+        },
+        ["nil_ls"] = {
+          init_options = {
+            formatting = {
+              command = { "alejandra" },
+            },
+          },
+        },
+        tailwindcss = {
+          cmd = { "./node_modules/@tailwindcss/language-server/bin/tailwindcss-language-server", "--stdio" },
+          filetypes = {
+            "elm",
+          },
+          init_options = {
+            userLanguages = {
+              elm = "html",
+            },
+          },
+          settings = {
+            tailwindCSS = {
+              classAttributes = {},
+              headwind = {
+                runOnSave = true,
+              },
+              includeLanguages = {
+                elm = "html",
+              },
+              experimental = {
+                classRegex = {
+                  '\\bclass[\\s(<|]+"([^"]*)"',
+                  '\\bclass[\\s(]+"[^"]*"[\\s+]+"([^"]*)"',
+                  '\\bclass[\\s<|]+"[^"]*"\\s*\\+{2}\\s*" ([^"]*)"',
+                  '\\bclass[\\s<|]+"[^"]*"\\s*\\+{2}\\s*" [^"]*"\\s*\\+{2}\\s*" ([^"]*)"',
+                  '\\bclass[\\s<|]+"[^"]*"\\s*\\+{2}\\s*" [^"]*"\\s*\\+{2}\\s*" [^"]*"\\s*\\+{2}\\s*" ([^"]*)"',
+                  '\\bclassList[\\s\\[\\(]+"([^"]*)"',
+                  '\\bclassList[\\s\\[\\(]+"[^"]*",\\s[^\\)]+\\)[\\s\\[\\(,]+"([^"]*)"',
+                  '\\bclassList[\\s\\[\\(]+"[^"]*",\\s[^\\)]+\\)[\\s\\[\\(,]+"[^"]*",\\s[^\\)]+\\)[\\s\\[\\(,]+"([^"]*)"',
+                },
+              },
+              lint = {
+                cssConflict = "error",
+                recommendedVariantOrder = "error",
+              },
+            },
+          },
+        },
       },
-    },
-  },
 
-  -- add tsserver and setup with typescript.nvim instead of lspconfig
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      "jose-elias-alvarez/typescript.nvim",
-      init = function()
-        require("lazyvim.util").on_attach(function(_, buffer)
-          -- stylua: ignore
-          vim.keymap.set( "n", "<leader>co", "TypescriptOrganizeImports", { buffer = buffer, desc = "Organize Imports" })
-          vim.keymap.set("n", "<leader>cR", "TypescriptRenameFile", { desc = "Rename File", buffer = buffer })
-        end)
-      end,
-    },
-    ---@class PluginLspOpts
-    opts = {
-      ---@type lspconfig.options
-      servers = {
-        -- tsserver will be automatically installed with mason and loaded with lspconfig
-        tsserver = {},
-      },
       -- you can do any additional lsp server setup here
       -- return true if you don't want this server to be setup with lspconfig
       ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
-        -- example to setup with typescript.nvim
-        tsserver = function(_, opts)
-          require("typescript").setup({ server = opts })
+        elmls = function(_, opts)
+          require("lspconfig").elmls.setup({
+            on_attach = custom_attach,
+            server = opts,
+          })
           return true
         end,
+        nil_ls = function(_, opts)
+          -- Lovingly copied from https://github.com/oxalica/nil/blob/main/dev/nvim-lsp.nix:
+
+          -- https://github.com/neovim/nvim-lspconfig/wiki/Autocompletion
+          -- https://github.com/hrsh7th/cmp-nvim-lsp/issues/42#issuecomment-1283825572
+          local caps = vim.tbl_deep_extend(
+            "force",
+            vim.lsp.protocol.make_client_capabilities(),
+            require("cmp_nvim_lsp").default_capabilities(),
+            -- File watching is disabled by default for neovim.
+            -- See: https://github.com/neovim/neovim/pull/22405
+            { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
+          )
+
+          require("lspconfig").nil_ls.setup({
+            autostart = true,
+            capabilities = caps,
+            settings = {
+              ["nil"] = opts.init_options,
+              -- formatting = {
+              --   command = { "alejandra" },
+              -- },
+              -- },
+            },
+          })
+          return true
+        end,
+        -- example to setup with typescript.nvim
+        -- tsserver = function(_, opts)
+        --   require("typescript").setup({ server = opts })
+        --   return true
+        -- end,
         -- Specify * to use this function as a fallback for any server
         -- ["*"] = function(server, opts) end,
       },
     },
   },
 
-  -- for typescript, LazyVim also includes extra specs to properly setup lspconfig,
-  -- treesitter, mason and typescript.nvim. So instead of the above, you can use:
-  { import = "lazyvim.plugins.extras.lang.typescript" },
+  { "echasnovski/mini.pairs", enabled = false },
 
-  -- add more treesitter parsers
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
-        "bash",
-        "html",
-        "javascript",
-        "json",
-        "lua",
-        "markdown",
-        "markdown_inline",
-        "python",
-        "query",
-        "regex",
-        "tsx",
-        "typescript",
-        "vim",
-        "yaml",
-      },
-    },
-  },
+  { "echasnovski/mini.ai", enabled = false },
 
-  -- since `vim.tbl_deep_extend`, can only merge tables and not lists, the code above
-  -- would overwrite `ensure_installed` with the new value.
-  -- If you'd rather extend the default config, use the code below instead:
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      -- add tsx and treesitter
-      vim.list_extend(opts.ensure_installed, {
-        "tsx",
-        "typescript",
-      })
-    end,
-  },
-
-  -- the opts function can also be used to change the default opts:
-  {
-    "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
-    opts = function(_, opts)
-      table.insert(opts.sections.lualine_x, "😄")
-    end,
-  },
-
-  -- or you can return new options to override all the defaults
-  {
-    "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
-    opts = function()
-      return {
-        --[[add your custom lualine config here]]
-      }
-    end,
-  },
-
-  -- use mini.starter instead of alpha
-  { import = "lazyvim.plugins.extras.ui.mini-starter" },
-
-  -- add jsonls and schemastore packages, and setup treesitter for json, json5 and jsonc
-  { import = "lazyvim.plugins.extras.lang.json" },
-
-  -- add any tools you want to have installed below
-  {
-    "williamboman/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "stylua",
-        "shellcheck",
-        "shfmt",
-        "flake8",
-      },
-    },
-  },
-
-  -- Use <tab> for completion and snippets (supertab)
-  -- first: disable default <tab> and <s-tab> behavior in LuaSnip
-  {
-    "L3MON4D3/LuaSnip",
-    keys = function()
-      return {}
-    end,
-  },
-  -- then: setup supertab in cmp
-  {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-emoji",
-    },
-    ---@param opts cmp.ConfigSchema
-    opts = function(_, opts)
-      local has_words_before = function()
-        unpack = unpack or table.unpack
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-      end
-
-      local luasnip = require("luasnip")
-      local cmp = require("cmp")
-
-      opts.mapping = vim.tbl_extend("force", opts.mapping, {
-        ["<Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_next_item()
-            -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-            -- this way you will only jump inside the snippet region
-          elseif luasnip.expand_or_jumpable() then
-            luasnip.expand_or_jump()
-          elseif has_words_before() then
-            cmp.complete()
-          else
-            fallback()
-          end
-        end, { "i", "s" }),
-        ["<S-Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_prev_item()
-          elseif luasnip.jumpable(-1) then
-            luasnip.jump(-1)
-          else
-            fallback()
-          end
-        end, { "i", "s" }),
-      })
-    end,
-  },
+  -- Similar to vim-abolish.
+  -- @see https://github.com/johmsalas/text-case.nvim
+  { "johmsalas/text-case.nvim" },
 }

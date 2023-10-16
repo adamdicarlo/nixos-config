@@ -39,8 +39,8 @@ map("n", "gl", "`.", { desc = "Jump to the last change in the file" })
 -- vim.go.lmap = "hk,jh,kj"
 
 --[[
--- Basic movement
-- Adapted from: http://forum.colemak.com/viewtopic.php?pid=184#p184 )
+--  Basic movement
+-   Adapted from: http://forum.colemak.com/viewtopic.php?pid=184#p184 )
 --]]
 map("", "h", "k", { desc = "Up", silent = true })
 map("", "j", "h", { desc = "Left", silent = true })

@@ -214,10 +214,6 @@ return {
             capabilities = caps,
             settings = {
               ["nil"] = opts.init_options,
-              -- formatting = {
-              --   command = { "alejandra" },
-              -- },
-              -- },
             },
           })
           return true

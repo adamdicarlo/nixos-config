@@ -65,6 +65,7 @@
     # with more details log output
     nix-output-monitor
     alejandra
+    any-nix-shell
     cachix
 
     # lsp: https://github.com/oxalica/nil
@@ -209,8 +210,41 @@
     };
   };
 
+  programs.mpv = {
+    enable = true;
+  };
+
+  programs.atuin = {
+    enable = true;
+    flags = ["--disable-up-arrow"];
+    settings = {
+      auto_sync = true;
+      sync_frequency = "2m";
+      update_check = false;
+    };
+  };
+
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    # direnv is auto-activated in fish, so we don't need to set any kind of
+    # 'enableFishIntegration' variable (it is, in fact, read-only).
+  };
+
   programs.fish = {
     enable = true;
+
+    functions = {
+      list_files_upon_chdir = {
+        body = "exa -l";
+        onVariable = "PWD";
+      };
+    };
+
+    interactiveShellInit = ''
+      any-nix-shell fish | source
+    '';
+
     plugins = [
       {
         name = "done";
@@ -223,9 +257,6 @@
     ];
   };
 
-  programs.lazygit = {
-    enable = true;
-  };
   programs.kitty = {
     enable = true;
     shellIntegration.enableFishIntegration = true;
@@ -237,17 +268,16 @@
     };
   };
 
-  programs.mpv = {
+  programs.lazygit = {
     enable = true;
   };
 
   # starship - an customizable prompt for any shell
   programs.starship = {
     enable = true;
-    enableFishIntegration = true;
     # custom settings
     settings = {
-      add_newline = false;
+      add_newline = true;
       aws.disabled = false;
       gcloud.disabled = true;
       line_break.disabled = true;

@@ -41,6 +41,7 @@
     };
   };
   hardware.system76.enableAll = true;
+  services.system76-scheduler.enable = true;
 
   specialisation = {
     on-the-go.configuration = {
@@ -59,8 +60,6 @@
 
   boot.blacklistedKernelModules = [ "i915" ];
   boot.initrd.luks.devices."luks-89774725-33d7-4569-98ca-969947979248".device = "/dev/disk/by-uuid/89774725-33d7-4569-98ca-969947979248";
-
-  console.keyMap = "colemak";
 
   networking.hostName = "tiv";
 
@@ -91,17 +90,26 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Configure keymap in X11
   services.xserver = {
     dpi = 96;
+  };
 
-    # Configure keymap in X11
-    layout = "us";
-    xkbVariant = "colemak";
-    xkbOptions = "altwin:swap_lalt_lwin";
-
-    autoRepeatDelay = 200;
-    autoRepeatInterval = 20;
+  # Keyboard
+  console.keyMap = "colemak";
+  services.xserver.layout = "us";
+  services.xserver.xkbVariant = "colemak";
+  services.xserver.xkbOptions = "altwin:swap_lalt_lwin,caps:none";
+  services.xserver.autoRepeatDelay = 200;
+  services.xserver.autoRepeatInterval = 20;
+  services.interception-tools = {
+    enable = true;
+    udevmonConfig =
+      ''
+        - JOB: "intercept -g $DEVNODE | caps2esc | uinput -d $DEVNODE"
+          DEVICE:
+            EVENTS:
+              EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
+      '';
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.

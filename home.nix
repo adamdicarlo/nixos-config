@@ -10,10 +10,6 @@
   home.username = "adam";
   home.homeDirectory = "/home/adam";
 
-  home.keyboard.layout = "us";
-  home.keyboard.variant = "colemak";
-  home.keyboard.xkbOptions = ["altwin:swap_lalt_lwin"];
-
   home.shellAliases = {
     urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";
     urlencode = "python3 -c 'import sys, urllib.parse as ul; print(ul.quote_plus(sys.stdin.read()))'";
@@ -83,6 +79,8 @@
     nerdfonts
 
     _1password-gui
+    google-chrome
+    slack
   ];
 
   programs.git = {
@@ -297,6 +295,17 @@
     enableScDaemon = false;
     enableSshSupport = true;
     sshKeys = ["689797597435372AAE566787A29AFFB7B862D0B6"];
+  };
+
+  programs.ssh = {
+    matchBlocks = {
+      "github-work" = {
+        hostname = "github.com";
+        user = "git";
+        identityFile = "/home/adam/.ssh/id_adaptiv";
+        addKeysToAgent = true;
+      };
+    };
   };
 
   # alacritty - a cross-platform, GPU-accelerated terminal emulator

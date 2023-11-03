@@ -7,12 +7,38 @@
     ./modules/default.nix
   ];
 
-  home.username = "adam";
-  home.homeDirectory = "/home/adam";
+  home = {
+    username = "adam";
+    homeDirectory = "/home/adam";
 
-  home.shellAliases = {
-    urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";
-    urlencode = "python3 -c 'import sys, urllib.parse as ul; print(ul.quote_plus(sys.stdin.read()))'";
+    shellAliases = {
+      urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";
+      urlencode = "python3 -c 'import sys, urllib.parse as ul; print(ul.quote_plus(sys.stdin.read()))'";
+    };
+
+    pointerCursor = {
+      gtk.enable = true;
+      # x11.enable = true;
+      package = pkgs.bibata-cursors;
+      name = "Bibata-Modern-Amber";
+      size = 32;
+    };
+  };
+
+  gtk = {
+    enable = true;
+    theme = {
+      package = pkgs.flat-remix-gtk;
+      name = "Flat-Remix-GTK-Grey-Darkest";
+    };
+    iconTheme = {
+      package = pkgs.libsForQt5.breeze-icons;
+      name = "breeze-dark";
+    };
+    font = {
+      name = "Sans";
+      size = 11;
+    };
   };
 
   # link the configuration file in current directory to the specified location in home directory
@@ -269,7 +295,7 @@
     font = {
       package = pkgs.nerdfonts;
       name = "FiraCode Nerd Font Mono";
-      size = 12;
+      size = 11;
     };
   };
 

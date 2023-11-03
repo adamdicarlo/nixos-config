@@ -98,7 +98,7 @@
   console.keyMap = "colemak";
   services.xserver.layout = "us";
   services.xserver.xkbVariant = "colemak";
-  services.xserver.xkbOptions = "altwin:swap_lalt_lwin,caps:none";
+  services.xserver.xkbOptions = "altwin:swap_lalt_lwin,ctrl:nocaps,shift:both_capslock";
   services.xserver.autoRepeatDelay = 200;
   services.xserver.autoRepeatInterval = 20;
   services.interception-tools = {
@@ -110,6 +110,15 @@
             EVENTS:
               EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
       '';
+  };
+
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.greetd}/bin/agreety --cmd Hyprland";
+      };
+    };
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.

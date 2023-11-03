@@ -66,7 +66,12 @@
     nix-output-monitor
     alejandra
     any-nix-shell
-    cachix
+
+    wofi
+    wofi-emoji
+    mako
+    xdragon
+    wlsunset
 
     # lsp: https://github.com/oxalica/nil
     nil
@@ -76,6 +81,8 @@
     # productivity
     glow # markdown previewer in terminal
     nerdfonts
+
+    _1password-gui
   ];
 
   programs.git = {
@@ -105,7 +112,7 @@
           user.signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTEAAAAIO1e83u2v7t+ePxp3RXARC3tnXiPcC950LMDi2sdTDAc";
           gpg = {
             format = "ssh";
-            program = "/opt/1Password/op-ssh-sign";
+            program = "${pkgs._1password-gui}/op-ssh-sign";
           };
         };
       }

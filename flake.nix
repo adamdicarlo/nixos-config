@@ -7,15 +7,11 @@
   nixConfig = {
     experimental-features = [ "nix-command" "flakes" ];
     extra-substituters = [
-      "https://cache.privatevoid.net"
-      "https://devenv.cachix.org"
       "https://fufexan.cachix.org"
       "https://hyprland.cachix.org"
       "https://nix-community.cachix.org"
     ];
     extra-trusted-public-keys = [
-      "cache.privatevoid.net:SErQ8bvNWANeAvtsOESUwVYr2VJynfuc9JRwlzTTkVg="
-      "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
       "fufexan.cachix.org-1:LwCDjCJNJQf5XD2BV+yamQIMZfcKWR9ISIFy5curUsY="
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
@@ -26,9 +22,6 @@
   # https://nixos.org/manual/nix/unstable/command-ref/new-cli/nix3-flake.html#flake-inputs
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-
-    devenv.url = "github:cachix/devenv";
-    devenv.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-23.05";
@@ -60,17 +53,12 @@
   #
   # The `@` syntax here is used to alias the attribute set of the
   # inputs's parameter, making it convenient to use inside the function.
-  outputs = inputs@{ self, devenv, nixpkgs, agenix, home-manager, nur, ... }: {
+  outputs = inputs@{ self, nixpkgs, agenix, home-manager, nur, ... }: {
     nixosConfigurations =
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
 
-      # Use an overlay to add the devenv package into nixpkgs, because I can't
-      # figure out how to get `configuration.nix` to access the `devenv` input
-      devenvOverlay = final: prev: {
-        devenv = devenv.outputs.packages.${system}.default;
-      };
     in
     {
       # By default, NixOS will try to refer the nixosConfiguration with
@@ -84,7 +72,7 @@
       # Run the following command in the flake's directory to
       # deploy this configuration on any NixOS system:
       #   sudo nixos-rebuild switch --flake .#nixos
-      "nixos" = nixpkgs.lib.nixosSystem {
+      "tiv" = nixpkgs.lib.nixosSystem {
         inherit system;
         # The Nix module system can modularize configuration,
         # improving the maintainability of configuration.
@@ -123,12 +111,12 @@
           inherit inputs;
         };
         modules = [
-          { nixpkgs.overlays = [ devenvOverlay nur.overlay ]; }
+          { nixpkgs.overlays = [ nur.overlay ]; }
 
           agenix.nixosModules.default
           nur.nixosModules.nur
 
-          ./configuration.nix
+          ./machines/tiv/default.nix
 
           home-manager.nixosModules.home-manager {
             home-manager.backupFileExtension = "hm-backup";

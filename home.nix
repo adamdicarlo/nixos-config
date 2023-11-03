@@ -71,7 +71,7 @@
     nnn # terminal file manager
 
     # utils
-    exa # A modern replacement for ‘ls’
+    eza # A modern replacement for ‘ls’
     fd
     fzf # A command-line fuzzy finder
     jq
@@ -267,7 +267,7 @@
 
     functions = {
       list_files_upon_chdir = {
-        body = "exa -l";
+        body = "eza -l";
         onVariable = "PWD";
       };
     };

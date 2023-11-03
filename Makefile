@@ -13,5 +13,4 @@ switch:
 	sudo NIXOS_CONFIG_PATH=$(NIXOS_CONFIG_PATH) nixos-rebuild switch --flake . --impure
 
 test:
-	echo $(NIXOS_CONFIG_PATH)
 	sudo NIXOS_CONFIG_PATH=$(NIXOS_CONFIG_PATH) nixos-rebuild test --flake . --impure

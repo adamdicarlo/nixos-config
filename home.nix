@@ -182,7 +182,7 @@
       '';
     };
     ffPackage = pkgs.firefox.override {
-      extraNativeMessagingHosts = [ff2mpv-host];
+      nativeMessagingHosts = [ff2mpv-host];
       pkcs11Modules = [];
       extraPolicies = {
         DisableFirefoxAccounts = true;

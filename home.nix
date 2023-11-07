@@ -87,13 +87,24 @@
     # with more details log output
     nix-output-monitor
     alejandra
-    any-nix-shell
 
+    cliphist
+    hyprpicker
+    mako
+    networkmanagerapplet
+    nwg-displays
+    sway
+    swayidle
+    swaylock
+    swaynag-battery
+    waybar
+    wbg
+    wl-clipboard
+    wlogout
+    wlsunset
     wofi
     wofi-emoji
-    mako
     xdragon
-    wlsunset
 
     # lsp: https://github.com/oxalica/nil
     nil
@@ -105,18 +116,21 @@
     nerdfonts
 
     _1password-gui
+    devbox
     google-chrome
     slack
   ];
 
   programs.git = {
     enable = true;
+    package = pkgs.gitFull;
+
     difftastic.enable = true;
     userName = "Adam DiCarlo";
     userEmail = "adam@bikko.org";
     extraConfig = {
       # My 2023 GPG key
-      user.signingKey = "C8CB1DB6E4EA5801";
+      user.signingkey = "C8CB1DB6E4EA5801";
       pull.rebase = true;
       core.editor = "nvim";
       init.defaultbranch = "main";
@@ -133,10 +147,16 @@
         condition = "gitdir:~/work/";
         contents = {
           user.email = "adam@adaptiv.systems";
-          user.signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTEAAAAIO1e83u2v7t+ePxp3RXARC3tnXiPcC950LMDi2sdTDAc";
+          user.signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO1e83u2v7t+ePxp3RXARC3tnXiPcC95OLMDi2sdTDAc";
           gpg = {
             format = "ssh";
-            program = "${pkgs._1password-gui}/op-ssh-sign";
+            ssh = {
+              allowedSignersFile = builtins.toFile "allowed-signers" ''
+                adam@adaptiv.systems ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJHuKcZZc8H73Brm6B7wIcGuInLH5t48ezXRDw4rurAi
+                adam@adaptiv.systems ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO1e83u2v7t+ePxp3RXARC3tnXiPcC95OLMDi2sdTDAc
+              '';
+              program = "${pkgs._1password-gui}/bin/op-ssh-sign";
+            };
           };
         };
       }
@@ -265,26 +285,32 @@
   programs.fish = {
     enable = true;
 
-    functions = {
-      list_files_upon_chdir = {
-        body = "eza -l";
-        onVariable = "PWD";
-      };
+    shellInit = ''
+      set -g fish_greeting
+      function chdir_hook_ls --on-variable=PWD
+        eza -l
+      end
+    '';
+
+    shellAbbrs = {
+      ls = "eza";
+      ll = "eza -l";
+      la = "eza -la";
+      lah = "eza -lah";
     };
 
-    interactiveShellInit = ''
-      any-nix-shell fish | source
-    '';
+    functions = {
+    };
 
     plugins = [
       {
         name = "done";
         src = pkgs.fishPlugins.done.src;
       }
-      {
-        name = "plugin-git";
-        src = pkgs.fishPlugins.plugin-git.src;
-      }
+      #      {
+      #        name = "plugin-git";
+      #        src = pkgs.fishPlugins.plugin-git.src;
+      #      }
     ];
   };
 
@@ -324,12 +350,16 @@
   };
 
   programs.ssh = {
+    enable = true;
     matchBlocks = {
       "github-work" = {
         hostname = "github.com";
         user = "git";
         identityFile = "/home/adam/.ssh/id_adaptiv";
-        addKeysToAgent = true;
+        extraOptions = {
+          AddKeysToAgent = "yes";
+          IdentityAgent = "~/.1password/agent.sock";
+        };
       };
     };
   };

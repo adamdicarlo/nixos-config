@@ -1,19 +1,21 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, lib, pkgs, ... }:
-
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   nix = {
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "adam" ];
+      experimental-features = ["nix-command" "flakes"];
+      trusted-users = ["adam"];
     };
     package = pkgs.nixFlakes;
   };
 
-  imports = [ ./hardware.nix ];
+  imports = [./hardware.nix];
 
   hardware.opengl = {
     enable = true;
@@ -21,13 +23,32 @@
     driSupport32Bit = true;
   };
 
-  # services.seatd.enable = true;
+  # https://github.com/NixOS/nixpkgs/issues/143365#issuecomment-1293871094
+  security.pam.services.swaylock.text = ''
+    # Account management.
+    account required pam_unix.so
+
+    # Authentication management.
+    auth sufficient pam_unix.so   likeauth try_first_pass
+    auth required pam_deny.so
+
+    # Password management.
+    password sufficient pam_unix.so nullok sha512
+
+    # Session management.
+    session required pam_env.so conffile=/etc/pam/environment readenv=0
+    session required pam_unix.so
+  '';
   services.logind.lidSwitchExternalPower = "ignore";
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = ["nvidia"];
 
   hardware.logitech.wireless.enable = true;
+
+  # https://nixos.wiki/wiki/Nvidia#Installing_Nvidia_Drivers_on_NixOS
   hardware.nvidia = {
     modesetting.enable = true;
+
+    # Try enabling these for suspend issues
     powerManagement.enable = false;
     powerManagement.finegrained = false;
 
@@ -45,7 +66,7 @@
 
   specialisation = {
     on-the-go.configuration = {
-      system.nixos.tags = [ "on-the-go" ];
+      system.nixos.tags = ["on-the-go"];
       hardware.nvidia = {
         prime.offload.enable = lib.mkForce true;
         prime.offload.enableOffloadCmd = lib.mkForce true;
@@ -56,10 +77,22 @@
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
+  boot.kernelParams = [
+    "atkbd.softrepeat=1"
+  ];
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.blacklistedKernelModules = [ "i915" ];
+  boot.blacklistedKernelModules = ["i915"];
+
+  # See if this helps booting to text mode
+  boot.initrd.kernelModules = ["nvidia"];
+  boot.extraModulePackages = [config.boot.kernelPackages.nvidia_x11];
+
   boot.initrd.luks.devices."luks-89774725-33d7-4569-98ca-969947979248".device = "/dev/disk/by-uuid/89774725-33d7-4569-98ca-969947979248";
+
+  virtualisation.docker = {
+    enable = true;
+  };
 
   networking.hostName = "tiv";
 
@@ -103,29 +136,42 @@
   services.xserver.autoRepeatInterval = 20;
   services.interception-tools = {
     enable = true;
-    udevmonConfig =
-      ''
-        - JOB: "intercept -g $DEVNODE | caps2esc | uinput -d $DEVNODE"
-          DEVICE:
-            EVENTS:
-              EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
-      '';
+    udevmonConfig = ''
+      - JOB: "intercept -g $DEVNODE | caps2esc | uinput -d $DEVNODE"
+        DEVICE:
+          EVENTS:
+            EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
+    '';
   };
 
-  services.greetd = {
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
+
+  # Enable sound with pipewire.
+  sound.enable = true;
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
     enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.greetd.greetd}/bin/agreety --cmd Hyprland";
-      };
-    };
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+
+    # use the example session manager (no others are packaged yet so this is
+    # enabled by default, no need to redefine it in your config for now)
+    #media-session.enable = true;
+    wireplumber.enable = true;
   };
+
+  services.xserver.enable = true;
+  services.xserver.displayManager.sddm.enable = true;
+  services.xserver.displayManager.sddm.wayland.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.adam = {
     isNormalUser = true;
     description = "Adam DiCarlo";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = ["docker" "networkmanager" "wheel"];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHw1DBIi3+PCiDnWkPohhHFVKqnAcKzUUezulxxywGHa adam@bikko.org"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEbs7eDyOmFy3rZV4zCI6Pz+5srASislwVs36/XcM4sq adam@bikko.org"
@@ -156,11 +202,11 @@
     git
 
     acpi
-    btop  # replacement of htop/nmon
+    btop # replacement of htop/nmon
     iotop # io monitoring
     iftop # network monitoring
     curl
-    dnsutils  # `dig` + `nslookup`
+    dnsutils # `dig` + `nslookup`
     file
     fish
     gawk
@@ -169,7 +215,7 @@
     gnupg
     gnused
     gnutar
-    ipcalc  # calculator for IPv4/v6 addresses
+    ipcalc # calculator for IPv4/v6 addresses
     iperf3
     ldns # replacement of `dig`, it provide the command `drill`
 
@@ -199,9 +245,21 @@
 
     vifm-full
     cachix
+
+    pavucontrol
+    pwvucontrol
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
+  #
+  programs._1password = {
+    enable = true;
+  };
+  programs._1password-gui = {
+    enable = true;
+    polkitPolicyOwners = ["adam"];
+  };
+
   # started in user sessions.
   # programs.mtr.enable = true;
   # programs.gnupg.agent = {
@@ -233,5 +291,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
-
 }

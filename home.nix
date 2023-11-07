@@ -123,7 +123,6 @@
 
   programs.git = {
     enable = true;
-    package = pkgs.gitFull;
 
     difftastic.enable = true;
     userName = "Adam DiCarlo";

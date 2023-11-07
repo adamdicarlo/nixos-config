@@ -306,10 +306,25 @@
         name = "done";
         src = pkgs.fishPlugins.done.src;
       }
-      #      {
-      #        name = "plugin-git";
-      #        src = pkgs.fishPlugins.plugin-git.src;
-      #      }
+
+      # https://github.com/jhillyerd/plugin-git/issues/102
+      #
+      # Use fork for now. Once the issue is solved and nixpkgs is updated,
+      # we can use:
+      #
+      # {
+      #   name = "plugin-git";
+      #   src = pkgs.fishPlugins.plugin-git.src;
+      # }
+      {
+        name = "plugin-git__hexclover-fork";
+        src = pkgs.fetchFromGitHub {
+          owner = "hexclover";
+          repo = "plugin-git";
+          rev = "265dc22cc53347135eba23d3128f34d9d6602a15";
+          sha256 = "sha256-RzyRekfji53P/fGaN5Yme/Y3Npd3JFvI7GIykTSwucU=";
+        };
+      }
     ];
   };
 

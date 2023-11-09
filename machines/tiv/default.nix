@@ -48,8 +48,10 @@
   hardware.nvidia = {
     modesetting.enable = true;
 
-    # Try enabling these for suspend issues
-    powerManagement.enable = false;
+    # This fixes suspend issues with Hyprland.
+    powerManagement.enable = true;
+
+    # Haven't tried turning this one on, yet.
     powerManagement.finegrained = false;
 
     open = false;

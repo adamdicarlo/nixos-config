@@ -8,6 +8,8 @@
     ll = "eza -l";
     la = "eza -la";
     lah = "eza -lah";
+    # I really hope I never need to use ghostscript.
+    gs = "git status";
   };
 in {
   imports = [

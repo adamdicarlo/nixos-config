@@ -179,9 +179,9 @@
     packages = with pkgs; [
       firefox
     ];
-    shell = pkgs.fish;
+    shell = pkgs.zsh;
   };
-  programs.fish.enable = true;
+  programs.zsh.enable = true;
 
   programs.hyprland = {
     enable = true;
@@ -217,6 +217,7 @@
     gnutar
     ipcalc # calculator for IPv4/v6 addresses
     iperf3
+    killall
     ldns # replacement of `dig`, it provide the command `drill`
 
     # system call monitoring
@@ -243,12 +244,20 @@
     zip
     zstd
 
+    catppuccin-sddm-corners
+    where-is-my-sddm-theme
+    sddm-chili-theme
+
     vifm-full
     cachix
 
     pavucontrol
     pwvucontrol
+    libsForQt5.qt5.qtwayland
+    qt6.qtwayland
   ];
+
+  environment.pathsToLink = ["/share/zsh"];
 
   # Some programs need SUID wrappers, can be configured further or are
   #

@@ -79,13 +79,12 @@ return {
       opts.textobjects = { enable = false }
       -- opts.indent = { enable = false }
 
-      opts.ensure_installed = { "elm" }
-      -- vim.list_extend(opts.ensure_installed, {
-      --   "css",
-      --   "elm",
-      --   "html",
-      --   "typescript",
-      -- }, nil, nil)
+      vim.list_extend(opts.ensure_installed, {
+        "css",
+        "elm",
+        "html",
+        "typescript",
+      }, nil, nil)
     end,
   },
 
@@ -136,6 +135,9 @@ return {
               },
             },
           },
+        },
+        tsserver = {
+          cmd = { "./node_modules/.bin/typescript-language-server", "--stdio" },
         },
         ["nil_ls"] = {
           init_options = {

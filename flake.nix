@@ -5,7 +5,7 @@
   description = "Adam DiCarlo's NixOS Configuration";
 
   nixConfig = {
-    experimental-features = [ "nix-command" "flakes" ];
+    experimental-features = ["nix-command" "flakes"];
     extra-substituters = [
       "https://fufexan.cachix.org"
       "https://hyprland.cachix.org"
@@ -41,6 +41,9 @@
     };
 
     nur.url = "github:nix-community/NUR";
+
+    devbox.url = "path:./flakes/devbox";
+    devbox.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   # `outputs` are all the build result of the flake.
@@ -53,14 +56,19 @@
   #
   # The `@` syntax here is used to alias the attribute set of the
   # inputs's parameter, making it convenient to use inside the function.
-  outputs = inputs@{ self, nixpkgs, agenix, home-manager, nur, ... }: {
-    nixosConfigurations =
-    let
+  outputs = inputs @ {
+    self,
+    devbox,
+    nixpkgs,
+    agenix,
+    home-manager,
+    nur,
+    ...
+  }: {
+    nixosConfigurations = let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-
-    in
-    {
+    in {
       # By default, NixOS will try to refer the nixosConfiguration with
       # its hostname, so the system named `nixos-test` will use this one.
       # However, the configuration name can also be specified using:
@@ -111,14 +119,23 @@
           inherit inputs;
         };
         modules = [
-          { nixpkgs.overlays = [ nur.overlay ]; }
+          {
+            nixpkgs.overlays = [
+              nur.overlay
+              (final: prev: {
+                # Is there a simpler way to do this?
+                devbox = devbox.outputs.defaultPackage.${system};
+              })
+            ];
+          }
 
           agenix.nixosModules.default
           nur.nixosModules.nur
 
           ./machines/tiv/default.nix
 
-          home-manager.nixosModules.home-manager {
+          home-manager.nixosModules.home-manager
+          {
             home-manager.backupFileExtension = "hm-backup";
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
@@ -126,37 +143,36 @@
 
             home-manager.extraSpecialArgs = {
               # Adapted from https://github.com/robbert-vdh/dotfiles/blob/129432dab00500eaeaf512b1d5003a102a08c72f/flake.nix#L71-L77
-              mkAbsoluteSymlink =
-                let
-                  # This needs to be set for the `mkAbsolutePath` function
-                  # defined below to work. It's set in the Makefile, and
-                  # requires the nix build to be run with `--impure`.
-                  dotfilesPath =
-                    let
-                      path = builtins.getEnv "NIXOS_CONFIG_PATH";
-                      assertion = pkgs.lib.asserts.assertMsg
-                        (path != "" && pkgs.lib.filesystem.pathIsDirectory path)
-                        "NIXOS_CONFIG_PATH='${path}' but must be set to this file's directory. Use 'make' to run this build.";
-                    in assert assertion; path;
-                  in
-                  # This is a super hacky way to get absolute paths from a Nix path.
-                  # Flakes intentionally don't allow you to get this information, but we
-                  # need this to be able to use `mkOutOfStoreSymlink` to create regular
-                  # symlinks for configurations that should be mutable, like for Emacs'
-                  # config and for fonts. This relies on `NIXOS_CONFIG_PATH`
-                  # pointing to the directory that contains this file.
-                  # FIXME: I couldn't figure out how to define this in a module so we
-                  #        don't need to pass config in here
-                  config: repoRelativePath:
-                    let
-                      fullPath = "${dotfilesPath}/${repoRelativePath}";
-                      assertion =
-                        pkgs.lib.asserts.assertMsg (builtins.pathExists fullPath)
-                        "'${fullPath}' does not exist (make sure --impure is enabled)";
-                    in assert assertion; config.lib.file.mkOutOfStoreSymlink fullPath;
+              mkAbsoluteSymlink = let
+                # This needs to be set for the `mkAbsolutePath` function
+                # defined below to work. It's set in the Makefile, and
+                # requires the nix build to be run with `--impure`.
+                dotfilesPath = let
+                  path = builtins.getEnv "NIXOS_CONFIG_PATH";
+                  assertion =
+                    pkgs.lib.asserts.assertMsg
+                    (path != "" && pkgs.lib.filesystem.pathIsDirectory path)
+                    "NIXOS_CONFIG_PATH='${path}' but must be set to this file's directory. Use 'make' to run this build.";
+                in
+                  assert assertion; path;
+              in
+                # This is a super hacky way to get absolute paths from a Nix path.
+                # Flakes intentionally don't allow you to get this information, but we
+                # need this to be able to use `mkOutOfStoreSymlink` to create regular
+                # symlinks for configurations that should be mutable, like for Emacs'
+                # config and for fonts. This relies on `NIXOS_CONFIG_PATH`
+                # pointing to the directory that contains this file.
+                # FIXME: I couldn't figure out how to define this in a module so we
+                #        don't need to pass config in here
+                config: repoRelativePath: let
+                  fullPath = "${dotfilesPath}/${repoRelativePath}";
+                  assertion =
+                    pkgs.lib.asserts.assertMsg (builtins.pathExists fullPath)
+                    "'${fullPath}' does not exist (make sure --impure is enabled)";
+                in
+                  assert assertion; config.lib.file.mkOutOfStoreSymlink fullPath;
             };
           }
-
         ];
       };
     };

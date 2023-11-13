@@ -8,6 +8,9 @@
     ll = "eza -l";
     la = "eza -la";
     lah = "eza -lah";
+
+    gcom = "git checkout main";
+
     # I really hope I never need to use ghostscript.
     gs = "git status";
   };
@@ -54,6 +57,11 @@ in {
     source = ./scripts;
     recursive = true; # link recursively
     executable = true; # make all files executable
+  };
+
+  home.file."Pictures/wallpaper" = {
+    source = ./wallpaper;
+    recursive = true;
   };
 
   # link the configuration file in current directory to the specified location in home directory
@@ -111,12 +119,15 @@ in {
     mako
     networkmanagerapplet
     nwg-displays
+    playerctl
     slurp
     swappy
     sway
+    swaybg
     swayidle
     swaylock
     swaynag-battery
+    udiskie
     waybar
     wbg
     wev
@@ -139,11 +150,276 @@ in {
     nerdfonts
 
     _1password-gui
-    devbox
+    devbox # via ./flakes/devbox
+    dolphin
     gh
     google-chrome
+    meld
     slack
   ];
+
+  services.cliphist = {
+    enable = true;
+    systemdTarget = "hyprland-session.target";
+  };
+
+  services.swayidle = {
+    enable = true;
+    systemdTarget = "hyprland-session.target";
+    timeouts = [
+      {
+        timeout = 900;
+        command = "${pkgs.swaylock}/bin/swaylock -f";
+      }
+      {
+        timeout = 915;
+        command = "${pkgs.hyprland}/bin/hyprctl dispatch dpms off";
+        resumeCommand = "${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
+      }
+    ];
+    events = [
+      {
+        event = "before-sleep";
+        command = "${pkgs.swaylock}/bin/swaylock -f";
+      }
+    ];
+  };
+
+  programs.swaylock = {
+    enable = false;
+    settings = {
+      bs-hl-color = "ee2e24FF";
+      caps-lock-bs-hl-color = "ee2e24FF";
+      caps-lock-key-hl-color = "ffd204FF";
+      color = "22D0D2FF";
+      font = "Sans";
+      ignore-empty-password = true;
+      indicator-caps-lock = true;
+      indicator-thickness = "60";
+
+      inside-caps-lock-color = "009ddc00";
+      inside-clear-color = "ffd20400";
+      inside-color = "009ddc00";
+      inside-ver-color = "d9d8d800";
+      inside-wrong-color = "ee2e2400";
+
+      key-hl-color = "009ddcFF";
+
+      line-caps-lock-color = "009ddcFF";
+      line-clear-color = "ffd204FF";
+      line-color = "009ddc00";
+      line-ver-color = "d9d8d8FF";
+      line-wrong-color = "ee2e24FF";
+
+      ring-caps-lock-color = "231f20D9";
+      ring-clear-color = "231f20D9";
+      ring-color = "231f20D9";
+      ring-ver-color = "231f20D9";
+      ring-wrong-color = "231f20D9";
+
+      separator-color = "231f20DD";
+      show-failed-attempts = true;
+      show-keyboard-layout = true;
+
+      text-caps-lock-color = "009ddc00";
+      text-clear-color = "ffd20400";
+      text-color = "009ddc00";
+      text-ver-color = "d9d8d800";
+      text-wrong-color = "ee2e2400";
+    };
+  };
+
+  programs.waybar = {
+    enable = true;
+    systemd = {
+      enable = true;
+      target = "hyprland-session.target";
+    };
+    settings = {
+      mainBar = {
+        # From https://github.com/Pipshag/dotfiles_nord/blob/master/.config/waybar/config
+        "layer" = "top"; # Waybar at top layer
+        "position" = "top"; # Waybar position (top|bottom|left|right)
+        # "height" = 36; # Waybar height (to be removed for auto height)
+        # Archived modules
+        # "custom/gpu" "bluetooth"  "custom/weather" "temperature" "sway/window"
+        # Choose the order of the modules
+        "modules-left" = [
+          "hyprland/workspaces"
+          # "custom/scratchpad-indicator"
+          # "sway/mode"
+          # "custom/media"
+        ];
+        "modules-center" = ["hyprland/window"];
+        "modules-right" = [
+          "idle_inhibitor"
+          # "custom/cpugovernor",
+          "cpu"
+          "temperature"
+          # "custom/gpu",
+          "pulseaudio"
+          "bluetooth"
+          "network"
+          "tray"
+          "clock"
+        ];
+        # Modules configuration
+        "hyprland/workspaces" = {
+          "all-outputs" = true;
+          "format" = "{icon}";
+          "format-icons" = {
+            "1" = "<span color=\"#D8DEE9\"></span>";
+            "2" = "<span color=\"#88C0D0\"></span>";
+            "3" = "<span color=\"#A3BE8C\"></span>";
+            "4" = "<span color=\"#D8DEE9\"></span>";
+            "urgent" = "";
+            "focused" = "";
+            "default" = "";
+          };
+        };
+        "sway/mode" = {
+          "format" = "<span style=\"italic\">{}</span>";
+        };
+        "hyprland/window" = {
+          "format" = "{class} {}";
+          "rewrite" = {
+            "(.*) — Mozilla Firefox" = "🌎 $1";
+            "^kitty (.*)" = " $1";
+            "nvim (.*)" = "> [$1]";
+          };
+        };
+        "bluetooth" = {
+          "interval" = 30;
+          "format" = "{icon}";
+          # "format-alt" = "{status}";
+          "format-icons" = {
+            "enabled" = "";
+            "disabled" = "";
+          };
+          "on-click" = "blueberry";
+        };
+        "idle_inhibitor" = {
+          "format" = "{icon}";
+          "format-icons" = {
+            "activated" = "";
+            "deactivated" = "";
+          };
+          "tooltip" = "true";
+        };
+        "tray" = {
+          #"icon-size = 11;
+          "spacing" = 5;
+        };
+        "clock" = {
+          "format" = "  {:%r     %b %e}";
+          "tooltip-format" = "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>";
+          "today-format" = "<b>{}</b>";
+          "on-click" = "gnome-calendar";
+        };
+        "cpu" = {
+          "interval" = "1";
+          "format" = "  {max_frequency}GHz <span color=\"darkgray\">| {usage}%</span>";
+          "max-length" = 13;
+          "min-length" = 13;
+          "on-click" = "kitty -e gtop --sort-key PERCENT_CPU";
+          "tooltip" = false;
+        };
+        "temperature" = {
+          #"thermal-zone" = 1;
+          "interval" = "4";
+          "hwmon-path" = "/sys/class/hwmon/hwmon3/temp1_input";
+          "critical-threshold" = 74;
+          "format-critical" = "  {temperatureC}°C";
+          "format" = "{icon}  {temperatureC}°C";
+          "format-icons" = ["" "" ""];
+          "max-length" = 7;
+          "min-length" = 7;
+        };
+        "network" = {
+          # "interface" = "wlan0", # (Optional) To force the use of this interface,
+          "format-wifi" = "  {essid}";
+          "format-ethernet" = "{ifname}: {ipaddr}/{cidr} ";
+          "format-linked" = "{ifname} (No IP) ";
+          "format-disconnected" = "";
+          "format-alt" = "{ifname}: {ipaddr}/{cidr}";
+          "family" = "ipv4";
+          "tooltip-format-wifi" = "  {ifname} @ {essid}\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\n {bandwidthUpBits}  {bandwidthDownBits}";
+          "tooltip-format-ethernet" = " {ifname}\nIP: {ipaddr}\n {bandwidthUpBits}  {bandwidthDownBits}";
+        };
+        "pulseaudio" = {
+          "scroll-step" = 3; # %, can be a float
+          "format" = "{icon} {volume}% {format_source}";
+          "format-bluetooth" = "{volume}% {icon} {format_source}";
+          "format-bluetooth-muted" = " {icon} {format_source}";
+          "format-muted" = " {format_source}";
+          #"format-source" = "{volume}% ";
+          #"format-source-muted" = "";
+          "format-source" = "";
+          "format-source-muted" = "";
+          "format-icons" = {
+            "headphone" = "";
+            "hands-free" = "";
+            "headset" = "";
+            "phone" = "";
+            "portable" = "";
+            "car" = "";
+            "default" = ["" "" ""];
+          };
+          "on-click" = "pavucontrol";
+          "on-click-right" = "wpctl set-mute @DEFAULT_SOURCE@ toggle";
+        };
+        "custom/weather" = {
+          "exec" = "curl 'https://wttr.in/?format=1'";
+          "interval" = 3600;
+        };
+        "custom/gpu" = {
+          "exec" = "$HOME/.config/waybar/custom_modules/custom-gpu.sh";
+          "return-type" = "json";
+          "format" = "  {}";
+          "interval" = 2;
+          "tooltip" = "{tooltip}";
+          "max-length" = 19;
+          "min-length" = 19;
+          "on-click" = "powerupp";
+        };
+        "custom/cpugovernor" = {
+          "format" = "{icon}";
+          "interval" = "30";
+          "return-type" = "json";
+          "exec" = "$HOME/.config/waybar/custom_modules/cpugovernor.sh";
+          "min-length" = 2;
+          "max-length" = 2;
+          "format-icons" = {
+            "perf" = "";
+            "sched" = "";
+          };
+        };
+        "custom/media" = {
+          "format" = "{icon} {}";
+          "return-type" = "json";
+          "max-length" = 40;
+          "format-icons" = {
+            "spotify" = "";
+            "default" = "🎜";
+          };
+          "escape" = true;
+          "exec" = "$HOME/.config/waybar/mediaplayer.py 2> /dev/null";
+          # "exec" = "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" # Filter player based on name
+        };
+      };
+    };
+  };
+
+  services.wlsunset = {
+    enable = true;
+    systemdTarget = "hyprland-session.target";
+    temperature = {
+      day = 4300;
+      night = 2800;
+    };
+    latitude = "45.6";
+    longitude = "122.7";
+  };
 
   programs.git = {
     enable = true;
@@ -152,17 +428,23 @@ in {
     userName = "Adam DiCarlo";
     userEmail = "adam@bikko.org";
     extraConfig = {
-      # My 2023 GPG key
-      user.signingkey = "C8CB1DB6E4EA5801";
-      pull.rebase = true;
+      branch.autoSetupRebase = "always";
+      checkout.guess = true;
+      commit.gpgsign = true;
       core.editor = "nvim";
       init.defaultbranch = "main";
-      commit.gpgsign = true;
+      merge.guitool = "meld";
+      #  cmd = ''meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"'';
+      pull.rebase = true;
+      push.autoSetupRemote = true;
+      rebase.autoStash = true;
       url = {
         "git+ssh://git@github.com/".insteadOf = ["gh:" "git://github.com/" "ssh://git@github.com:"];
         "git+ssh://git@github.com/".pushInsteadOf = ["git://github.com/" "https://github.com/" "ssh://git@github.com:"];
         "github-work:adaptivsystems/".insteadOf = "git@github.com:adaptivsystems/";
       };
+      # My 2023 GPG key
+      user.signingkey = "C8CB1DB6E4EA5801";
     };
 
     includes = [
@@ -304,37 +586,47 @@ in {
 
   programs.carapace.enable = true;
 
-  # programs.direnv = {
-  # enable = true;
-  # nix-direnv.enable = true;
-  # direnv is auto-activated in fish, so we don't need to set any kind of
-  # 'enableFishIntegration' variable (it is, in fact, read-only).
-  # };
-  #
   programs.zsh = {
     enable = true;
     enableAutosuggestions = true;
     enableCompletion = true;
     enableVteIntegration = true;
-    dotDir = ".config/zsh";
+
+    # `devbox shell` mysteriously fails to execute project init_hook if ZDOTDIR
+    # is, e.g. $HOME/.config/zsh.
+    #
+    # dotDir = ".config/zsh";
+
     initExtra = ''
       # Automatically run devbox shell when entering adaptiv repos
       eval "$(/home/adam/work/localtools/scripts/cd-devbox)"
     '';
-    plugins = [
+    plugins = let
+      ohmyzsh = pkgs.fetchgit {
+        url = "https://github.com/ohmyzsh/ohmyzsh";
+        rev = "b6bb133f230847ed0b3f9f4e25f2ceb874ca6c91";
+        hash = "sha256-XBAFP+lUBgOy7Qw2zRUc0M1Q5/PJCc8/R88lX2xaNY0=";
+        sparseCheckout = [
+          "lib/clipboard.zsh"
+          "plugins/git/git.plugin.zsh"
+        ];
+      };
+    in [
       {
         name = "git";
         file = "plugins/git/git.plugin.zsh";
-        src = pkgs.fetchgit {
-          url = "https://github.com/ohmyzsh/ohmyzsh";
-          rev = "b6bb133f230847ed0b3f9f4e25f2ceb874ca6c91";
-          hash = "sha256-2x1v9x3I3Gz8n1qLOnNHvGazWTBoLYGsISEGmqhdF/Y=";
-          sparseCheckout = [
-            "plugins/git/git.plugin.zsh"
-          ];
-        };
+        src = ohmyzsh;
+      }
+      {
+        name = "git";
+        file = "lib/clipboard.zsh";
+        src = ohmyzsh;
       }
     ];
+    prezto = {
+      enable = true;
+      prompt.theme = "pure";
+    };
     syntaxHighlighting = {
       enable = true;
     };
@@ -387,13 +679,17 @@ in {
 
   programs.kitty = {
     enable = true;
-    shellIntegration.enableFishIntegration = false;
-    shellIntegration.enableZshIntegration = true;
     theme = "Dracula";
     font = {
       package = pkgs.nerdfonts;
       name = "FiraCode Nerd Font Mono";
       size = 11;
+    };
+    settings = {
+      enable_audio_bell = false;
+      scrollback_lines = 15000;
+      sync_to_monitor = false;
+      visual_bell_duration = "0.2";
     };
   };
 
@@ -403,13 +699,13 @@ in {
 
   # starship - a customizable prompt for any shell
   programs.starship = {
-    enable = true;
+    enable = false;
     # custom settings
     settings = {
       add_newline = true;
       aws.disabled = false;
       gcloud.disabled = true;
-      line_break.disabled = true;
+      line_break.disabled = false;
     };
   };
 
@@ -430,13 +726,12 @@ in {
       # See https://wiki.hyprland.org/Configuring/Keywords/ for more
 
       # Execute your favorite apps at launch
-      exec-once = waybar
-      exec-once = wlsunset -l 45.6 -L 122.7 -t 2700 -T 4300 -g 1.0
+      exec-once = swaybg -m fill -i ~/Pictures/wallpaper/pexels-andy-vu-3484061.jpg
       exec-once = nm-applet --indicator
-      exec-once = swayidle -w
       exec-once = swaynag-battery
-      exec-once = wl-paste --watch cliphist store
       exec-once = ~/.config/hypr/on-lid.sh
+      exec-once = 1password --silent
+      exec-once = udiskie
 
       # Source a file (multi-file configs)
       # source = ~/.config/hypr/myColors.conf
@@ -449,8 +744,16 @@ in {
       env = GDK_BACKEND,wayland,x11
       env = QT_QPA_PLATFORM,wayland;xcb
       env = SDL_VIDEODRIVER,wayland
+      env = GBM_BACKEND,nvidia-drm
+      env = LIBVA_DRIVER_NAME,nvidia
+      env = __GLX_VENDOR_LIBRARY_NAME,nvidia
+      env = __GL_VRR_ALLOWED,1
       env = WLR_NO_HARDWARE_CURSORS,1
       env = NIXOS_OZONE_WL,1
+      env = CLUTTER_BACKEND,wayland
+      env = WLR_RENDERER,vulkan
+      env = TERMINAL,kitty
+      env = BROWSER,google-chrome-stable
 
 
       # Clamshell mode configuration
@@ -584,7 +887,7 @@ in {
 
       bind = $mainMod      , S     , exec, ~/bin/grim-swappy.sh
       bind = $mainMod SHIFT, S     , exec, ~/bin/wf-record-area.sh
-      bind = $mainMod SHIFT, F     , exec, dolphin
+      bind = $mainMod      , F     , exec, dolphin
       bind = $mainMod      , E     , exec, pkill wofi || wofi-emoji
       bind = $mainMod SHIFT, E     , exec, wlogout --protocol layer-shell
       bind = $mainMod SHIFT, SPACE , togglefloating,
@@ -592,8 +895,20 @@ in {
       bind = $mainMod      , ESCAPE, exec, swaylock # Lock the screen
       bind = $mainMod      , P     , pseudo, # dwindle
       bind = $mainMod      , G     , togglesplit, # dwindle
-      bind = $mainMod      , F     , fullscreen,
+      bind = $mainMod SHIFT, F     , fullscreen,
       bind = $mainMod      , Y     , exec, cliphist list | wofi -dmenu | cliphist decode | wl-copy
+
+      # Audio
+      bind=,XF86AudioPlay,exec,playerctl play-pause
+      bind=,XF86AudioPrev,exec,playerctl previous
+      bind=,XF86AudioNext,exec,playerctl next
+
+      bindl=,XF86AudioMedia,exec,playerctl play-pause
+      bindl=,XF86AudioStop,exec,playerctl stop
+
+      bindle=,XF86AudioRaiseVolume,exec,wpctl set-volume @DEFAULT_SINK@ 2.5%+
+      bindle=,XF86AudioLowerVolume,exec,wpctl set-volume @DEFAULT_SINK@ 2.5%-
+      bindle=,XF86AudioMute,exec,wpctl set-mute @DEFAULT@ toggle
 
       # Move focus
       bind = $mainMod, J, movefocus, l

@@ -15,6 +15,12 @@ local function textcase_cw(op)
   end
 end
 
+local function textcase_cwv(op)
+  return function()
+    require("textcase").visual(op)
+  end
+end
+
 map("n", "gau", textcase_cw("to_upper_case"), { desc = "Change current word to upper case" })
 map("n", "gal", textcase_cw("to_lower_case"), { desc = "Change current word to lower case" })
 map("n", "gas", textcase_cw("to_snake_case"), { desc = "Change current word to snake case" })
@@ -26,6 +32,18 @@ map("n", "gac", textcase_cw("to_camel_case"), { desc = "Change current word to c
 map("n", "gap", textcase_cw("to_pascal_case"), { desc = "Change current word to pascal case" })
 map("n", "gat", textcase_cw("to_title_case"), { desc = "Change current word to title case" })
 map("n", "gaf", textcase_cw("to_path_case"), { desc = "Change current word to path case" })
+
+map("v", "gau", textcase_cwv("to_upper_case"), { desc = "Change current word to upper case" })
+map("v", "gal", textcase_cwv("to_lower_case"), { desc = "Change current word to lower case" })
+map("v", "gas", textcase_cwv("to_snake_case"), { desc = "Change current word to snake case" })
+map("v", "gad", textcase_cwv("to_dash_case"), { desc = "Change current word to dash case" })
+map("v", "gan", textcase_cwv("to_constant_case"), { desc = "Change current word to constant case" })
+map("v", "ga.", textcase_cwv("to_dot_case"), { desc = "Change current word to dot case" })
+map("v", "gaa", textcase_cwv("to_phrase_case"), { desc = "Change current word to phrase case" })
+map("v", "gac", textcase_cwv("to_camel_case"), { desc = "Change current word to camel case" })
+map("v", "gap", textcase_cwv("to_pascal_case"), { desc = "Change current word to pascal case" })
+map("v", "gat", textcase_cwv("to_title_case"), { desc = "Change current word to title case" })
+map("v", "gaf", textcase_cwv("to_path_case"), { desc = "Change current word to path case" })
 
 map("c", "%%", function()
   return vim.fn.expand("%:h") .. "/"

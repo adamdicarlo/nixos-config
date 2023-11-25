@@ -5,8 +5,10 @@ local custom_attach = function(client)
 end
 
 return {
+  { "folke/flash.nvim", enabled = false },
   {
     "echasnovski/mini.surround",
+    enabled = false,
     opts = {
       mappings = {
         add = "gsa", -- Add surrounding in Normal and Visual modes
@@ -35,7 +37,7 @@ return {
   -- @see https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-bracketed.md
   { "echasnovski/mini.bracketed" },
 
-  { "gpanders/editorconfig.nvim", enabled = false },
+  { "gpanders/editorconfig.nvim", enabled = true },
   { "folke/lazy.nvim" },
 
   {
@@ -73,10 +75,10 @@ return {
     opts = function(_, opts)
       -- vim.notify(opts)
 
-      opts.highlight = { enable = false }
-      opts.context_commentstring = { enable = false }
-      opts.incremental_selection = { enable = false }
-      opts.textobjects = { enable = false }
+      -- opts.highlight = { enable = false }
+      -- opts.context_commentstring = { enable = false }
+      -- opts.incremental_selection = { enable = false }
+      -- opts.textobjects = { enable = false }
       -- opts.indent = { enable = false }
 
       vim.list_extend(opts.ensure_installed, {
@@ -102,7 +104,6 @@ return {
     "folke/which-key.nvim",
     event = "VeryLazy",
     opts = function(_, opts)
-      opts.defaults["gs"] = opts.defaults["gz"]
       opts.defaults["gz"] = nil
       return opts
     end,
@@ -117,28 +118,57 @@ return {
       -- @see https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/elmls.lua
       servers = {
         elmls = {
-          init_options = {
+          rootPatterns = { "elm.json" },
+          elmLS = {
+            disableElmLSDiagnostics = false,
+            elmReviewDiagnostics = "error",
+            elmPath = "/etc/profiles/per-user/adam/bin/elm",
+            elmReviewPath = "./node_modules/.bin/elm-review",
+            elmTestRunner = {
+              showElmTestOutput = true,
+            },
+            onlyUpdateDiagnosticsOnSave = true,
+            rootPatterns = { "elm.json" },
+            skipInstallPackageConfirmation = false,
+            trace = {
+              server = "messages",
+            },
+          },
+          settings = {
+            rootPatterns = { "elm.json" },
             elmLS = {
               disableElmLSDiagnostics = false,
-              elmFormatPath = "",
-              elmPath = "",
               elmReviewDiagnostics = "error",
-              elmReviewPath = "",
-              onlyUpdateDiagnosticsOnSave = true,
-              elmTestPath = "",
+              elmPath = "/etc/profiles/per-user/adam/bin/elm",
+              elmReviewPath = "./node_modules/.bin/elm-review",
               elmTestRunner = {
                 showElmTestOutput = true,
               },
+              onlyUpdateDiagnosticsOnSave = true,
+              rootPatterns = { "elm.json" },
               skipInstallPackageConfirmation = false,
               trace = {
                 server = "messages",
               },
             },
           },
+          init_options = {
+            disableElmLSDiagnostics = false,
+            elmReviewDiagnostics = "error",
+            elmPath = "/etc/profiles/per-user/adam/bin/elm",
+            elmReviewPath = "./node_modules/.bin/elm-review",
+            elmTestRunner = {
+              showElmTestOutput = true,
+            },
+            onlyUpdateDiagnosticsOnSave = true,
+            rootPatterns = { "elm.json" },
+            skipInstallPackageConfirmation = false,
+            trace = {
+              server = "messages",
+            },
+          },
         },
-        tsserver = {
-          cmd = { "./node_modules/.bin/typescript-language-server", "--stdio" },
-        },
+        tsserver = {},
         ["nil_ls"] = {
           init_options = {
             formatting = {
@@ -147,7 +177,6 @@ return {
           },
         },
         tailwindcss = {
-          cmd = { "./node_modules/@tailwindcss/language-server/bin/tailwindcss-language-server", "--stdio" },
           filetypes = {
             "elm",
           },
@@ -190,11 +219,18 @@ return {
       -- return true if you don't want this server to be setup with lspconfig
       ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
+        -- elmls = function(_, opts)
+        --   return false
+        -- end,
         elmls = function(_, opts)
-          require("lspconfig").elmls.setup({
-            on_attach = custom_attach,
-            server = opts,
-          })
+          local default_config = require("lspconfig.server_configurations.elmls").default_config
+          local final_config = vim.tbl_deep_extend("force", default_config, opts, { on_attach = custom_attach })
+          -- print(vim.inspect(final_config))
+          -- final_config.root_dir = function(a, b)
+          --   vim.notify("root_dir" .. vim.inspect({ a, b }))
+          --   return "/home/adam/work/marketing-site"
+          -- end
+          require("lspconfig").elmls.setup(final_config)
           return true
         end,
         nil_ls = function(_, opts)

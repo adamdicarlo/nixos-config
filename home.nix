@@ -90,14 +90,13 @@ in {
     kitty-img
     kitty-themes
 
-    neofetch
-    nnn # terminal file manager
-
-    # utils
     eza # A modern replacement for ‘ls’
-    fd
+    fd # Modern `find`
     fzf # A command-line fuzzy finder
     jq
+    imagemagick
+    libwebp
+    neofetch
     procs
     ripgrep
 
@@ -106,28 +105,31 @@ in {
 
     # nix related
     #
+    alejandra
     # it provides the command `nom` works just like `nix`
     # with more details log output
     nix-output-monitor
-    alejandra
 
     # Wayland, GUI stuff
     cliphist
     grim
     hyprpicker
+    fuzzel
     imv
+    libnotify
     mako
     networkmanagerapplet
     nwg-displays
     playerctl
     slurp
     swappy
-    sway
     swaybg
     swayidle
     swaylock
+    swayosd
     swaynag-battery
     udiskie
+    watershot
     waybar
     wbg
     wev
@@ -146,8 +148,26 @@ in {
     stylua
 
     # productivity
+    font-awesome
     glow # markdown previewer in terminal
     nerdfonts
+
+    # dev
+    elmPackages.elm
+    elmPackages.elm-format
+    elmPackages.elm-language-server
+    elmPackages.elm-review
+    lua-language-server
+    nodePackages.typescript-language-server
+    nodePackages.vscode-json-languageserver
+    nodejs_18
+    shellcheck
+    shfmt
+    stylua
+    tailwindcss-language-server
+    terraform-ls
+    tflint
+    tflint-plugins.tflint-ruleset-aws
 
     _1password-gui
     devbox # via ./flakes/devbox
@@ -160,12 +180,74 @@ in {
 
   services.cliphist = {
     enable = true;
-    systemdTarget = "hyprland-session.target";
   };
+
+  services.kanshi = {
+    enable = true;
+    profiles = {
+      dell-ultrawide = {
+        outputs = [
+          {
+            criteria = "Dell Inc. DELL U3821DW HH7YZ63";
+            status = "enable";
+            mode = "3840x1600@60Hz";
+            position = "0,0";
+            scale = 1.0;
+          }
+          {
+            criteria = "eDP-1";
+            status = "disable";
+          }
+        ];
+      };
+
+      lg-ultrawide = {
+        outputs = [
+          {
+            criteria = "Goldstar Company Ltd LG HDR WQHD 0x0000B6E2";
+            status = "enable";
+            mode = "3440x1440@60Hz";
+            position = "0,0";
+            scale = 1.0;
+          }
+          {
+            criteria = "eDP-1";
+            status = "disable";
+          }
+        ];
+      };
+
+      x1c7-undocked = {
+        outputs = [
+          {
+            criteria = "Unknown 0x07C8 0x00000000";
+            status = "enable";
+            mode = "3840x2160@60Hz";
+            position = "0,0";
+            scale = 2.0;
+          }
+        ];
+      };
+
+      addw3-undocked = {
+        outputs = [
+          {
+            criteria = "BOE 0x08B3";
+            status = "enable";
+            mode = "1920x1080@144Hz";
+            position = "0,0";
+            scale = 1.0;
+          }
+        ];
+      };
+    };
+  };
+
+  services.mako.enable = true;
+  services.network-manager-applet.enable = true;
 
   services.swayidle = {
     enable = true;
-    systemdTarget = "hyprland-session.target";
     timeouts = [
       {
         timeout = 900;
@@ -173,8 +255,8 @@ in {
       }
       {
         timeout = 915;
-        command = "${pkgs.hyprland}/bin/hyprctl dispatch dpms off";
-        resumeCommand = "${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
+        command = "${pkgs.sway}/bin/swaymsg output * power off";
+        resumeCommand = "${pkgs.sway}/bin/swaymsg output * power on";
       }
     ];
     events = [
@@ -185,8 +267,10 @@ in {
     ];
   };
 
+  services.udiskie.enable = true;
+
   programs.swaylock = {
-    enable = false;
+    enable = true;
     settings = {
       bs-hl-color = "ee2e24FF";
       caps-lock-bs-hl-color = "ee2e24FF";
@@ -229,12 +313,13 @@ in {
     };
   };
 
+  services.swayosd = {
+    enable = true;
+  };
+
   programs.waybar = {
     enable = true;
-    systemd = {
-      enable = true;
-      target = "hyprland-session.target";
-    };
+    systemd.enable = true;
     settings = {
       mainBar = {
         # From https://github.com/Pipshag/dotfiles_nord/blob/master/.config/waybar/config
@@ -245,50 +330,47 @@ in {
         # "custom/gpu" "bluetooth"  "custom/weather" "temperature" "sway/window"
         # Choose the order of the modules
         "modules-left" = [
-          "hyprland/workspaces"
+          "sway/workspaces"
           # "custom/scratchpad-indicator"
-          # "sway/mode"
-          # "custom/media"
+          "sway/mode"
+          "wlr/taskbar"
         ];
-        "modules-center" = ["hyprland/window"];
+        "modules-center" = ["sway/window"];
         "modules-right" = [
-          "idle_inhibitor"
-          # "custom/cpugovernor",
           "cpu"
-          "temperature"
-          # "custom/gpu",
+          "temperature#cpu"
+          "temperature#gpu"
+          "idle_inhibitor"
+          "backlight"
           "pulseaudio"
-          "bluetooth"
+          "privacy"
+          # "bluetooth"
           "network"
+          "battery"
           "tray"
           "clock"
         ];
         # Modules configuration
-        "hyprland/workspaces" = {
-          "all-outputs" = true;
-          "format" = "{icon}";
-          "format-icons" = {
-            "1" = "<span color=\"#D8DEE9\"></span>";
-            "2" = "<span color=\"#88C0D0\"></span>";
-            "3" = "<span color=\"#A3BE8C\"></span>";
-            "4" = "<span color=\"#D8DEE9\"></span>";
-            "urgent" = "";
-            "focused" = "";
-            "default" = "";
+        "sway/workspaces" = {
+          all-outputs = true;
+          format = "{icon}";
+          format-icons = {
+            "1" = "<span color=\"#D8DEE9\">  </span>";
+            "2" = "<span color=\"#88C0D0\">  </span>";
+            "3" = "<span color=\"#D8DEE9\">  </span>";
+            "4" = "<span color=\"#A3BE8C\">  </span>";
+            urgent = "";
+            focused = "";
+            default = "";
           };
         };
         "sway/mode" = {
           "format" = "<span style=\"italic\">{}</span>";
         };
-        "hyprland/window" = {
-          "format" = "{class} {}";
-          "rewrite" = {
-            "(.*) — Mozilla Firefox" = "🌎 $1";
-            "^kitty (.*)" = " $1";
-            "nvim (.*)" = "> [$1]";
-          };
+        "backlight" = {
+          device = "acpi_video0";
         };
-        "bluetooth" = {
+        bluetooth = {
           "interval" = 30;
           "format" = "{icon}";
           # "format-alt" = "{status}";
@@ -301,10 +383,10 @@ in {
         "idle_inhibitor" = {
           "format" = "{icon}";
           "format-icons" = {
-            "activated" = "";
-            "deactivated" = "";
+            "activated" = "";
+            "deactivated" = " ";
           };
-          "tooltip" = "true";
+          "tooltip" = true;
         };
         "tray" = {
           #"icon-size = 11;
@@ -314,49 +396,82 @@ in {
           "format" = "  {:%r     %b %e}";
           "tooltip-format" = "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>";
           "today-format" = "<b>{}</b>";
-          "on-click" = "gnome-calendar";
+          "on-click" = "";
         };
         "cpu" = {
           "interval" = "1";
           "format" = "  {max_frequency}GHz <span color=\"darkgray\">| {usage}%</span>";
           "max-length" = 13;
           "min-length" = 13;
-          "on-click" = "kitty -e gtop --sort-key PERCENT_CPU";
+          "on-click" = "${pkgs.kitty}/bin/kitty -e btop";
           "tooltip" = false;
         };
-        "temperature" = {
-          #"thermal-zone" = 1;
-          "interval" = "4";
-          "hwmon-path" = "/sys/class/hwmon/hwmon3/temp1_input";
-          "critical-threshold" = 74;
+        "temperature#cpu" = {
+          "thermal-zone" = 0;
+          "interval" = "2";
+          # "hwmon-path" = "/sys/class/hwmon/hwmon3/temp1_input";
+          "critical-threshold" = 80;
           "format-critical" = "  {temperatureC}°C";
           "format" = "{icon}  {temperatureC}°C";
-          "format-icons" = ["" "" ""];
+          "format-icons" = [""];
           "max-length" = 7;
           "min-length" = 7;
         };
-        "network" = {
-          # "interface" = "wlan0", # (Optional) To force the use of this interface,
-          "format-wifi" = "  {essid}";
-          "format-ethernet" = "{ifname}: {ipaddr}/{cidr} ";
-          "format-linked" = "{ifname} (No IP) ";
-          "format-disconnected" = "";
-          "format-alt" = "{ifname}: {ipaddr}/{cidr}";
-          "family" = "ipv4";
-          "tooltip-format-wifi" = "  {ifname} @ {essid}\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\n {bandwidthUpBits}  {bandwidthDownBits}";
-          "tooltip-format-ethernet" = " {ifname}\nIP: {ipaddr}\n {bandwidthUpBits}  {bandwidthDownBits}";
+        "temperature#gpu" = {
+          "thermal-zone" = 1;
+          "interval" = "2";
+          # "hwmon-path" = "/sys/class/hwmon/hwmon3/temp1_input";
+          "critical-threshold" = 74;
+          "format-critical" = "  {temperatureC}°C";
+          "format" = "{icon}  {temperatureC}°C";
+          "format-icons" = [""];
+          "max-length" = 7;
+          "min-length" = 7;
         };
-        "pulseaudio" = {
-          "scroll-step" = 3; # %, can be a float
-          "format" = "{icon} {volume}% {format_source}";
-          "format-bluetooth" = "{volume}% {icon} {format_source}";
-          "format-bluetooth-muted" = " {icon} {format_source}";
-          "format-muted" = " {format_source}";
+        network = {
+          # "interface" = "wlan0", # (Optional) To force the use of this interface,
+          format-wifi = " ";
+          format-ethernet = "{ifname}: {ipaddr}/{cidr} ";
+          format-linked = "{ifname} (No IP) ";
+          format-disconnected = "";
+          format-alt = "{ifname}: {ipaddr}/{cidr}";
+          family = "ipv4";
+          tooltip-format-wifi = "  {ifname} @ {essid}\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\n {bandwidthUpBits}  {bandwidthDownBits}";
+          tooltip-format-ethernet = " {ifname}\nIP: {ipaddr}\n {bandwidthUpBits}  {bandwidthDownBits}";
+        };
+        privacy = {
+          "icon-spacing" = 4;
+          "icon-size" = 18;
+          "transition-duration" = 250;
+          "modules" = [
+            {
+              "type" = "screenshare";
+              "tooltip" = true;
+              "tooltip-icon-size" = 24;
+            }
+            {
+              "type" = "audio-out";
+              "tooltip" = true;
+              "tooltip-icon-size" = 24;
+            }
+            {
+              "type" = "audio-in";
+              "tooltip" = true;
+              "tooltip-icon-size" = 24;
+            }
+          ];
+        };
+        pulseaudio = {
+          scroll-step = 2.5; # %, can be a float
+          format = "{icon}  {volume}% {format_source}";
+          format-bluetooth = "{volume}% {icon} {format_source}";
+          format-bluetooth-muted = " {icon} {format_source}";
+          format-muted = " {format_source}";
           #"format-source" = "{volume}% ";
           #"format-source-muted" = "";
-          "format-source" = "";
-          "format-source-muted" = "";
-          "format-icons" = {
+          format-source = "";
+          format-source-muted = "";
+          format-icons = {
             "headphone" = "";
             "hands-free" = "";
             "headset" = "";
@@ -365,12 +480,24 @@ in {
             "car" = "";
             "default" = ["" "" ""];
           };
-          "on-click" = "pavucontrol";
-          "on-click-right" = "wpctl set-mute @DEFAULT_SOURCE@ toggle";
+          on-click = "${pkgs.pavucontrol}/bin/pavucontrol";
+          on-click-right = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle";
+        };
+        battery = {
+          states = {
+            warning = 25;
+            critical = 10;
+          };
+          format = " {icon}   {capacity}% ";
+          format-alt = " {time}  {icon}  ";
+          format-icons = ["" "" "" "" ""];
+          format-time = "{H}:{M}";
+          tooltip = false;
+          interval = 20;
         };
         "custom/weather" = {
-          "exec" = "curl 'https://wttr.in/?format=1'";
-          "interval" = 3600;
+          exec = "curl 'https://wttr.in/?format=1'";
+          interval = 3600;
         };
         "custom/gpu" = {
           "exec" = "$HOME/.config/waybar/custom_modules/custom-gpu.sh";
@@ -412,13 +539,12 @@ in {
 
   services.wlsunset = {
     enable = true;
-    systemdTarget = "hyprland-session.target";
     temperature = {
-      day = 4300;
+      day = 4000;
       night = 2800;
     };
     latitude = "45.6";
-    longitude = "122.7";
+    longitude = "-122.7";
   };
 
   programs.git = {
@@ -431,7 +557,7 @@ in {
       branch.autoSetupRebase = "always";
       checkout.guess = true;
       commit.gpgsign = true;
-      core.editor = "nvim";
+      core.editor = "${pkgs.neovim}/bin/nvim";
       init.defaultbranch = "main";
       merge.guitool = "meld";
       #  cmd = ''meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"'';
@@ -717,26 +843,138 @@ in {
     sshKeys = ["689797597435372AAE566787A29AFFB7B862D0B6"];
   };
 
-  wayland.windowManager.hyprland = {
+  wayland.windowManager.sway = {
     enable = true;
+    systemd.enable = true;
+    config = {
+      bars = [];
+      fonts = {
+        names = ["FiraCode Nerd Font Mono" "FontAwesome6Free"];
+        size = 11.0;
+      };
+
+      gaps = {
+        inner = 4;
+        outer = 0;
+        smartBorders = "on";
+        smartGaps = true;
+      };
+
+      input = {
+        "type:keyboard" = {
+          xkb_layout = "us";
+          xkb_variant = "colemak";
+          xkb_options = "altwin:swap_lalt_lwin";
+          repeat_delay = "200";
+          repeat_rate = "50";
+        };
+        "type:pointer" = {
+          natural_scroll = "enabled";
+        };
+
+        "type:touchpad" = {
+          tap = "disabled";
+          drag = "enabled";
+          drag_lock = "disabled";
+          dwt = "enabled";
+          natural_scroll = "enabled";
+          middle_emulation = "enabled";
+          scroll_method = "two_finger";
+        };
+      };
+
+      # KEYS
+      modifier = "Mod4";
+      left = "j";
+      right = "l";
+      up = "h";
+      down = "k";
+      keybindings = let
+        modifier = config.wayland.windowManager.sway.config.modifier;
+      in
+        pkgs.lib.mkOptionDefault {
+          "${modifier}+Shift+e" = "exec wlogout --protocol layer-shell";
+          "${modifier}+s" = "exec ~/bin/grim-swappy.sh";
+          "${modifier}+Shift+s" = "exec ~/bin/wf-record-area.sh";
+          "${modifier}+Shift+f" = "exec dolphin";
+          "${modifier}+y" = "exec cliphist list | wofi -dmenu | cliphist decode | wl-copy";
+        };
+
+      startup = [
+        #  {command = "1password";}
+        #  {command = "slack";}
+        #  {command = "firefox";}
+      ];
+
+      terminal = "${pkgs.kitty}/bin/kitty";
+      menu = "${pkgs.fuzzel}/bin/fuzzel";
+
+      window = {
+        commands = [
+          {
+            command = "floating enable";
+            criteria = {
+              app_id = "(?i)(?:pavucontrol|nm-connection-editor|gsimplecal|galculator)";
+            };
+          }
+        ];
+        hideEdgeBorders = "smart";
+        titlebar = false;
+      };
+    };
     extraConfig = ''
-      # See https://wiki.hyprland.org/Configuring/Monitors/
-      monitor=,preferred,auto,1
+      popup_during_fullscreen smart
+    '';
+    extraOptions = [
+      "--verbose"
+      "--debug"
+      "--unsupported-gpu"
+    ];
+    extraSessionCommands = ''
+      export WLR_NO_HARDWARE_CURSORS=1
+    '';
+    #  export BROWSER=google-chrome-stable
+    #  export CLUTTER_BACKEND=wayland
+    #  export GBM_BACKEND=nvidia-drm
+    #  export GDK_BACKEND=wayland,x11
+    #  export LIBVA_DRIVER_NAME=nvidia
+    #  export NIXOS_OZONE_WL=1
+    #  export QT_QPA_PLATFORM=wayland # wayland;xcb
+    #  export SDL_VIDEODRIVER=wayland
+    #  export TERMINAL=kitty
+    #  export WLR_NO_HARDWARE_CURSORS=1
+    #  export WLR_RENDERER=vulkan
+    #  export XCURSOR_SIZE=24
+    #  export __GLX_VENDOR_LIBRARY_NAME=nvidia
+    #  export __GL_VRR_ALLOWED=1
+    #'';
+    swaynag = {
+      enable = true;
+      settings = {
+        "<config>" = {
+          edge = "bottom";
+          font = "Dina 12";
+        };
 
-      # See https://wiki.hyprland.org/Configuring/Keywords/ for more
+        green = {
+          edge = "top";
+          background = "00AA00";
+          text = "FFFFFF";
+          button-background = "00CC00";
+          message-padding = 10;
+        };
+      };
+    };
+    wrapperFeatures.gtk = true;
+  };
 
-      # Execute your favorite apps at launch
-      exec-once = swaybg -m fill -i ~/Pictures/wallpaper/pexels-andy-vu-3484061.jpg
-      exec-once = nm-applet --indicator
-      exec-once = swaynag-battery
+  wayland.windowManager.hyprland = {
+    enable = false;
+    extraConfig = ''
       exec-once = ~/.config/hypr/on-lid.sh
+      exec-once = swaybg -m fill -i ~/Pictures/wallpaper/pexels-andy-vu-3484061.jpg
       exec-once = 1password --silent
-      exec-once = udiskie
 
-      # Source a file (multi-file configs)
-      # source = ~/.config/hypr/myColors.conf
-
-      # Some default env vars.
       env = XCURSOR_SIZE,24
       env = XDG_CURRENT_DESKTOP,Hyprland
       env = XDG_SESSION_DESKTOP,Hyprland
@@ -755,135 +993,18 @@ in {
       env = TERMINAL,kitty
       env = BROWSER,google-chrome-stable
 
-
       # Clamshell mode configuration
 
       ## Lid is opened
-      bindl=,switch:off:Lid Switch,exec, ~/.config/hypr/on-lid.sh
+      bindl=,switch:off:Lid Switch,exec,~/.config/hypr/on-lid.sh
 
       ## Lid is closed
       bindl=,switch:on:Lid Switch,exec,~/.config/hypr/on-lid.sh
 
+      bindle=,XF86RFKill,exec,~/.config/hypr/on-lid.sh
 
       # For use with Kvantam
       # env = QT_QPA_PLATFORMTHEME=qt5ct
-
-      # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
-      input {
-          kb_layout = us
-          kb_variant = colemak
-          kb_model =
-          kb_options = altwin:swap_lalt_lwin
-          kb_rules =
-          repeat_rate = 40
-          repeat_delay = 200
-
-          follow_mouse = 1
-
-          scroll_method = 2fg
-          natural_scroll = yes
-          touchpad {
-              natural_scroll = yes
-              clickfinger_behavior = yes
-              tap-to-click = no
-          }
-          sensitivity = 0 # -1.0 - 1.0, 0 means no modification.
-      }
-
-      general {
-          # See https://wiki.hyprland.org/Configuring/Variables/ for more
-
-          gaps_in = 2
-          gaps_out = 2
-          border_size = 2
-          col.active_border = rgba(33ccffee) rgba(00ff99ee) 45deg
-          col.inactive_border = rgba(595959aa)
-
-          layout = dwindle
-      }
-
-      decoration {
-          # See https://wiki.hyprland.org/Configuring/Variables/ for more
-
-          rounding = 2
-
-          blur {
-              enabled = true
-              size = 7
-              passes = 4
-              new_optimizations = true
-          }
-
-          blurls = lockscreen
-
-          inactive_opacity = 0.96
-          drop_shadow = yes
-          shadow_range = 4
-          shadow_render_power = 3
-          col.shadow = rgba(1a1a1aee)
-      }
-
-      animations {
-          enabled = yes
-
-          # Some default animations, see https://wiki.hyprland.org/Configuring/Animations/ for more
-
-          bezier = myBezier, 0.05, 0.9, 0.1, 1.05
-
-          animation = windows, 1, 2, default
-          animation = windowsOut, 1, 3, default, popin 80%
-          animation = border, 1, 5, default
-          animation = borderangle, 1, 3, default
-          animation = fade, 1, 3, default
-          animation = workspaces, 1, 2, default
-      }
-
-      dwindle {
-          # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
-          pseudotile = yes # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
-          preserve_split = yes # you probably want this
-      }
-
-      master {
-          # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more
-          new_is_master = true
-      }
-
-      gestures {
-          # See https://wiki.hyprland.org/Configuring/Variables/ for more
-          workspace_swipe = off
-      }
-
-      # Example per-device config
-      # See https://wiki.hyprland.org/Configuring/Keywords/#executing for more
-      device:epic-mouse-v1 {
-          sensitivity = -0.5
-      }
-
-      # Example windowrule v1
-      # windowrule = float, ^(kitty)$
-      # Example windowrule v2
-      # windowrulev2 = float,class:^(kitty)$,title:^(kitty)$
-      # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
-
-
-      # TODO:
-      #
-      # - test idle/lock
-      # - nag-battery
-      # - emoji
-      # - screenshot
-      # - screen record
-      # - clipboard
-      # - XF86AudioRaiseVolume XF86MonBrightnessUp
-      # - Remove the anime girl wallpaper
-
-      # See https://wiki.hyprland.org/Configuring/Keywords/ for more
-      $mainMod = SUPER
-
-      # See https://wiki.hyprland.org/Configuring/Binds/ for more
-      bind = $mainMod, RETURN, exec, kitty
-      bind = $mainMod SHIFT, Q, killactive,
 
       bind = $mainMod      , S     , exec, ~/bin/grim-swappy.sh
       bind = $mainMod SHIFT, S     , exec, ~/bin/wf-record-area.sh
@@ -897,62 +1018,6 @@ in {
       bind = $mainMod      , G     , togglesplit, # dwindle
       bind = $mainMod SHIFT, F     , fullscreen,
       bind = $mainMod      , Y     , exec, cliphist list | wofi -dmenu | cliphist decode | wl-copy
-
-      # Audio
-      bind=,XF86AudioPlay,exec,playerctl play-pause
-      bind=,XF86AudioPrev,exec,playerctl previous
-      bind=,XF86AudioNext,exec,playerctl next
-
-      bindl=,XF86AudioMedia,exec,playerctl play-pause
-      bindl=,XF86AudioStop,exec,playerctl stop
-
-      bindle=,XF86AudioRaiseVolume,exec,wpctl set-volume @DEFAULT_SINK@ 2.5%+
-      bindle=,XF86AudioLowerVolume,exec,wpctl set-volume @DEFAULT_SINK@ 2.5%-
-      bindle=,XF86AudioMute,exec,wpctl set-mute @DEFAULT@ toggle
-
-      # Move focus
-      bind = $mainMod, J, movefocus, l
-      bind = $mainMod, L, movefocus, r
-      bind = $mainMod, H, movefocus, u
-      bind = $mainMod, K, movefocus, d
-
-      # Move window
-      bind = $mainMod SHIFT, J, swapwindow, l
-      bind = $mainMod SHIFT, L, swapwindow, r
-      bind = $mainMod SHIFT, H, swapwindow, u
-      bind = $mainMod SHIFT, K, swapwindow, d
-
-      # Switch workspaces with mainMod + [0-9]
-      bind = $mainMod, 1, workspace, 1
-      bind = $mainMod, 2, workspace, 2
-      bind = $mainMod, 3, workspace, 3
-      bind = $mainMod, 4, workspace, 4
-      bind = $mainMod, 5, workspace, 5
-      bind = $mainMod, 6, workspace, 6
-      bind = $mainMod, 7, workspace, 7
-      bind = $mainMod, 8, workspace, 8
-      bind = $mainMod, 9, workspace, 9
-      bind = $mainMod, 0, workspace, 10
-
-      # Move active window to a workspace with mainMod + SHIFT + [0-9]
-      bind = $mainMod SHIFT, 1, movetoworkspace, 1
-      bind = $mainMod SHIFT, 2, movetoworkspace, 2
-      bind = $mainMod SHIFT, 3, movetoworkspace, 3
-      bind = $mainMod SHIFT, 4, movetoworkspace, 4
-      bind = $mainMod SHIFT, 5, movetoworkspace, 5
-      bind = $mainMod SHIFT, 6, movetoworkspace, 6
-      bind = $mainMod SHIFT, 7, movetoworkspace, 7
-      bind = $mainMod SHIFT, 8, movetoworkspace, 8
-      bind = $mainMod SHIFT, 9, movetoworkspace, 9
-      bind = $mainMod SHIFT, 0, movetoworkspace, 10
-
-      # Scroll through existing workspaces with mainMod + scroll
-      bind = $mainMod, mouse_down, workspace, e+1
-      bind = $mainMod, mouse_up, workspace, e-1
-
-      # Move/resize windows with mainMod + LMB/RMB and dragging
-      bindm = $mainMod, mouse:272, movewindow
-      bindm = $mainMod, mouse:273, resizewindow
     '';
   };
 

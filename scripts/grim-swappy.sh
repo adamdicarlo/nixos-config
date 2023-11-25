@@ -20,5 +20,6 @@ if area=$(slurp -d -f '{"w":%W,"h":%H,"x":%X,"y":%Y}'); then
     stamp=$(date +%Y%m%d-%H%M%S)
     swappy -f $cropped --output-file $HOME/Sync/Screenshots/$stamp.png &!
 else
+    notify-send --transient -t 2000 "Canceled screenshot"
     imv-msg $imv_pid quit
 fi

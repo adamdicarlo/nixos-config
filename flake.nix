@@ -7,13 +7,15 @@
   nixConfig = {
     experimental-features = ["nix-command" "flakes"];
     extra-substituters = [
+      "https://cache.nixos.org"
       "https://fufexan.cachix.org"
-      "https://hyprland.cachix.org"
       "https://nix-community.cachix.org"
+      "https://nixpkgs-wayland.cachix.org"
     ];
     extra-trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
       "fufexan.cachix.org-1:LwCDjCJNJQf5XD2BV+yamQIMZfcKWR9ISIFy5curUsY="
-      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
@@ -22,6 +24,9 @@
   # https://nixos.org/manual/nix/unstable/command-ref/new-cli/nix3-flake.html#flake-inputs
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
+    nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -122,6 +127,7 @@
           {
             nixpkgs.overlays = [
               nur.overlay
+              inputs.nixpkgs-wayland.overlay
               (final: prev: {
                 # Is there a simpler way to do this?
                 devbox = devbox.outputs.defaultPackage.${system};

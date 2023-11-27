@@ -112,10 +112,14 @@ in {
 
     # Wayland, GUI stuff
     cliphist
-    grim
-    hyprpicker
+    drm_info
     fuzzel
+    grim
+    gst_all_1.gst-vaapi
+    hyprpicker
     imv
+    kooha
+    libappindicator-gtk3
     libnotify
     mako
     networkmanagerapplet
@@ -126,19 +130,22 @@ in {
     swaybg
     swayidle
     swaylock
-    swayosd
     swaynag-battery
     udiskie
-    watershot
     waybar
     wbg
+    wdisplays
     wev
     wf-recorder
     wl-clipboard
+    wl-gammarelay-rs
+    wlay
     wlogout
     wlsunset
+    wob
     wofi
     wofi-emoji
+    wshowkeys
     wtype
     xdragon
 
@@ -272,10 +279,10 @@ in {
   programs.swaylock = {
     enable = true;
     settings = {
-      bs-hl-color = "ee2e24FF";
-      caps-lock-bs-hl-color = "ee2e24FF";
-      caps-lock-key-hl-color = "ffd204FF";
-      color = "22D0D2FF";
+      bs-hl-color = "ee2e24ff";
+      caps-lock-bs-hl-color = "ee2e24ff";
+      caps-lock-key-hl-color = "ffd204ff";
+      color = "22d0d2ff";
       font = "Sans";
       ignore-empty-password = true;
       indicator-caps-lock = true;
@@ -289,19 +296,19 @@ in {
 
       key-hl-color = "009ddcFF";
 
-      line-caps-lock-color = "009ddcFF";
-      line-clear-color = "ffd204FF";
+      line-caps-lock-color = "009ddcff";
+      line-clear-color = "ffd204ff";
       line-color = "009ddc00";
-      line-ver-color = "d9d8d8FF";
-      line-wrong-color = "ee2e24FF";
+      line-ver-color = "d9d8d8ff";
+      line-wrong-color = "ee2e24ff";
 
-      ring-caps-lock-color = "231f20D9";
-      ring-clear-color = "231f20D9";
-      ring-color = "231f20D9";
-      ring-ver-color = "231f20D9";
-      ring-wrong-color = "231f20D9";
+      ring-caps-lock-color = "231f20d9";
+      ring-clear-color = "231f20d9";
+      ring-color = "231f20d9";
+      ring-ver-color = "231f20d9";
+      ring-wrong-color = "231f20d9";
 
-      separator-color = "231f20DD";
+      separator-color = "231f20dd";
       show-failed-attempts = true;
       show-keyboard-layout = true;
 
@@ -311,10 +318,6 @@ in {
       text-ver-color = "d9d8d800";
       text-wrong-color = "ee2e2400";
     };
-  };
-
-  services.swayosd = {
-    enable = true;
   };
 
   programs.waybar = {
@@ -365,7 +368,7 @@ in {
           };
         };
         "sway/mode" = {
-          "format" = "<span style=\"italic\">{}</span>";
+          tooltip = false;
         };
         "backlight" = {
           device = "acpi_video0";
@@ -386,11 +389,11 @@ in {
             "activated" = "";
             "deactivated" = " ";
           };
-          "tooltip" = true;
+          tooltip = true;
         };
         "tray" = {
           #"icon-size = 11;
-          "spacing" = 5;
+          spacing = 6;
         };
         "clock" = {
           "format" = "  {:%r     %b %e}";
@@ -403,7 +406,7 @@ in {
           "format" = "  {max_frequency}GHz <span color=\"darkgray\">| {usage}%</span>";
           "max-length" = 13;
           "min-length" = 13;
-          "on-click" = "${pkgs.kitty}/bin/kitty -e btop";
+          "on-click" = "${pkgs.sway}/bin/swaymsg exec \"${pkgs.kitty}/bin/kitty -e btop\"";
           "tooltip" = false;
         };
         "temperature#cpu" = {
@@ -418,15 +421,15 @@ in {
           "min-length" = 7;
         };
         "temperature#gpu" = {
-          "thermal-zone" = 1;
-          "interval" = "2";
+          thermal-zone = 1;
+          interval = "2";
           # "hwmon-path" = "/sys/class/hwmon/hwmon3/temp1_input";
-          "critical-threshold" = 74;
-          "format-critical" = "  {temperatureC}°C";
-          "format" = "{icon}  {temperatureC}°C";
-          "format-icons" = [""];
-          "max-length" = 7;
-          "min-length" = 7;
+          critical-threshold = 74;
+          format-critical = "  {temperatureC}°C";
+          format = "{icon}  {temperatureC}°C";
+          format-icons = [""];
+          max-length = 7;
+          min-length = 7;
         };
         network = {
           # "interface" = "wlan0", # (Optional) To force the use of this interface,
@@ -440,24 +443,24 @@ in {
           tooltip-format-ethernet = " {ifname}\nIP: {ipaddr}\n {bandwidthUpBits}  {bandwidthDownBits}";
         };
         privacy = {
-          "icon-spacing" = 4;
-          "icon-size" = 18;
-          "transition-duration" = 250;
-          "modules" = [
+          icon-spacing = 4;
+          icon-size = 18;
+          transition-duration = 350;
+          modules = [
             {
-              "type" = "screenshare";
-              "tooltip" = true;
-              "tooltip-icon-size" = 24;
+              type = "screenshare";
+              tooltip = true;
+              tooltip-icon-size = 24;
             }
             {
-              "type" = "audio-out";
-              "tooltip" = true;
-              "tooltip-icon-size" = 24;
+              type = "audio-out";
+              tooltip = true;
+              tooltip-icon-size = 24;
             }
             {
-              "type" = "audio-in";
-              "tooltip" = true;
-              "tooltip-icon-size" = 24;
+              type = "audio-in";
+              tooltip = true;
+              tooltip-icon-size = 24;
             }
           ];
         };
@@ -467,9 +470,9 @@ in {
           format-bluetooth = "{volume}% {icon} {format_source}";
           format-bluetooth-muted = " {icon} {format_source}";
           format-muted = " {format_source}";
-          #"format-source" = "{volume}% ";
           #"format-source-muted" = "";
-          format-source = "";
+          # format-source = "";
+          format-source = "{volume}% ";
           format-source-muted = "";
           format-icons = {
             "headphone" = "";
@@ -480,7 +483,7 @@ in {
             "car" = "";
             "default" = ["" "" ""];
           };
-          on-click = "${pkgs.pavucontrol}/bin/pavucontrol";
+          on-click = "${pkgs.sway}/bin/swaymsg exec \"${pkgs.pavucontrol}/bin/pavucontrol\"";
           on-click-right = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle";
         };
         battery = {
@@ -494,44 +497,6 @@ in {
           format-time = "{H}:{M}";
           tooltip = false;
           interval = 20;
-        };
-        "custom/weather" = {
-          exec = "curl 'https://wttr.in/?format=1'";
-          interval = 3600;
-        };
-        "custom/gpu" = {
-          "exec" = "$HOME/.config/waybar/custom_modules/custom-gpu.sh";
-          "return-type" = "json";
-          "format" = "  {}";
-          "interval" = 2;
-          "tooltip" = "{tooltip}";
-          "max-length" = 19;
-          "min-length" = 19;
-          "on-click" = "powerupp";
-        };
-        "custom/cpugovernor" = {
-          "format" = "{icon}";
-          "interval" = "30";
-          "return-type" = "json";
-          "exec" = "$HOME/.config/waybar/custom_modules/cpugovernor.sh";
-          "min-length" = 2;
-          "max-length" = 2;
-          "format-icons" = {
-            "perf" = "";
-            "sched" = "";
-          };
-        };
-        "custom/media" = {
-          "format" = "{icon} {}";
-          "return-type" = "json";
-          "max-length" = 40;
-          "format-icons" = {
-            "spotify" = "";
-            "default" = "🎜";
-          };
-          "escape" = true;
-          "exec" = "$HOME/.config/waybar/mediaplayer.py 2> /dev/null";
-          # "exec" = "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" # Filter player based on name
         };
       };
     };
@@ -845,6 +810,7 @@ in {
 
   wayland.windowManager.sway = {
     enable = true;
+    package = null;
     systemd.enable = true;
     config = {
       bars = [];
@@ -864,7 +830,7 @@ in {
         "type:keyboard" = {
           xkb_layout = "us";
           xkb_variant = "colemak";
-          xkb_options = "altwin:swap_lalt_lwin";
+          xkb_options = "altwin:swap_lalt_lwin,ctrl:nocaps,shift:both_capslock";
           repeat_delay = "200";
           repeat_rate = "50";
         };
@@ -925,14 +891,6 @@ in {
     extraConfig = ''
       popup_during_fullscreen smart
     '';
-    extraOptions = [
-      "--verbose"
-      "--debug"
-      "--unsupported-gpu"
-    ];
-    extraSessionCommands = ''
-      export WLR_NO_HARDWARE_CURSORS=1
-    '';
     #  export BROWSER=google-chrome-stable
     #  export CLUTTER_BACKEND=wayland
     #  export GBM_BACKEND=nvidia-drm
@@ -965,7 +923,6 @@ in {
         };
       };
     };
-    wrapperFeatures.gtk = true;
   };
 
   wayland.windowManager.hyprland = {

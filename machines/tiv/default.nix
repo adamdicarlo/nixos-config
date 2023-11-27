@@ -6,7 +6,23 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  extraEnv = {
+    # GBM_BACKEND = "nvidia-drm";
+    GDK_BACKEND = "wayland";
+    MOZ_ENABLE_WAYLAND = "1";
+    QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+    QT_QPA_PLATFORM = "wayland";
+    QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+    WLR_DRM_DEVICES = "$(if test -d /sys/class/drm/card1/card1-eDP-1; then echo /dev/dri/card1:/dev/dri/card0; else echo /dev/dri/card0:/dev/dri/card1; fi)";
+    WLR_DRM_NO_ATOMIC = "1";
+    # WLR_NO_HARDWARE_CURSORS = "1";
+    XDG_CURRENT_DESKTOP = "sway";
+    # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    # __GL_GSYNC_ALLOWED = "0";
+    # __GL_VRR_ALLOWED = "0";
+  };
+in {
   nix = {
     settings = {
       experimental-features = ["nix-command" "flakes"];
@@ -52,7 +68,6 @@
   # boot.initrd.kernelModules = ["nouveau"];
   # services.xserver.videoDrivers = ["nouveau"];
 
-  services.xserver.videoDrivers = ["nvidia"];
   # boot.initrd.kernelModules = ["nvidia"];
   # boot.extraModulePackages = [config.boot.kernelPackages.nvidia_x11];
 
@@ -66,10 +81,10 @@
 
     # Whether to use Nvidia's "open source" driver. Not to be confused with Nouveau
     # open = false;
-    nvidiaSettings = true;
+    nvidiaSettings = false;
 
     prime = {
-      sync.enable = true;
+      reverseSync.enable = true;
       intelBusId = "PCI:0:2:0";
       nvidiaBusId = "PCI:1:0:0";
     };
@@ -148,7 +163,13 @@
   };
 
   services.xserver = {
+    enable = true;
+    displayManager.defaultSession = "sway";
+    displayManager.sddm.enable = true;
+    displayManager.sddm.wayland.enable = true;
     dpi = 96;
+    libinput.enable = true;
+    videoDrivers = ["nvidia"];
   };
 
   # Keyboard
@@ -194,10 +215,6 @@
     wireplumber.enable = true;
   };
 
-  # services.xserver.enable = true;
-  # services.xserver.displayManager.sddm.enable = true;
-  # services.xserver.displayManager.sddm.wayland.enable = true;
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.adam = {
     isNormalUser = true;
@@ -217,6 +234,10 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+
+  environment.variables = extraEnv;
+  environment.sessionVariables = extraEnv;
+  environment.pathsToLink = ["/share/zsh"];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -272,6 +293,12 @@
     zip
     zstd
 
+    glib
+    xdg-utils
+    glxinfo
+    vulkan-tools
+    glmark2
+
     catppuccin-sddm-corners
     where-is-my-sddm-theme
     sddm-chili-theme
@@ -282,8 +309,6 @@
     libsForQt5.qt5.qtwayland
     qt6.qtwayland
   ];
-
-  environment.pathsToLink = ["/share/zsh"];
 
   # Some programs need SUID wrappers, can be configured further or are
   #
@@ -296,6 +321,14 @@
   };
 
   programs.dconf.enable = true;
+
+  programs.sway = {
+    enable = true;
+    extraOptions = [
+      "--unsupported-gpu"
+    ];
+    wrapperFeatures.gtk = true;
+  };
 
   # started in user sessions.
   # programs.mtr.enable = true;

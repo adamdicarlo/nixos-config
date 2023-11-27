@@ -18,10 +18,10 @@ if area=$(slurp -d -f '{"w":%W,"h":%H,"x":%X,"y":%Y}'); then
 	fi
 	scale=$(echo $info | jq '.[0].scale')
 	output_name=$(echo $info | jq -r '.[0].name')
-	x=$(echo $area | jq .x*$scale+$output_x)
-	y=$(echo $area | jq .y*$scale+$output_y)
-	w=$(echo $area | jq .w*$scale)
-	h=$(echo $area | jq .h*$scale)
+	x=$(echo $area | jq ".x * $scale + $output_x")
+	y=$(echo $area | jq ".y * $scale + $output_y")
+	w=$(echo $area | jq ".w * $scale")
+	h=$(echo $area | jq ".h * $scale")
 	area="${x},${y} ${w}x${h}"
 	notify-send --transient -t 500 "Recording $output_name" "2"
 	sleep 1
@@ -32,8 +32,8 @@ if area=$(slurp -d -f '{"w":%W,"h":%H,"x":%X,"y":%Y}'); then
 	stamp=$(date +%Y%m%d-%H%M%S)
 	target="$HOME/Sync/GIFs/$stamp-screen.gif"
 	exec sh -c "wf-recorder -o \"$output_name\" --codec gif -g \"$area\" -r 12 -f \"$target\"; \
-        notify-send -t 4000 'Saved screen recording' \"$target - putting in clipboard\"; \
-        wl-copy \"$target\""
+    notify-send --transient -t 4000 'Saved screen recording' \"$target - $(stat --printf=%s $target | jq '. / 1024') KiB - putting in clipboard\"; \
+    wl-copy \"$target\""
 else
 	notify-send --transient -t 2000 "Canceled screen recording"
 fi

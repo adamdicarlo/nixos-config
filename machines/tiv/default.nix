@@ -232,6 +232,7 @@ in {
 
     # system tools
     ethtool
+    gtop
     lm_sensors # for `sensors` command
     mtr # A network diagnostic tool
     neovim
@@ -370,9 +371,9 @@ in {
       CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
       CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
       START_CHARGE_THRESH_BAT0 = 75;
-      STOP_CHARGE_THRESH_BAT0 = 80;
+      STOP_CHARGE_THRESH_BAT0 = 85;
 
-      CPU_MAX_PERF_ON_AC = 80;
+      CPU_MAX_PERF_ON_AC = 85;
       CPU_MAX_PERF_ON_BAT = 60;
       CPU_HWP_DYN_BOOST_ON_AC = 1;
       CPU_HWP_DYN_BOOST_ON_BAT = 0;

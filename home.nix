@@ -896,6 +896,9 @@ in {
       };
     };
     extraConfig = ''
+      set $laptop eDP-1
+      bindswitch --reload --locked lid:on output $laptop disable
+      bindswitch --reload --locked lid:off output $laptop enable
       popup_during_fullscreen smart
     '';
     #  export BROWSER=google-chrome-stable

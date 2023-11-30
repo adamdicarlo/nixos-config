@@ -1,0 +1,3 @@
+[submodule "devbox-nix-flake"]
+	path = flakes/devbox
+	url = git@github.com:adamdicarlo/devbox-nix-flake.git

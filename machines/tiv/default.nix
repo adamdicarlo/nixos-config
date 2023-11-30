@@ -301,56 +301,66 @@ in {
   # };
 
   # List services that you want to enable:
-  #
   services.actkbd = let
-    # sound.mediaKeys.enable uses amixer, which is fine, but it execs it as
-    # root, without XDG_RUNTIME_DIR, so it cannot connect to ALSA.
+    # I don't use sound.mediaKeys.enable, since it execs as root (without
+    # XDG_RUNTIME_DIR), and thus cannot connect to ALSA.
     volumeStep = "2.5%";
     wpctl = "XDG_RUNTIME_DIR=/run/user/${toString config.users.users.adam.uid} ${pkgs.wireplumber}/bin/wpctl";
+    brillo = "${pkgs.brillo}/bin/brillo";
+
+    XF86MonBrightnessUp = 232;
+    XF86MonBrightnessDown = 233;
+    XF86AudioMute = 113;
+    XF86AudioMicMute = 190;
+    XF86AudioLowerVolume = 114;
+    XF86AudioRaiseVolume = 115;
+
+    noRepeat = ["key"];
+    repeat = ["key" "rep"];
+
+    onKey = keyOrKeys: events: command: let
+      keys =
+        if builtins.isList keyOrKeys
+        then keyOrKeys
+        else [keyOrKeys];
+    in [
+      {
+        inherit keys events command;
+        attributes = ["exec" "grab"];
+      }
+      {
+        inherit keys;
+        events = ["rel"];
+        attributes = ["noexec" "ungrab"];
+      }
+    ];
   in {
-    enable = false;
-    bindings = [
-      # XF86MonBrightnessUp
-      {
-        keys = [232];
-        events = ["key" "rep"];
-        command = "${pkgs.brillo}/bin/brillo -U 5";
-      }
-
-      # XF86MonBrightnessDown
-      {
-        keys = [233];
-        events = ["key" "rep"];
-        command = "${pkgs.brillo}/bin/brillo -A 5";
-      }
-
-      # "Mute" media key
-      {
-        keys = [113];
-        events = ["key"];
-        command = "${wpctl} set-mute @DEFAULT_SINK@ toggle";
-      }
-
-      # "Lower Volume" media key (XF86AudioLowerVolume)
-      {
-        keys = [114];
-        events = ["key" "rep"];
-        command = "${wpctl} set-volume @DEFAULT_SINK@ ${volumeStep}-";
-      }
-
-      # "Raise Volume" media key (XF86AudioRaiseVolume)
-      {
-        keys = [115];
-        events = ["key" "rep"];
-        command = "${wpctl} set-volume @DEFAULT_SINK@ ${volumeStep}+";
-      }
-
-      # "Mic Mute" media key
-      {
-        keys = [190];
-        events = ["key"];
-        command = "${wpctl} set-mute @DEFAULT_SOURCE@ toggle";
-      }
+    enable = true;
+    bindings = builtins.concatLists [
+      (
+        onKey XF86MonBrightnessUp repeat
+        "${brillo} -A 5"
+      )
+      (
+        onKey XF86MonBrightnessDown repeat
+        "${brillo}/bin/brillo -U 5"
+      )
+      (
+        onKey XF86AudioMute noRepeat
+        "${wpctl} set-mute @DEFAULT_SINK@ toggle"
+      )
+      (
+        onKey XF86AudioMicMute noRepeat
+        "${wpctl} set-mute @DEFAULT_SOURCE@ toggle"
+      )
+      (
+        onKey XF86AudioLowerVolume repeat
+        "${wpctl} set-volume @DEFAULT_SINK@ ${volumeStep}-"
+      )
+      (
+        onKey XF86AudioRaiseVolume repeat
+        "${wpctl} set-volume @DEFAULT_SINK@ ${volumeStep}+"
+      )
     ];
   };
 

@@ -8,16 +8,14 @@
   ...
 }: let
   extraEnv = {
-    # GBM_BACKEND = "nvidia-drm";
     GDK_BACKEND = "wayland";
     MOZ_ENABLE_WAYLAND = "1";
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
     QT_QPA_PLATFORM = "wayland";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-    WLR_DRM_DEVICES = "$(if test -d /sys/class/drm/card1/card1-eDP-1; then echo /dev/dri/card1:/dev/dri/card0; else echo /dev/dri/card0:/dev/dri/card1; fi)";
     WLR_DRM_NO_ATOMIC = "1";
-    # WLR_NO_HARDWARE_CURSORS = "1";
     XDG_CURRENT_DESKTOP = "sway";
+    # GBM_BACKEND = "nvidia-drm";
     # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     # __GL_GSYNC_ALLOWED = "0";
     # __GL_VRR_ALLOWED = "0";
@@ -68,51 +66,8 @@ in {
   # boot.initrd.kernelModules = ["nouveau"];
   # services.xserver.videoDrivers = ["nouveau"];
 
-  # boot.initrd.kernelModules = ["nvidia"];
-  # boot.extraModulePackages = [config.boot.kernelPackages.nvidia_x11];
-
-  # https://nixos.wiki/wiki/Nvidia#Installing_Nvidia_Drivers_on_NixOS
-  hardware.nvidia = {
-    modesetting.enable = true;
-
-    # This fixes suspend issues with Hyprland.
-    powerManagement.enable = true;
-    powerManagement.finegrained = false;
-
-    # Whether to use Nvidia's "open source" driver. Not to be confused with Nouveau
-    # open = false;
-    nvidiaSettings = false;
-
-    prime = {
-      reverseSync.enable = true;
-      intelBusId = "PCI:0:2:0";
-      nvidiaBusId = "PCI:1:0:0";
-    };
-    forceFullCompositionPipeline = true;
-  };
   hardware.system76.enableAll = true;
   services.system76-scheduler.enable = true;
-
-  specialisation = {
-    # on the go
-    OTG.configuration = {
-      boot.initrd.kernelModules = ["nvidia"];
-      boot.extraModulePackages = [config.boot.kernelPackages.nvidia_x11];
-      system.nixos.tags = ["OTG"];
-      services.xserver.videoDrivers = ["nvidia"];
-      hardware.nvidia = {
-        prime = {
-          intelBusId = "PCI:0:2:0";
-          nvidiaBusId = "PCI:1:0:0";
-        };
-        modesetting.enable = true;
-        powerManagement.finegrained = lib.mkForce true;
-        prime.offload.enable = lib.mkForce true;
-        prime.offload.enableOffloadCmd = lib.mkForce true;
-        prime.sync.enable = lib.mkForce false;
-      };
-    };
-  };
 
   # Bootloader.
   boot.loader.systemd-boot = {
@@ -120,12 +75,13 @@ in {
     configurationLimit = 4;
   };
   boot.kernelParams = [
-    "actkbd.softrepeat=1"
+    "blacklist=nvidia"
   ];
   boot.loader.efi.canTouchEfiVariables = true;
   boot.initrd.luks.devices."luks-89774725-33d7-4569-98ca-969947979248".device = "/dev/disk/by-uuid/89774725-33d7-4569-98ca-969947979248";
 
-  #  boot.blacklistedKernelModules = [
+  boot.blacklistedKernelModules = ["nvidia"];
+
   #    "amd76x_edac" "asus_acpi" "ath_pci" "aty128fb" "atyfb" "bcm43xx" "cirrusfb" "cyber2000fb" "cyblafb" "de4x5" "dv1394" "eepro100" "eth1394" "evbug" "garmin_gps" "gx1fb" "hgafb" "i2c_nvidia_gpu" "i810fb" "intelfb" "kyrofb" "lxfb" "matroxfb_base" "microcode" "neofb" "nvidiafb" "ohci1394" "pcspkr" "pm2fb" "prism54" "psmouse" "radeonfb" "raw1394" "rivafb" "s1d13xxxfb" "savagefb" "sbp2" "sisfb" "snd_intel8x0m" "snd_pcsp" "sstfb" "tdfxfb" "tridentfb" "udlfb" "usbkbd" "usbmouse" "vfb" "viafb" "video1394" "vt8623fb"
   #  ];
 
@@ -169,7 +125,6 @@ in {
     displayManager.sddm.wayland.enable = true;
     dpi = 96;
     libinput.enable = true;
-    videoDrivers = ["nvidia"];
   };
 
   # Keyboard

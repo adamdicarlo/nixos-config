@@ -85,9 +85,11 @@ in {
   #    "amd76x_edac" "asus_acpi" "ath_pci" "aty128fb" "atyfb" "bcm43xx" "cirrusfb" "cyber2000fb" "cyblafb" "de4x5" "dv1394" "eepro100" "eth1394" "evbug" "garmin_gps" "gx1fb" "hgafb" "i2c_nvidia_gpu" "i810fb" "intelfb" "kyrofb" "lxfb" "matroxfb_base" "microcode" "neofb" "nvidiafb" "ohci1394" "pcspkr" "pm2fb" "prism54" "psmouse" "radeonfb" "raw1394" "rivafb" "s1d13xxxfb" "savagefb" "sbp2" "sisfb" "snd_intel8x0m" "snd_pcsp" "sstfb" "tdfxfb" "tridentfb" "udlfb" "usbkbd" "usbmouse" "vfb" "viafb" "video1394" "vt8623fb"
   #  ];
 
-  virtualisation.docker = {
-    enable = true;
+  virtualisation = {
+    docker.enable = true;
+    libvirtd.enable = true;
   };
+  programs.virt-manager.enable = true;
 
   networking.hostName = "tiv";
 
@@ -174,7 +176,7 @@ in {
   users.users.adam = {
     isNormalUser = true;
     description = "Adam DiCarlo";
-    extraGroups = ["docker" "networkmanager" "video" "wheel"];
+    extraGroups = ["docker" "libvirtd" "networkmanager" "video" "wheel"];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHw1DBIi3+PCiDnWkPohhHFVKqnAcKzUUezulxxywGHa adam@bikko.org"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEbs7eDyOmFy3rZV4zCI6Pz+5srASislwVs36/XcM4sq adam@bikko.org"
@@ -263,6 +265,8 @@ in {
     pavucontrol
     libsForQt5.qt5.qtwayland
     qt6.qtwayland
+
+    qemu_kvm
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

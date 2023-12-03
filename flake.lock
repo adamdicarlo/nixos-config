@@ -32,18 +32,17 @@
         ]
       },
       "locked": {
-        "dir": "flakes/devbox",
-        "dirtyRev": "de951308a145c631c7c977630d22265e527f5f18-dirty",
-        "dirtyShortRev": "de95130-dirty",
-        "lastModified": 1701108338,
-        "narHash": "sha256-z69miPvQNyg/okthK/ZWDpJkvsRlYVdz6MUSXqVZuPU=",
-        "type": "git",
-        "url": "file:.?dir=flakes/devbox"
+        "lastModified": 1701390743,
+        "narHash": "sha256-MojHlI4KKSzyhP9z8E7QituaYKDR/Wqkw4WddVOdyJc=",
+        "owner": "adamdicarlo",
+        "repo": "devbox-nix-flake",
+        "rev": "f2a6ffe1949212627d6b4186476a64d89714aa05",
+        "type": "github"
       },
       "original": {
-        "dir": "flakes/devbox",
-        "type": "git",
-        "url": "file:.?dir=flakes/devbox"
+        "owner": "adamdicarlo",
+        "repo": "devbox-nix-flake",
+        "type": "github"
       }
     },
     "flake-compat": {

@@ -48,7 +48,7 @@
     nur.url = "github:nix-community/NUR";
 
     # https://github.com/NixOS/nix/issues/3978#issuecomment-1661075896
-    devbox.url = "git+file:.?dir=flakes/devbox";
+    devbox.url = "github:adamdicarlo/devbox-nix-flake";
     devbox.inputs.nixpkgs.follows = "nixpkgs";
   };
 

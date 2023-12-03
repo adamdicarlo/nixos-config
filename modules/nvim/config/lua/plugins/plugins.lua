@@ -5,6 +5,18 @@ local custom_attach = function(client)
 end
 
 return {
+
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters = {
+        shfmt = {
+          prepend_args = { "-i", "2" },
+        },
+      },
+    },
+  },
+
   { "folke/flash.nvim", enabled = false },
   {
     "echasnovski/mini.surround",

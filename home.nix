@@ -156,24 +156,21 @@ in {
     wtype
     xdragon
 
-    # lsp: https://github.com/oxalica/nil
-    nil
-    lua-language-server
-    stylua
-
     # productivity
     font-awesome
     glow # markdown previewer in terminal
     nerdfonts
 
     # dev
+    devbox # via ./flakes/devbox
     elmPackages.elm
     elmPackages.elm-format
     elmPackages.elm-language-server
     elmPackages.elm-review
+    gh
     lua-language-server
+    nil
     nodePackages.typescript-language-server
-    nodePackages.vscode-json-languageserver
     nodejs_18
     shellcheck
     shfmt
@@ -182,11 +179,10 @@ in {
     terraform-ls
     tflint
     tflint-plugins.tflint-ruleset-aws
+    vscode-langservers-extracted
 
     _1password-gui
-    devbox # via ./flakes/devbox
     dolphin
-    gh
     google-chrome
     meld
     slack

@@ -147,7 +147,7 @@ in {
         DEVICE:
           NAME: "AT Translated Set 2 (k|K)eyboard.*"
           EVENTS:
-            EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
+            EV_KEY: [[KEY_CAPSLOCK, KEY_ESC]]
     '';
   };
 

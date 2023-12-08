@@ -939,59 +939,6 @@ in {
     };
   };
 
-  wayland.windowManager.hyprland = {
-    enable = false;
-    extraConfig = ''
-      exec-once = ~/.config/hypr/on-lid.sh
-      exec-once = swaybg -m fill -i ~/Pictures/wallpaper/pexels-andy-vu-3484061.jpg
-      exec-once = 1password --silent
-
-      env = XCURSOR_SIZE,24
-      env = XDG_CURRENT_DESKTOP,Hyprland
-      env = XDG_SESSION_DESKTOP,Hyprland
-      env = XDG_SESSION_TYPE,wayland
-      env = GDK_BACKEND,wayland,x11
-      env = QT_QPA_PLATFORM,wayland;xcb
-      env = SDL_VIDEODRIVER,wayland
-      env = GBM_BACKEND,nvidia-drm
-      env = LIBVA_DRIVER_NAME,nvidia
-      env = __GLX_VENDOR_LIBRARY_NAME,nvidia
-      env = __GL_VRR_ALLOWED,1
-      env = WLR_NO_HARDWARE_CURSORS,1
-      env = NIXOS_OZONE_WL,1
-      env = CLUTTER_BACKEND,wayland
-      env = WLR_RENDERER,vulkan
-      env = TERMINAL,kitty
-      env = BROWSER,google-chrome-stable
-
-      # Clamshell mode configuration
-
-      ## Lid is opened
-      bindl=,switch:off:Lid Switch,exec,~/.config/hypr/on-lid.sh
-
-      ## Lid is closed
-      bindl=,switch:on:Lid Switch,exec,~/.config/hypr/on-lid.sh
-
-      bindle=,XF86RFKill,exec,~/.config/hypr/on-lid.sh
-
-      # For use with Kvantam
-      # env = QT_QPA_PLATFORMTHEME=qt5ct
-
-      bind = $mainMod      , S     , exec, ~/bin/grim-swappy.sh
-      bind = $mainMod SHIFT, S     , exec, ~/bin/wf-record-area.sh
-      bind = $mainMod      , F     , exec, dolphin
-      bind = $mainMod      , E     , exec, pkill wofi || wofi-emoji
-      bind = $mainMod SHIFT, E     , exec, wlogout --protocol layer-shell
-      bind = $mainMod SHIFT, SPACE , togglefloating,
-      bind = $mainMod      , SPACE , exec, pkill wofi || wofi --show drun
-      bind = $mainMod      , ESCAPE, exec, swaylock # Lock the screen
-      bind = $mainMod      , P     , pseudo, # dwindle
-      bind = $mainMod      , G     , togglesplit, # dwindle
-      bind = $mainMod SHIFT, F     , fullscreen,
-      bind = $mainMod      , Y     , exec, cliphist list | wofi -dmenu | cliphist decode | wl-copy
-    '';
-  };
-
   programs.ssh = {
     enable = true;
     matchBlocks = {

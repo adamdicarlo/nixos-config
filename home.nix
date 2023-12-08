@@ -547,6 +547,7 @@ in {
         contents = {
           user.email = "adam@adaptiv.systems";
           user.signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO1e83u2v7t+ePxp3RXARC3tnXiPcC95OLMDi2sdTDAc";
+          commit.gpgsign = true;
           gpg = {
             format = "ssh";
             ssh = {

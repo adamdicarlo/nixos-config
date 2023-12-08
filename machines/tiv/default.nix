@@ -287,6 +287,7 @@ in {
     extraOptions = [
       "--unsupported-gpu"
     ];
+    # Render via the iGPU (intel device) only! (Is --unsupported-gpu actually necessary?)
     extraSessionCommands = ''
       WLR_DRM_DEVICES="$(if test -d /sys/class/drm/card1/card1-eDP-1; then echo /dev/dri/card1; else echo /dev/dri/card0; fi)"
       export WLR_DRM_DEVICES

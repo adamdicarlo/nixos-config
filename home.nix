@@ -815,7 +815,11 @@ in {
     sshKeys = ["689797597435372AAE566787A29AFFB7B862D0B6"];
   };
 
-  wayland.windowManager.sway = {
+  wayland.windowManager.sway = let
+    # Mod1: Alt
+    # Mod4: Super
+    modifier = "Mod4";
+  in {
     enable = true;
     package = null;
     systemd.enable = true;
@@ -847,6 +851,7 @@ in {
 
         "type:touchpad" = {
           tap = "disabled";
+          tap_button_map = "lrm";
           drag = "enabled";
           drag_lock = "disabled";
           dwt = "enabled";
@@ -857,26 +862,24 @@ in {
       };
 
       # KEYS
-      modifier = "Mod4";
+      inherit modifier;
       left = "j";
       right = "l";
       up = "h";
       down = "k";
-      keybindings = let
-        modifier = config.wayland.windowManager.sway.config.modifier;
-      in
-        pkgs.lib.mkOptionDefault {
-          "${modifier}+Shift+e" = "exec wlogout --protocol layer-shell";
-          "${modifier}+s" = "exec ~/bin/grim-swappy.sh";
-          "${modifier}+Shift+s" = "exec ~/bin/wf-record-area.sh";
-          "${modifier}+Shift+f" = "exec dolphin";
-          "${modifier}+y" = "exec cliphist list | wofi -dmenu | cliphist decode | wl-copy";
-        };
+      keybindings = pkgs.lib.mkOptionDefault {
+        "${modifier}+Shift+e" = "exec wlogout --protocol layer-shell";
+        "${modifier}+s" = "exec ~/bin/grim-swappy.sh";
+        "${modifier}+Shift+s" = "exec ~/bin/wf-record-area.sh";
+        "${modifier}+Shift+f" = "exec dolphin";
+        "${modifier}+y" = "exec cliphist list | wofi -dmenu | cliphist decode | wl-copy";
+        "${modifier}+m" = "exec pkill wofi-emoji || wofi-emoji";
+      };
 
       startup = [
-        #  {command = "1password";}
-        #  {command = "slack";}
-        #  {command = "firefox";}
+        {command = "1password --silent";}
+        # {command = "slack";}
+        # {command = "firefox";}
       ];
 
       terminal = "${pkgs.kitty}/bin/kitty";
@@ -900,6 +903,10 @@ in {
       bindswitch --reload --locked lid:on output $laptop disable
       bindswitch --reload --locked lid:off output $laptop enable
       popup_during_fullscreen smart
+
+      # XF86Display key on 'tiv' is Alt_L+; (well, Super_L+p before Colemak and swap_lalt_lwin)
+      bindsym --no-repeat Mod1+semicolon exec wdisplays
+      bindsym --no-repeat --locked Shift+Mod1+semicolon output * enable; output * dpms on
     '';
     #  export BROWSER=google-chrome-stable
     #  export CLUTTER_BACKEND=wayland

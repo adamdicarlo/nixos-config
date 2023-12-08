@@ -3,13 +3,16 @@
   pkgs,
   ...
 }: let
+  ezaFlags = "--color-scale --group-directories-first --icons";
   shellAbbrs = {
-    ls = "eza";
-    ll = "eza -l";
-    la = "eza -la";
-    lah = "eza -lah";
+    ls = "eza ${ezaFlags}";
+    ll = "eza ${ezaFlags} -l --git";
+    la = "eza ${ezaFlags} -la --git";
+    lah = "eza ${ezaFlags} -lah --git";
+    lsdu = "eza ${ezaFlags} -lah --git --total-size";
 
     gcom = "git checkout main";
+    gum = "git fetch origin main:main";
 
     # I really hope I never need to use ghostscript.
     gs = "git status";
@@ -679,7 +682,7 @@ in {
     enable = true;
   };
 
-  programs.carapace.enable = true;
+  # programs.carapace.enable = true;
 
   programs.zsh = {
     enable = true;
@@ -732,7 +735,7 @@ in {
   };
 
   programs.fish = {
-    enable = false;
+    enable = true;
 
     shellInit = ''
       set -g fish_greeting
@@ -750,23 +753,14 @@ in {
         name = "done";
         src = pkgs.fishPlugins.done.src;
       }
-
-      # https://github.com/jhillyerd/plugin-git/issues/102
-      #
-      # Use fork for now. Once the issue is solved and nixpkgs is updated,
-      # we can use:
-      #
-      # {
-      #   name = "plugin-git";
-      #   src = pkgs.fishPlugins.plugin-git.src;
-      # }
       {
-        name = "plugin-git__hexclover-fork";
+        name = "plugin-git";
         src = pkgs.fetchFromGitHub {
-          owner = "hexclover";
+          owner = "jhillyerd";
           repo = "plugin-git";
-          rev = "265dc22cc53347135eba23d3128f34d9d6602a15";
-          sha256 = "sha256-RzyRekfji53P/fGaN5Yme/Y3Npd3JFvI7GIykTSwucU=";
+          # https://github.com/jhillyerd/plugin-git/issues/102
+          rev = "c2b38f53f0b04bc67f9a0fa3d583bafb3f558718";
+          sha256 = "sha256-efKPbsXxjHm1wVWPJCV8teG4DgZN5dshEzX8PWuhKo4=";
         };
       }
     ];

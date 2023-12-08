@@ -295,75 +295,33 @@ in {
     wrapperFeatures.gtk = true;
   };
 
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
   # List services that you want to enable:
-  services.actkbd = let
-    # I don't use sound.mediaKeys.enable, since it execs as root (without
+  services.actkbd = {
+    enable = false;
+    # Don't use sound.mediaKeys.enable, since it execs as root (without
     # XDG_RUNTIME_DIR), and thus cannot connect to ALSA.
-    volumeStep = "2.5%";
-    wpctl = "XDG_RUNTIME_DIR=/run/user/${toString config.users.users.adam.uid} ${pkgs.wireplumber}/bin/wpctl";
-    brillo = "${pkgs.brillo}/bin/brillo";
-
-    XF86MonBrightnessUp = 232;
-    XF86MonBrightnessDown = 233;
-    XF86AudioMute = 113;
-    XF86AudioMicMute = 190;
-    XF86AudioLowerVolume = 114;
-    XF86AudioRaiseVolume = 115;
-
-    noRepeat = ["key"];
-    repeat = ["key" "rep"];
-
-    onKey = keyOrKeys: events: command: let
-      keys =
-        if builtins.isList keyOrKeys
-        then keyOrKeys
-        else [keyOrKeys];
-    in [
-      {
-        inherit keys events command;
-        attributes = ["exec" "grab"];
-      }
-      {
-        inherit keys;
-        events = ["rel"];
-        attributes = ["noexec" "ungrab"];
-      }
-    ];
-  in {
-    enable = true;
-    bindings = builtins.concatLists [
-      (
-        onKey XF86MonBrightnessUp repeat
-        "${brillo} -A 5"
-      )
-      (
-        onKey XF86MonBrightnessDown repeat
-        "${brillo}/bin/brillo -U 5"
-      )
-      (
-        onKey XF86AudioMute noRepeat
-        "${wpctl} set-mute @DEFAULT_SINK@ toggle"
-      )
-      (
-        onKey XF86AudioMicMute noRepeat
-        "${wpctl} set-mute @DEFAULT_SOURCE@ toggle"
-      )
-      (
-        onKey XF86AudioLowerVolume repeat
-        "${wpctl} set-volume @DEFAULT_SINK@ ${volumeStep}-"
-      )
-      (
-        onKey XF86AudioRaiseVolume repeat
-        "${wpctl} set-volume @DEFAULT_SINK@ ${volumeStep}+"
-      )
-    ];
+    # guiEnv = "XDG_RUNTIME_DIR=/run/user/${toString config.users.users.adam.uid}";
+    # wpctl = "${guiEnv} ${pkgs.wireplumber}/bin/wpctl";
+    # volumeStep = "2.5%";
+    # brillo = "${pkgs.brillo}/bin/brillo";
+    # Shift_L = 42;
+    # XF86MonBrightnessUp = 232;
+    # XF86MonBrightnessDown = 233;
+    # XF86AudioMute = 113;
+    # XF86AudioMicMute = 190;
+    # XF86AudioLowerVolume = 114;
+    # XF86AudioRaiseVolume = 115;
+    # bindings = builtins.concatLists [
+    #   (onKey XF86MonBrightnessUp noRepeat "${brillo} -A 5")
+    #   (onKey XF86MonBrightnessDown noRepeat "${brillo} -U 5")
+    #   (onKey XF86AudioMute noRepeat "${wpctl} set-mute @DEFAULT_SINK@ toggle")
+    #   (onKey XF86AudioMicMute noRepeat "${wpctl} set-mute @DEFAULT_SOURCE@ toggle")
+    #   (onKey XF86AudioLowerVolume noRepeat "${wpctl} set-volume @DEFAULT_SINK@ ${volumeStep}-")
+    #   (onKey XF86AudioRaiseVolume noRepeat "${wpctl} set-volume @DEFAULT_SINK@ ${volumeStep}+")
+    #   (onKey [Shift_L XF86AudioMute] noRepeat "${wpctl} set-mute @DEFAULT_SOURCE@ toggle")
+    #   (onKey [Shift_L XF86AudioLowerVolume] noRepeat "${wpctl} set-volume @DEFAULT_SOURCE@ ${volumeStep}-")
+    #   (onKey [Shift_L XF86AudioRaiseVolume] noRepeat "${wpctl} set-volume @DEFAULT_SOURCE@ ${volumeStep}+")
+    # ];
   };
 
   services.tlp = {

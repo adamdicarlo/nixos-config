@@ -3,13 +3,14 @@
   pkgs,
   ...
 }: let
-  ezaFlags = "--color-scale --group-directories-first --icons";
+  ezaFlags = "--group-directories-first";
+  ezaLong = "${ezaFlags} --color-scale --git --icons -l";
   shellAbbrs = {
     ls = "eza ${ezaFlags}";
-    ll = "eza ${ezaFlags} -l --git";
-    la = "eza ${ezaFlags} -la --git";
-    lah = "eza ${ezaFlags} -lah --git";
-    lsdu = "eza ${ezaFlags} -lah --git --total-size";
+    ll = "eza ${ezaLong}";
+    la = "eza ${ezaLong} -a";
+    lah = "eza ${ezaLong} -ah";
+    lsdu = "eza ${ezaLong} -ah --total-size";
 
     gcom = "git checkout main";
     gum = "git fetch origin main:main";

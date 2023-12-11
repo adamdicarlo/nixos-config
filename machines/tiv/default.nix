@@ -21,15 +21,7 @@
     # __GL_VRR_ALLOWED = "0";
   };
 in {
-  nix = {
-    settings = {
-      experimental-features = ["nix-command" "flakes"];
-      trusted-users = ["adam"];
-    };
-    package = pkgs.nixFlakes;
-  };
-
-  imports = [./hardware.nix];
+  imports = [./hardware.nix ../common.nix];
 
   # Allow brightness control from users in the video group
   hardware.brillo.enable = true;
@@ -81,9 +73,7 @@ in {
   boot.initrd.luks.devices."luks-89774725-33d7-4569-98ca-969947979248".device = "/dev/disk/by-uuid/89774725-33d7-4569-98ca-969947979248";
 
   boot.blacklistedKernelModules = ["nvidia"];
-
-  #    "amd76x_edac" "asus_acpi" "ath_pci" "aty128fb" "atyfb" "bcm43xx" "cirrusfb" "cyber2000fb" "cyblafb" "de4x5" "dv1394" "eepro100" "eth1394" "evbug" "garmin_gps" "gx1fb" "hgafb" "i2c_nvidia_gpu" "i810fb" "intelfb" "kyrofb" "lxfb" "matroxfb_base" "microcode" "neofb" "nvidiafb" "ohci1394" "pcspkr" "pm2fb" "prism54" "psmouse" "radeonfb" "raw1394" "rivafb" "s1d13xxxfb" "savagefb" "sbp2" "sisfb" "snd_intel8x0m" "snd_pcsp" "sstfb" "tdfxfb" "tridentfb" "udlfb" "usbkbd" "usbmouse" "vfb" "viafb" "video1394" "vt8623fb"
-  #  ];
+  networking.hostName = "tiv";
 
   virtualisation = {
     docker.enable = true;
@@ -91,34 +81,11 @@ in {
   };
   programs.virt-manager.enable = true;
 
-  networking.hostName = "tiv";
-
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
-
-  # Set your time zone.
-  time.timeZone = "America/Los_Angeles";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
 
   services.xserver = {
     enable = true;
@@ -128,30 +95,6 @@ in {
     dpi = 96;
     libinput.enable = true;
   };
-
-  # Keyboard
-  console.keyMap = "colemak";
-  services.xserver.layout = "us";
-  services.xserver.xkbVariant = "colemak";
-  services.xserver.xkbOptions = "altwin:swap_lalt_lwin,ctrl:nocaps,shift:both_capslock";
-  services.xserver.autoRepeatDelay = 200;
-  services.xserver.autoRepeatInterval = 20;
-  services.interception-tools = {
-    enable = true;
-    udevmonConfig = let
-      intercept = "${pkgs.interception-tools}/bin/intercept";
-      uinput = "${pkgs.interception-tools}/bin/uinput";
-      caps2esc = "${pkgs.interception-tools-plugins.caps2esc}/bin/caps2esc";
-    in ''
-      - JOB: "${intercept} -g $DEVNODE | ${caps2esc} | ${uinput} -d $DEVNODE"
-        DEVICE:
-          NAME: "AT Translated Set 2 (k|K)eyboard.*"
-          EVENTS:
-            EV_KEY: [[KEY_CAPSLOCK, KEY_ESC]]
-    '';
-  };
-
-  services.fstrim.enable = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -172,26 +115,8 @@ in {
     wireplumber.enable = true;
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.adam = {
-    isNormalUser = true;
-    description = "Adam DiCarlo";
-    extraGroups = ["docker" "libvirtd" "networkmanager" "video" "wheel"];
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHw1DBIi3+PCiDnWkPohhHFVKqnAcKzUUezulxxywGHa adam@bikko.org"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEbs7eDyOmFy3rZV4zCI6Pz+5srASislwVs36/XcM4sq adam@bikko.org"
-    ];
-    packages = with pkgs; [
-      firefox
-    ];
-    shell = pkgs.zsh;
-    uid = 1000;
-  };
+  programs.fish.enable = true;
   programs.zsh.enable = true;
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
   environment.variables = extraEnv;
   environment.sessionVariables = extraEnv;
   environment.pathsToLink = ["/share/zsh"];
@@ -199,58 +124,7 @@ in {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    # Flakes use Git to pull dependencies from data sources, so Git must be installed first
-    git
-
-    # Nix
-    cachix
-
-    acpi
     brightnessctl
-    btop # replacement of htop/nmon
-    iotop # io monitoring
-    iftop # network monitoring
-    curl
-    dnsutils # `dig` + `nslookup`
-    file
-    fish
-    gawk
-    gcc
-    gnumake
-    gnupg
-    gnused
-    gnutar
-    ipcalc # calculator for IPv4/v6 addresses
-    iperf3
-    killall
-    ldns # replacement of `dig`, it provide the command `drill`
-
-    # system call monitoring
-    strace # system call monitoring
-    ltrace # library call monitoring
-    lsof # list open files
-
-    # system tools
-    ethtool
-    gtop
-    lm_sensors # for `sensors` command
-    mtr # A network diagnostic tool
-    neovim
-    nmap # A utility for network discovery and security auditing
-    lshw
-    p7zip
-    pciutils # lspci
-    socat # replacement of openbsd-netcat
-    sysstat
-    tree
-    unzip
-    usbutils # lsusb
-    wget
-    which
-    xz
-    zip
-    zstd
-
     glib
     xdg-utils
     glxinfo
@@ -260,8 +134,6 @@ in {
     catppuccin-sddm-corners
     where-is-my-sddm-theme
     sddm-chili-theme
-
-    vifm-full
 
     pavucontrol
     libsForQt5.qt5.qtwayland

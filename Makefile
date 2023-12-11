@@ -10,10 +10,19 @@ default:
 	sudo NIXOS_CONFIG_PATH=$(NIXOS_CONFIG_PATH) nixos-rebuild test --flake . --impure
 
 check:
-	sudo NIXOS_CONFIG_PATH=$(NIXOS_CONFIG_PATH) nixos-rebuild dry-build --flake . --impure
+	sudo NIXOS_CONFIG_PATH=$(NIXOS_CONFIG_PATH) nixos-rebuild dry-build --flake . --impure --show-trace
+
+repl:
+	NIXOS_CONFIG_PATH=$(NIXOS_CONFIG_PATH) nix repl --extra-experimental-features 'nix-command flakes'
 
 switch:
 	sudo NIXOS_CONFIG_PATH=$(NIXOS_CONFIG_PATH) nixos-rebuild switch --flake . --impure
+
+home-news:
+	NIXOS_CONFIG_PATH=$(NIXOS_CONFIG_PATH) home-manager news --flake . --impure
+
+home-switch:
+	NIXOS_CONFIG_PATH=$(NIXOS_CONFIG_PATH) home-manager switch --flake . --impure
 
 test:
 	sudo NIXOS_CONFIG_PATH=$(NIXOS_CONFIG_PATH) nixos-rebuild test --flake . --impure

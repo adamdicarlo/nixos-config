@@ -2,43 +2,13 @@
   config,
   pkgs,
   ...
-}: let
-  ezaFlags = "--group-directories-first";
-  ezaLong = "${ezaFlags} --color-scale --git --icons -l";
-  shellAbbrs = {
-    ls = "eza ${ezaFlags}";
-    ll = "eza ${ezaLong}";
-    la = "eza ${ezaLong} -a";
-    lah = "eza ${ezaLong} -ah";
-    lsdu = "eza ${ezaLong} -ah --total-size";
-
-    gcom = "git checkout main";
-    gum = "git fetch origin main:main";
-
-    # I really hope I never need to use ghostscript.
-    gs = "git status";
-  };
-in {
-  imports = [
-    ./modules/default.nix
-  ];
-
-  home = {
-    username = "adam";
-    homeDirectory = "/home/adam";
-
-    shellAliases = {
-      urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";
-      urlencode = "python3 -c 'import sys, urllib.parse as ul; print(ul.quote_plus(sys.stdin.read()))'";
-    };
-
-    pointerCursor = {
-      gtk.enable = true;
-      # x11.enable = true;
-      package = pkgs.bibata-cursors;
-      name = "Bibata-Modern-Amber";
-      size = 32;
-    };
+}: {
+  home.pointerCursor = {
+    gtk.enable = true;
+    # x11.enable = true;
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Amber";
+    size = 32;
   };
 
   dconf.settings = {
@@ -64,31 +34,10 @@ in {
     };
   };
 
-  home.file."bin" = {
-    source = ./scripts;
-    recursive = true; # link recursively
-    executable = true; # make all files executable
-  };
-
   home.file."Pictures/wallpaper" = {
     source = ./wallpaper;
     recursive = true;
   };
-
-  # link the configuration file in current directory to the specified location in home directory
-  # home.file.".config/i3/wallpaper.jpg".source = ./wallpaper.jpg;
-
-  # link all files in `./scripts` to `~/.config/i3/scripts`
-  # home.file.".config/i3/scripts" = {
-  #   source = ./scripts;
-  #   recursive = true;   # link recursively
-  #   executable = true;  # make all files executable
-  # };
-
-  # encode the file content in nix configuration file directly
-  # home.file.".xxx".text = ''
-  #     xxx
-  # '';
 
   # set cursor size and dpi
   xresources.properties = {
@@ -100,26 +49,6 @@ in {
     kitty
     kitty-img
     kitty-themes
-
-    eza # A modern replacement for ‘ls’
-    fd # Modern `find`
-    fzf # A command-line fuzzy finder
-    jq
-    imagemagick
-    libwebp
-    neofetch
-    procs
-    ripgrep
-
-    # networking tools
-    aria2 # A lightweight multi-protocol & multi-source command-line download utility
-
-    # nix related
-    #
-    alejandra
-    # it provides the command `nom` works just like `nix`
-    # with more details log output
-    nix-output-monitor
 
     # Wayland, GUI stuff
     cliphist
@@ -165,27 +94,6 @@ in {
     glow # markdown previewer in terminal
     nerdfonts
 
-    # dev
-    devbox # via ./flakes/devbox
-    elmPackages.elm
-    elmPackages.elm-format
-    elmPackages.elm-language-server
-    elmPackages.elm-review
-    gh
-    lua-language-server
-    nil
-    nodePackages.typescript-language-server
-    nodejs_18
-    shellcheck
-    shfmt
-    stylua
-    tailwindcss-language-server
-    terraform-ls
-    tflint
-    tflint-plugins.tflint-ruleset-aws
-    vscode-langservers-extracted
-
-    _1password-gui
     dolphin
     google-chrome
     meld
@@ -519,68 +427,6 @@ in {
     longitude = "-122.7";
   };
 
-  programs.git = {
-    enable = true;
-
-    difftastic.enable = true;
-    userName = "Adam DiCarlo";
-    userEmail = "adam@bikko.org";
-    extraConfig = {
-      branch.autoSetupRebase = "always";
-      checkout.guess = true;
-      commit.gpgsign = true;
-      core.editor = "${pkgs.neovim}/bin/nvim";
-      init.defaultbranch = "main";
-      merge.guitool = "meld";
-      #  cmd = ''meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"'';
-      pull.rebase = true;
-      push.autoSetupRemote = true;
-      rebase.autoStash = true;
-      url = {
-        "git+ssh://git@github.com/".insteadOf = ["gh:" "git://github.com/" "ssh://git@github.com:"];
-        "git+ssh://git@github.com/".pushInsteadOf = ["git://github.com/" "https://github.com/" "ssh://git@github.com:"];
-        "github-work:adaptivsystems/".insteadOf = "git@github.com:adaptivsystems/";
-      };
-      # My 2023 GPG key
-      user.signingkey = "C8CB1DB6E4EA5801";
-    };
-
-    includes = [
-      {
-        condition = "gitdir:~/work/";
-        contents = {
-          user.email = "adam@adaptiv.systems";
-          user.signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO1e83u2v7t+ePxp3RXARC3tnXiPcC95OLMDi2sdTDAc";
-          commit.gpgsign = true;
-          gpg = {
-            format = "ssh";
-            ssh = {
-              allowedSignersFile = builtins.toFile "allowed-signers" ''
-                adam@adaptiv.systems ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJHuKcZZc8H73Brm6B7wIcGuInLH5t48ezXRDw4rurAi
-                adam@adaptiv.systems ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO1e83u2v7t+ePxp3RXARC3tnXiPcC95OLMDi2sdTDAc
-              '';
-              program = "${pkgs._1password-gui}/bin/op-ssh-sign";
-            };
-          };
-        };
-      }
-    ];
-  };
-
-  programs.gpg = {
-    enable = true;
-    homedir = "${config.xdg.dataHome}/gnupg";
-  };
-
-  programs.bash = {
-    enable = true;
-    # enableCompletion = true;
-    # TODO add your cusotm bashrc here
-    bashrcExtra = ''
-      export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/go/bin"
-    '';
-  };
-
   # cribbed and adapted from Charlotte Van Petegem's configs
   # at https://git.chvp.be/chvp/nixos-config
   programs.firefox = let
@@ -665,108 +511,6 @@ in {
     };
   };
 
-  programs.mpv = {
-    enable = true;
-  };
-
-  programs.atuin = {
-    enable = true;
-    flags = ["--disable-up-arrow"];
-    settings = {
-      auto_sync = true;
-      sync_frequency = "2m";
-      update_check = false;
-    };
-  };
-
-  programs.autojump = {
-    enable = true;
-  };
-
-  # programs.carapace.enable = true;
-
-  programs.zsh = {
-    enable = true;
-    enableAutosuggestions = true;
-    enableCompletion = true;
-    enableVteIntegration = true;
-
-    # `devbox shell` mysteriously fails to execute project init_hook if ZDOTDIR
-    # is, e.g. $HOME/.config/zsh.
-    #
-    # dotDir = ".config/zsh";
-
-    initExtra = ''
-      # Automatically run devbox shell when entering adaptiv repos
-      eval "$(/home/adam/work/localtools/scripts/cd-devbox)"
-    '';
-    plugins = let
-      ohmyzsh = pkgs.fetchgit {
-        url = "https://github.com/ohmyzsh/ohmyzsh";
-        rev = "b6bb133f230847ed0b3f9f4e25f2ceb874ca6c91";
-        hash = "sha256-XBAFP+lUBgOy7Qw2zRUc0M1Q5/PJCc8/R88lX2xaNY0=";
-        sparseCheckout = [
-          "lib/clipboard.zsh"
-          "plugins/git/git.plugin.zsh"
-        ];
-      };
-    in [
-      {
-        name = "git";
-        file = "plugins/git/git.plugin.zsh";
-        src = ohmyzsh;
-      }
-      {
-        name = "git";
-        file = "lib/clipboard.zsh";
-        src = ohmyzsh;
-      }
-    ];
-    prezto = {
-      enable = true;
-      prompt.theme = "pure";
-    };
-    syntaxHighlighting = {
-      enable = true;
-    };
-    zsh-abbr = {
-      enable = true;
-      abbreviations = shellAbbrs;
-    };
-  };
-
-  programs.fish = {
-    enable = true;
-
-    shellInit = ''
-      set -g fish_greeting
-      function chdir_hook_ls --on-variable=PWD
-        eza -l
-      end
-    '';
-
-    shellAbbrs = shellAbbrs;
-    functions = {
-    };
-
-    plugins = [
-      {
-        name = "done";
-        src = pkgs.fishPlugins.done.src;
-      }
-      {
-        name = "plugin-git";
-        src = pkgs.fetchFromGitHub {
-          owner = "jhillyerd";
-          repo = "plugin-git";
-          # https://github.com/jhillyerd/plugin-git/issues/102
-          rev = "c2b38f53f0b04bc67f9a0fa3d583bafb3f558718";
-          sha256 = "sha256-efKPbsXxjHm1wVWPJCV8teG4DgZN5dshEzX8PWuhKo4=";
-        };
-      }
-    ];
-  };
-
   programs.kitty = {
     enable = true;
     theme = "Dracula";
@@ -783,28 +527,23 @@ in {
     };
   };
 
-  programs.lazygit = {
-    enable = true;
-  };
+  # alacritty - a cross-platform, GPU-accelerated terminal emulator
+  # programs.alacritty = {
+  #  enable = true;
+  #  # custom settings
+  #  settings = {
+  #    env.TERM = "xterm-256color";
+  #    font = {
+  #      size = 12;
+  #      draw_bold_text_with_bright_colors = true;
+  #    };
+  #    scrolling.multiplier = 5;
+  #    selection.save_to_clipboard = true;
+  #  };
+  #};
 
-  # starship - a customizable prompt for any shell
-  programs.starship = {
-    enable = false;
-    # custom settings
-    settings = {
-      add_newline = true;
-      aws.disabled = false;
-      gcloud.disabled = true;
-      line_break.disabled = false;
-    };
-  };
-
-  services.gpg-agent = {
+  programs.mpv = {
     enable = true;
-    enableExtraSocket = true;
-    enableScDaemon = false;
-    enableSshSupport = true;
-    sshKeys = ["689797597435372AAE566787A29AFFB7B862D0B6"];
   };
 
   wayland.windowManager.sway = let
@@ -933,47 +672,4 @@ in {
       };
     };
   };
-
-  programs.ssh = {
-    enable = true;
-    matchBlocks = {
-      "github-work" = {
-        hostname = "github.com";
-        user = "git";
-        identityFile = "/home/adam/.ssh/id_adaptiv";
-        extraOptions = {
-          AddKeysToAgent = "yes";
-          IdentityAgent = "~/.1password/agent.sock";
-        };
-      };
-    };
-  };
-
-  # alacritty - a cross-platform, GPU-accelerated terminal emulator
-  # programs.alacritty = {
-  #  enable = true;
-  #  # custom settings
-  #  settings = {
-  #    env.TERM = "xterm-256color";
-  #    font = {
-  #      size = 12;
-  #      draw_bold_text_with_bright_colors = true;
-  #    };
-  #    scrolling.multiplier = 5;
-  #    selection.save_to_clipboard = true;
-  #  };
-  #};
-
-  # This value determines the home Manager release that your
-  # configuration is compatible with. This helps avoid breakage
-  # when a new home Manager release introduces backwards
-  # incompatible changes.
-  #
-  # You can update home Manager without changing this value. See
-  # the home Manager release notes for a list of state version
-  # changes in each release.
-  home.stateVersion = "23.05";
-
-  # Let home Manager install and manage itself.
-  programs.home-manager.enable = true;
 }

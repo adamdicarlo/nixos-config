@@ -5,7 +5,6 @@
   description = "Adam DiCarlo's NixOS Configuration";
 
   nixConfig = {
-    experimental-features = ["nix-command" "flakes"];
     extra-substituters = [
       "https://cache.nixos.org"
       "https://fufexan.cachix.org"
@@ -70,116 +69,134 @@
     home-manager,
     nur,
     ...
-  }: {
+  }: let
+    inherit (self) outputs;
+    system = "x86_64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
+  in {
     nixosConfigurations = let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      devboxOverlay = final: prev: {
+        # Is there a simpler way to do this?
+        devbox = devbox.outputs.defaultPackage.${system};
+      };
+
+      hmConfigModule = {
+        home-manager.backupFileExtension = "hm-backup";
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+      };
     in {
-      # By default, NixOS will try to refer the nixosConfiguration with
-      # its hostname, so the system named `nixos-test` will use this one.
-      # However, the configuration name can also be specified using:
-      #   sudo nixos-rebuild switch --flake /path/to/flakes/directory#<name>
-      #
-      # The `nixpkgs.lib.nixosSystem` function is used to build this
-      # configuration, the following attribute set is its parameter.
-      #
-      # Run the following command in the flake's directory to
-      # deploy this configuration on any NixOS system:
-      #   sudo nixos-rebuild switch --flake .#nixos
-      "tiv" = nixpkgs.lib.nixosSystem {
+      opti = nixpkgs.lib.nixosSystem {
         inherit system;
-        # The Nix module system can modularize configuration,
-        # improving the maintainability of configuration.
-        #
-        # Each parameter in the `modules` is a Nix Module, and
-        # there is a partial introduction to it in the nixpkgs manual:
-        #    <https://nixos.org/manual/nixpkgs/unstable/#module-system-introduction>
-        # It is said to be partial because the documentation is not
-        # complete, only some simple introductions.
-        # such is the current state of Nix documentation...
+        specialArgs = {
+          inherit inputs;
+        };
+        modules = [
+          {nixpkgs.overlays = [devboxOverlay];}
+
+          hmConfigModule
+          ./machines/opti/default.nix
+        ];
+      };
+
+      # By default, NixOS will try to refer the nixosConfiguration with
+      # its hostname. However, the configuration name can also be specified using:
+      #   sudo nixos-rebuild switch --flake /path/to/flakes/directory#<name>
+      tiv = nixpkgs.lib.nixosSystem {
+        inherit system;
+        # Each parameter in `modules` is a Nix Module, and there is a partial
+        # introduction to it in the nixpkgs manual:
+        #   <https://nixos.org/manual/nixpkgs/unstable/#module-system-introduction>
         #
         # A Nix Module can be an attribute set, or a function that
         # returns an attribute set. By default, if a Nix Module is a
         # function, this function can only have the following parameters:
         #
-        #  lib:     the nixpkgs function library, which provides many
-        #             useful functions for operating Nix expressions:
-        #             https://nixos.org/manual/nixpkgs/stable/#id-1.4
-        #  config:  all config options of the current flake, every useful
-        #  options: all options defined in all NixOS Modules
-        #             in the current flake
-        #  pkgs:   a collection of all packages defined in nixpkgs,
-        #            plus a set of functions related to packaging.
-        #            you can assume its default value is
-        #            `nixpkgs.legacyPackages."${system}"` for now.
-        #            can be customed by `nixpkgs.pkgs` option
-        #  modulesPath: the default path of nixpkgs's modules folder,
-        #               used to import some extra modules from nixpkgs.
-        #               this parameter is rarely used,
-        #               you can ignore it for now.
+        # - `lib`: the nixpkgs function library, which provides many
+        #   useful functions for operating on Nix expressions:
+        #   https://nixos.org/manual/nixpkgs/stable/#id-1.4
+        # - `config`: all config options of the current flake, every useful
+        # - `options`: all options defined in all NixOS Modules
+        #   in the current flake
+        # - `pkgs`: a collection of all packages defined in nixpkgs,
+        #   plus a set of functions related to packaging.
+        #   you can assume its default value is
+        #   `nixpkgs.legacyPackages."${system}"` for now.
+        #   can be customed by `nixpkgs.pkgs` option.
+        # - `modulesPath`: the default path of nixpkgs's modules folder,
+        #   used to import some extra modules from nixpkgs.
+        #   this parameter is rarely used,
+        #   you can ignore it for now.
         #
         # Only these parameters can be passed by default.
         # If you need to pass other parameters, you must use `specialArgs`.
-
         specialArgs = {
           inherit inputs;
         };
         modules = [
+          nur.nixosModules.nur
+
           {
             nixpkgs.overlays = [
               nur.overlay
+              devboxOverlay
               inputs.nixpkgs-wayland.overlay
-              (final: prev: {
-                # Is there a simpler way to do this?
-                devbox = devbox.outputs.defaultPackage.${system};
-              })
             ];
           }
 
           agenix.nixosModules.default
-          nur.nixosModules.nur
-
+          hmConfigModule
           ./machines/tiv/default.nix
+        ];
+      };
+    };
 
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.backupFileExtension = "hm-backup";
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.adam = import ./home.nix;
+    homeConfigurations = let
+      # Adapted from https://github.com/robbert-vdh/dotfiles/blob/129432dab00500eaeaf512b1d5003a102a08c72f/flake.nix#L71-L77
+      mkAbsoluteSymlink = let
+        # This needs to be set for the `mkAbsolutePath` function
+        # defined below to work. It's set in the Makefile, and
+        # requires the nix build to be run with `--impure`.
+        dotfilesPath = let
+          path = builtins.getEnv "NIXOS_CONFIG_PATH";
+          assertion =
+            pkgs.lib.asserts.assertMsg
+            (path != "" && pkgs.lib.filesystem.pathIsDirectory path)
+            "NIXOS_CONFIG_PATH='${path}' but must be set to this file's directory. Use 'make' to run this build.";
+        in
+          assert assertion; path;
+      in
+        # This is a super hacky way to get absolute paths from a Nix path.
+        # Flakes intentionally don't allow you to get this information, but we
+        # need this to be able to use `mkOutOfStoreSymlink` to create regular
+        # symlinks for configurations that should be mutable, like for Emacs'
+        # config and for fonts. This relies on `NIXOS_CONFIG_PATH`
+        # pointing to the directory that contains this file.
+        # FIXME: I couldn't figure out how to define this in a module so we
+        #        don't need to pass config in here
+        config: repoRelativePath: let
+          fullPath = "${dotfilesPath}/${repoRelativePath}";
+          assertion =
+            pkgs.lib.asserts.assertMsg (builtins.pathExists fullPath)
+            "'${fullPath}' does not exist (make sure --impure is enabled)";
+        in
+          assert assertion; config.lib.file.mkOutOfStoreSymlink fullPath;
+    in {
+      "adam@tiv" = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        extraSpecialArgs = {inherit inputs outputs mkAbsoluteSymlink;};
+        modules = [
+          ./home-manager/home.nix
+          ./home-manager/gui.nix
+          ./home-manager/adaptiv.nix
+        ];
+      };
 
-            home-manager.extraSpecialArgs = {
-              # Adapted from https://github.com/robbert-vdh/dotfiles/blob/129432dab00500eaeaf512b1d5003a102a08c72f/flake.nix#L71-L77
-              mkAbsoluteSymlink = let
-                # This needs to be set for the `mkAbsolutePath` function
-                # defined below to work. It's set in the Makefile, and
-                # requires the nix build to be run with `--impure`.
-                dotfilesPath = let
-                  path = builtins.getEnv "NIXOS_CONFIG_PATH";
-                  assertion =
-                    pkgs.lib.asserts.assertMsg
-                    (path != "" && pkgs.lib.filesystem.pathIsDirectory path)
-                    "NIXOS_CONFIG_PATH='${path}' but must be set to this file's directory. Use 'make' to run this build.";
-                in
-                  assert assertion; path;
-              in
-                # This is a super hacky way to get absolute paths from a Nix path.
-                # Flakes intentionally don't allow you to get this information, but we
-                # need this to be able to use `mkOutOfStoreSymlink` to create regular
-                # symlinks for configurations that should be mutable, like for Emacs'
-                # config and for fonts. This relies on `NIXOS_CONFIG_PATH`
-                # pointing to the directory that contains this file.
-                # FIXME: I couldn't figure out how to define this in a module so we
-                #        don't need to pass config in here
-                config: repoRelativePath: let
-                  fullPath = "${dotfilesPath}/${repoRelativePath}";
-                  assertion =
-                    pkgs.lib.asserts.assertMsg (builtins.pathExists fullPath)
-                    "'${fullPath}' does not exist (make sure --impure is enabled)";
-                in
-                  assert assertion; config.lib.file.mkOutOfStoreSymlink fullPath;
-            };
-          }
+      "adam@opti" = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        extraSpecialArgs = {inherit inputs outputs mkAbsoluteSymlink;};
+        modules = [
+          ./home-manager/home.nix
         ];
       };
     };

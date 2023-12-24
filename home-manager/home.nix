@@ -18,6 +18,9 @@
 
     # I really hope I never need to use ghostscript.
     gs = "git status";
+
+    hm = "home-manager --flake . --impure";
+    nos = "sudo nixos-rebuild --flake . --impure";
   };
 in {
   imports = [

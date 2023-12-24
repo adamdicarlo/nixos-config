@@ -82,19 +82,12 @@
       inherit system;
     };
   in {
-    nixosConfigurations = let
-      hmConfigModule = {
-        home-manager.backupFileExtension = "hm-backup";
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-      };
-    in {
-      opti = pkgs.lib.nixosSystem {
+    nixosConfigurations = {
+      opti = nixpkgs.lib.nixosSystem {
         specialArgs = {
           inherit inputs;
         };
         modules = [
-          hmConfigModule
           ./machines/opti/default.nix
         ];
       };
@@ -102,7 +95,7 @@
       # By default, NixOS will try to refer the nixosConfiguration with
       # its hostname. However, the configuration name can also be specified using:
       #   sudo nixos-rebuild switch --flake /path/to/flakes/directory#<name>
-      tiv = pkgs.lib.nixosSystem {
+      tiv = nixpkgs.lib.nixosSystem {
         # Each parameter in `modules` is a Nix Module, and there is a partial
         # introduction to it in the nixpkgs manual:
         #   <https://nixos.org/manual/nixpkgs/unstable/#module-system-introduction>
@@ -140,7 +133,6 @@
           }
 
           agenix.nixosModules.default
-          hmConfigModule
           ./machines/tiv/default.nix
         ];
       };
@@ -149,31 +141,15 @@
     homeConfigurations = let
       # Adapted from https://github.com/robbert-vdh/dotfiles/blob/129432dab00500eaeaf512b1d5003a102a08c72f/flake.nix#L71-L77
       mkAbsoluteSymlink = let
-        # This needs to be set for the `mkAbsolutePath` function
-        # defined below to work. It's set in the Makefile, and
-        # requires the nix build to be run with `--impure`.
-        dotfilesPath = let
-          path = builtins.getEnv "NIXOS_CONFIG_PATH";
-          assertion =
-            pkgs.lib.asserts.assertMsg
-            (path != "" && pkgs.lib.filesystem.pathIsDirectory path)
-            "NIXOS_CONFIG_PATH='${path}' but must be set to this file's directory. Use 'make' to run this build.";
-        in
-          assert assertion; path;
+        nixosConfigPath = "/home/adam/nixos-config";
       in
-        # This is a super hacky way to get absolute paths from a Nix path.
-        # Flakes intentionally don't allow you to get this information, but we
-        # need this to be able to use `mkOutOfStoreSymlink` to create regular
-        # symlinks for configurations that should be mutable, like for Emacs'
-        # config and for fonts. This relies on `NIXOS_CONFIG_PATH`
-        # pointing to the directory that contains this file.
         # FIXME: I couldn't figure out how to define this in a module so we
         #        don't need to pass config in here
         config: repoRelativePath: let
-          fullPath = "${dotfilesPath}/${repoRelativePath}";
+          fullPath = "${nixosConfigPath}/${repoRelativePath}";
           assertion =
             pkgs.lib.asserts.assertMsg (builtins.pathExists fullPath)
-            "'${fullPath}' does not exist (make sure --impure is enabled)";
+            "mkAbsoluteSymlink: '${fullPath}' does not seem to exist";
         in
           assert assertion; config.lib.file.mkOutOfStoreSymlink fullPath;
 

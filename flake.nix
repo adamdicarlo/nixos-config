@@ -67,33 +67,33 @@
     nixpkgs,
     agenix,
     home-manager,
-    nur,
     ...
   }: let
     inherit (self) outputs;
     system = "x86_64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
+    pkgs = import nixpkgs {
+      overlays = [
+        (final: prev: {
+          # Is there a simpler way to do this?
+          devbox = inputs.devbox.outputs.defaultPackage.${system};
+        })
+        inputs.nur.overlay
+      ];
+      inherit system;
+    };
   in {
     nixosConfigurations = let
-      devboxOverlay = final: prev: {
-        # Is there a simpler way to do this?
-        devbox = devbox.outputs.defaultPackage.${system};
-      };
-
       hmConfigModule = {
         home-manager.backupFileExtension = "hm-backup";
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
       };
     in {
-      opti = nixpkgs.lib.nixosSystem {
-        inherit system;
+      opti = pkgs.lib.nixosSystem {
         specialArgs = {
           inherit inputs;
         };
         modules = [
-          {nixpkgs.overlays = [devboxOverlay];}
-
           hmConfigModule
           ./machines/opti/default.nix
         ];
@@ -102,8 +102,7 @@
       # By default, NixOS will try to refer the nixosConfiguration with
       # its hostname. However, the configuration name can also be specified using:
       #   sudo nixos-rebuild switch --flake /path/to/flakes/directory#<name>
-      tiv = nixpkgs.lib.nixosSystem {
-        inherit system;
+      tiv = pkgs.lib.nixosSystem {
         # Each parameter in `modules` is a Nix Module, and there is a partial
         # introduction to it in the nixpkgs manual:
         #   <https://nixos.org/manual/nixpkgs/unstable/#module-system-introduction>
@@ -134,12 +133,8 @@
           inherit inputs;
         };
         modules = [
-          nur.nixosModules.nur
-
           {
-            nixpkgs.overlays = [
-              nur.overlay
-              devboxOverlay
+            pkgs.overlays = [
               inputs.nixpkgs-wayland.overlay
             ];
           }

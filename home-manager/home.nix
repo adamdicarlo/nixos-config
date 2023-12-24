@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  username,
   ...
 }: let
   ezaFlags = "--group-directories-first";
@@ -33,8 +34,11 @@ in {
   };
 
   home = {
-    username = "adam";
-    homeDirectory = "/home/adam";
+    inherit username;
+    homeDirectory =
+      if username == "root"
+      then "/root"
+      else "/home/${username}";
 
     shellAliases = {
       urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";

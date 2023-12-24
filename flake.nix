@@ -181,24 +181,31 @@
             "'${fullPath}' does not exist (make sure --impure is enabled)";
         in
           assert assertion; config.lib.file.mkOutOfStoreSymlink fullPath;
-    in {
-      "adam@tiv" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        extraSpecialArgs = {inherit inputs outputs mkAbsoluteSymlink;};
-        modules = [
-          ./home-manager/home.nix
-          ./home-manager/gui.nix
-          ./home-manager/adaptiv.nix
-        ];
-      };
 
-      "adam@opti" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        extraSpecialArgs = {inherit inputs outputs mkAbsoluteSymlink;};
-        modules = [
-          ./home-manager/home.nix
-        ];
-      };
+      laptop = username:
+        home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = {inherit inputs outputs mkAbsoluteSymlink username;};
+          modules = [
+            ./home-manager/home.nix
+            ./home-manager/gui.nix
+            ./home-manager/adaptiv.nix
+          ];
+        };
+      server = username:
+        home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = {inherit inputs outputs mkAbsoluteSymlink username;};
+          modules = [
+            ./home-manager/home.nix
+          ];
+        };
+    in {
+      "adam@tiv" = laptop "adam";
+      "root@tiv" = laptop "root";
+
+      "adam@opti" = server "adam";
+      "root@opti" = server "root";
     };
   };
 }

@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   imports = [./hardware.nix ../common.nix];
 
   boot.loader.systemd-boot.enable = true;
@@ -10,12 +14,34 @@
   environment.systemPackages = with pkgs; [
   ];
 
+  age.secrets.namecheap_api_key.file = ../../secrets/namecheap_api_key.age;
+  age.secrets.namecheap_api_user.file = ../../secrets/namecheap_api_user.age;
+  security.acme = {
+    acceptTerms = true;
+    certs."sleeping-panda.net" = {
+      # FAILED? Public IP probably changed!
+      # https://ap.www.namecheap.com/settings/tools/apiaccess/whitelisted-ips
+      credentialFiles = {
+        NAMECHEAP_API_USER_FILE = config.age.secrets.namecheap_api_user.path;
+        NAMECHEAP_API_KEY_FILE = config.age.secrets.namecheap_api_key.path;
+      };
+      domain = "sleeping-panda.net";
+      dnsProvider = "namecheap";
+      dnsPropagationCheck = true;
+      extraDomainNames = ["*.sleeping-panda.net"];
+      server = "https://acme-v02.api.letsencrypt.org/directory";
+
+      # Let's Encrypt staging server:
+      # server = "https://acme-staging-v02.api.letsencrypt.org/directory";
+    };
+    defaults.email = "contact@sleeping-panda.net";
+    preliminarySelfsigned = false;
+  };
+
   services.adguardhome = {
     enable = true;
-
     # open ports for web interface
     openFirewall = true;
-
     settings = rec {
       http = {
         address = "${bind_host}:${builtins.toString bind_port}";

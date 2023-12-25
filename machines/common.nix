@@ -93,10 +93,12 @@
     git
 
     # Nix
+    inputs.agenix.packages.x86_64-linux.default
     cachix
     home-manager
 
     acpi
+    age
     btop # replacement of htop/nmon
     curl
     dnsutils # `dig` + `nslookup`

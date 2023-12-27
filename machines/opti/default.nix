@@ -3,7 +3,11 @@
   pkgs,
   ...
 }: {
-  imports = [./hardware.nix ../common.nix];
+  imports = [
+    ../common.nix
+    ./hardware.nix
+    ./traefik.nix
+  ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

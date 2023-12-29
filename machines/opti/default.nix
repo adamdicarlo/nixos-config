@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{config, ...}: {
   imports = [
     ../common.nix
     ./hardware.nix
@@ -14,9 +10,8 @@
 
   networking.hostName = "opti";
 
-  # List packages installed in system profile.
-  environment.systemPackages = with pkgs; [
-  ];
+  # environment.systemPackages = with pkgs; [
+  # ];
 
   age.secrets.namecheap_api_key.file = ../../secrets/namecheap_api_key.age;
   age.secrets.namecheap_api_user.file = ../../secrets/namecheap_api_user.age;
@@ -54,9 +49,6 @@
       bind_port = 5300;
     };
   };
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [53 80 443];

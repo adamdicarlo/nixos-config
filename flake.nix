@@ -35,6 +35,10 @@
       inputs.flake-utils.follows = "flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
@@ -76,7 +80,6 @@
     self,
     devbox,
     nixpkgs,
-    agenix,
     home-manager,
     ...
   }: let
@@ -94,12 +97,23 @@
     };
   in {
     nixosConfigurations = {
+      oddsy = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs;
+        };
+        modules = [
+          inputs.agenix.nixosModules.default
+          inputs.disko.nixosModules.disko
+          ./machines/oddsy/default.nix
+        ];
+      };
+
       opti = nixpkgs.lib.nixosSystem {
         specialArgs = {
           inherit inputs;
         };
         modules = [
-          agenix.nixosModules.default
+          inputs.agenix.nixosModules.default
           ./machines/opti/default.nix
         ];
       };
@@ -144,7 +158,7 @@
             ];
           }
 
-          agenix.nixosModules.default
+          inputs.agenix.nixosModules.default
           ./machines/tiv/default.nix
         ];
       };
@@ -184,6 +198,9 @@
           ];
         };
     in {
+      "adam@oddsy" = server "adam";
+      "root@oddsy" = server "root";
+
       "adam@tiv" = laptop "adam";
       "root@tiv" = laptop "root";
 

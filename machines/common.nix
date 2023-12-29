@@ -49,7 +49,10 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Keyboard
+  # Console
+  console.font = "Lat2-Terminus16";
+
+  # Keyboard key map
   console.keyMap = "colemak";
   services.xserver.layout = "us";
   services.xserver.xkbVariant = "colemak";
@@ -74,6 +77,9 @@
   programs.fish.enable = true;
 
   services.fstrim.enable = true;
+
+  # Enable the OpenSSH daemon.
+  services.openssh.enable = true;
 
   users.users.adam = {
     isNormalUser = true;

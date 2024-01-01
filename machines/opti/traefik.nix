@@ -23,7 +23,7 @@
     enable = true;
     dynamicConfigOptions = {
       http.routers =
-        mkSimpleRouters ["adguardhome"]
+        mkSimpleRouters ["adguardhome" "hass"]
         // {
           traefik = {
             rule = "Host(`traefik.sleeping-panda.net`)";
@@ -34,6 +34,9 @@
         };
       http.services.adguardhome = {
         loadBalancer.servers = [{url = "http://localhost:5300/";}];
+      };
+      http.services.hass = {
+        loadBalancer.servers = [{url = "http://10.0.0.3:8123/";}];
       };
       tls = {
         certificates = [

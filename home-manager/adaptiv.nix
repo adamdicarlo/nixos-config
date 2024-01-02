@@ -54,5 +54,12 @@
         IdentityAgent = "~/.1password/agent.sock";
       };
     };
+    "github.com" = {
+      extraOptions = {
+        AddKeysToAgent = "yes";
+      };
+      identityFile = "/home/adam/.ssh/id_personal";
+      user = "git";
+    };
   };
 }

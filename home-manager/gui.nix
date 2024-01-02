@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   home.pointerCursor = {
     gtk.enable = true;
     # x11.enable = true;
@@ -189,7 +185,14 @@
     ];
   };
 
-  services.udiskie.enable = true;
+  # Requires services.udisks2 in system config.
+  services.udiskie = {
+    enable = true;
+    settings = {
+      program_options.file_manager = "${pkgs.dolphin}/bin/dolphin";
+      notifications.timeout = 3;
+    };
+  };
 
   programs.swaylock = {
     enable = true;

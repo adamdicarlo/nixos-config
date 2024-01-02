@@ -215,6 +215,10 @@ in {
     };
   };
 
+  services.udisks2 = {
+    enable = true;
+  };
+
   # throttled doesn't support i9-13900HX.
   # undervolting seems to be locked in firmware.
   services.undervolt = {

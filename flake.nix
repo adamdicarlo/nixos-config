@@ -78,7 +78,6 @@
   # inputs's parameter, making it convenient to use inside the function.
   outputs = inputs @ {
     self,
-    devbox,
     nixpkgs,
     home-manager,
     ...
@@ -91,6 +90,7 @@
           # Is there a simpler way to do this?
           devbox = inputs.devbox.outputs.defaultPackage.${system};
         })
+        inputs.nixpkgs-wayland.overlay
         inputs.nur.overlay
       ];
       inherit system;
@@ -152,12 +152,6 @@
           inherit inputs;
         };
         modules = [
-          {
-            pkgs.overlays = [
-              inputs.nixpkgs-wayland.overlay
-            ];
-          }
-
           inputs.agenix.nixosModules.default
           ./machines/tiv/default.nix
         ];

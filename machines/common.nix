@@ -87,7 +87,7 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEbs7eDyOmFy3rZV4zCI6Pz+5srASislwVs36/XcM4sq adam@bikko.org"
     ];
     packages = [];
-    shell = pkgs.fish;
+    shell = pkgs.zsh;
     uid = 1000;
   };
 
@@ -147,4 +147,5 @@
     zip
     zstd
   ];
+  environment.pathsToLink = ["/share/zsh"];
 }

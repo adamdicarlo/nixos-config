@@ -19,8 +19,8 @@
     # I really hope I never need to use ghostscript.
     gs = "git status";
 
-    hm = "home-manager --flake . --impure";
-    nos = "sudo nixos-rebuild --flake . --impure";
+    hm = "home-manager --flake . --impure ";
+    nos = "sudo nixos-rebuild --flake . --impure ";
   };
 in {
   imports = [
@@ -155,6 +155,15 @@ in {
     enableAutosuggestions = true;
     enableCompletion = true;
     enableVteIntegration = true;
+
+    initExtra = ''
+      if [[ -z "$(declare -f ls_cd_hook)" ]]; then
+        ls_cd_hook() {
+          ${shellAbbrs.lah}
+        }
+        chpwd_functions=(''${chpwd_functions[@]} "ls_cd_hook")
+      fi
+    '';
 
     # `devbox shell` mysteriously fails to execute project init_hook if ZDOTDIR
     # is, e.g. $HOME/.config/zsh.

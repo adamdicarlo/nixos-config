@@ -132,6 +132,8 @@ in {
 
     pavucontrol
     libsForQt5.qt5.qtwayland
+    openaws-vpn-client
+    openvpn
     qt6.qtwayland
 
     qemu_kvm

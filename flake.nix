@@ -30,21 +30,39 @@
       inputs.systems.follows = "systems";
     };
     # https://github.com/NixOS/nix/issues/3978#issuecomment-1661075896
-    devbox = {
-      url = "github:adamdicarlo/devbox-nix-flake";
-      inputs.flake-utils.follows = "flake-utils";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # devbox = {
+    #   url = "github:adamdicarlo/devbox-nix-flake";
+    #   inputs.flake-utils.follows = "flake-utils";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-utils = {
-      url = "github:numtide/flake-utils";
-      inputs.systems.follows = "systems";
-    };
     home-manager = {
       url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nur.url = "github:nix-community/NUR";
+
+    # openaws-vpn-client and dependency
+    openaws-vpn-client = {
+      url = "https://github.com/adamdicarlo/openaws-vpn-client/archive/68e559ca3550b7da7b083b80833bc7ecb0e9c228.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.rust-overlay.follows = "rust-overlay";
+    };
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # nixpkgs-wayland and dependencies
+    nixpkgs-wayland = {
+      url = "github:nix-community/nixpkgs-wayland";
+      inputs.lib-aggregate.follows = "lib-aggregate";
+      inputs.nix-eval-jobs.follows = "nix-eval-jobs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     lib-aggregate = {
@@ -55,14 +73,12 @@
       url = "github:nix-community/nix-eval-jobs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-wayland = {
-      url = "github:nix-community/nixpkgs-wayland";
-      inputs.lib-aggregate.follows = "lib-aggregate";
-      inputs.nix-eval-jobs.follows = "nix-eval-jobs";
-      inputs.nixpkgs.follows = "nixpkgs";
+
+    # Common flake dependencies.
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.systems.follows = "systems";
     };
-    nur.url = "github:nix-community/NUR";
     systems.url = "github:nix-systems/x86_64-linux";
   };
 
@@ -84,17 +100,6 @@
   }: let
     inherit (self) outputs;
     system = "x86_64-linux";
-    pkgs = import nixpkgs {
-      overlays = [
-        (final: prev: {
-          # Is there a simpler way to do this?
-          devbox = inputs.devbox.outputs.defaultPackage.${system};
-        })
-        inputs.nixpkgs-wayland.overlay
-        inputs.nur.overlay
-      ];
-      inherit system;
-    };
   in {
     nixosConfigurations = {
       oddsy = nixpkgs.lib.nixosSystem {
@@ -152,6 +157,16 @@
           inherit inputs;
         };
         modules = [
+          ({lib, ...}: {
+            # Beware: https://github.com/NixOS/nixpkgs/issues/191910
+            nixpkgs.config.allowUnfree = true;
+            nixpkgs.overlays = [
+              (_: _: {
+                openvpn = inputs.openaws-vpn-client.outputs.packages.${system}.openvpn;
+                openaws-vpn-client = inputs.openaws-vpn-client.outputs.packages.${system}.openaws-vpn-client;
+              })
+            ];
+          })
           inputs.agenix.nixosModules.default
           ./machines/tiv/default.nix
         ];
@@ -159,6 +174,18 @@
     };
 
     homeConfigurations = let
+      pkgs = import nixpkgs {
+        overlays = [
+          # (final: prev: {
+          #   # Is there a simpler way to do this?
+          #   devbox = inputs.devbox.outputs.defaultPackage.${system};
+          # })
+          inputs.nixpkgs-wayland.overlay
+          inputs.nur.overlay
+        ];
+        inherit system;
+      };
+
       # Adapted from https://github.com/robbert-vdh/dotfiles/blob/129432dab00500eaeaf512b1d5003a102a08c72f/flake.nix#L71-L77
       mkAbsoluteSymlink = let
         nixosConfigPath = "/home/adam/nixos-config";

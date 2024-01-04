@@ -9,7 +9,6 @@
       experimental-features = ["nix-command" "flakes" "repl-flake"];
       trusted-users = ["root" "@wheel"];
       warn-dirty = false;
-      flake-registry = "";
     };
     gc = {
       automatic = true;

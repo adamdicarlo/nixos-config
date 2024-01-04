@@ -157,11 +157,12 @@ in {
     enableVteIntegration = true;
 
     initExtra = ''
-      if [[ -z "$(declare -f ls_cd_hook)" ]]; then
-        ls_cd_hook() {
-          ${shellAbbrs.lah}
+      if [[ -z "$(declare -f custom_cd_hook_ls)" ]]; then
+        custom_cd_hook_ls() {
+          [[ $PWD != "$custom_cd_hook_ls_last_dir" ]] && ${shellAbbrs.lah}
+          custom_cd_hook_ls_last_dir=$PWD
         }
-        chpwd_functions=(''${chpwd_functions[@]} "ls_cd_hook")
+        chpwd_functions=(''${chpwd_functions[@]} "custom_cd_hook_ls")
       fi
     '';
 

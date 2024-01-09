@@ -134,6 +134,7 @@ in {
     libsForQt5.qt5.qtwayland
     openaws-vpn-client
     openvpn
+    polkit_gnome
     qt6.qtwayland
 
     qemu_kvm

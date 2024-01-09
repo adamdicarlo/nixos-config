@@ -675,4 +675,23 @@
       };
     };
   };
+
+  # Adapted from https://github.com/Madic-/Sway-DE/blob/master/config/systemd/user/polkit-gnome.service.j2
+  systemd.user.services.polkit-gnome = {
+    Unit = {
+      Description = "Legacy polkit authentication agent for GNOME";
+      PartOf = ["sway-session.target"];
+    };
+    Service = {
+      Type = "simple";
+      ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+      ExecStop = "kill -2 $MAINPID";
+      Restart = "on-failure";
+      RestartSec = 1;
+      TimeoutStopSec = 10;
+    };
+    Install = {
+      WantedBy = ["sway-session.target"];
+    };
+  };
 }

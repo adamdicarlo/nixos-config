@@ -48,7 +48,7 @@
 
     # openaws-vpn-client and dependency
     openaws-vpn-client = {
-      url = "https://github.com/adamdicarlo/openaws-vpn-client/archive/68e559ca3550b7da7b083b80833bc7ecb0e9c228.tar.gz";
+      url = "https://github.com/adamdicarlo/openaws-vpn-client/archive/6462f1449875bb26d0866644c3687e4a82b0d4c1.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.rust-overlay.follows = "rust-overlay";
     };

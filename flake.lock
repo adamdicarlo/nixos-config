@@ -271,14 +271,14 @@
         ]
       },
       "locked": {
-        "lastModified": 1704310332,
-        "narHash": "sha256-mqRY7NjomGCeNShDM+aq8zs9XvvzSz95f/GwrniSy9A=",
+        "lastModified": 1704763914,
+        "narHash": "sha256-fiz7c/9AedI9NlEOZCilCQF8f1EBEPGQLXnKKhjypcA=",
         "type": "tarball",
-        "url": "https://github.com/adamdicarlo/openaws-vpn-client/archive/68e559ca3550b7da7b083b80833bc7ecb0e9c228.tar.gz"
+        "url": "https://github.com/adamdicarlo/openaws-vpn-client/archive/6462f1449875bb26d0866644c3687e4a82b0d4c1.tar.gz"
       },
       "original": {
         "type": "tarball",
-        "url": "https://github.com/adamdicarlo/openaws-vpn-client/archive/68e559ca3550b7da7b083b80833bc7ecb0e9c228.tar.gz"
+        "url": "https://github.com/adamdicarlo/openaws-vpn-client/archive/6462f1449875bb26d0866644c3687e4a82b0d4c1.tar.gz"
       }
     },
     "root": {

@@ -685,14 +685,14 @@ in {
   };
 
   # Adapted from https://github.com/Madic-/Sway-DE/blob/master/config/systemd/user/polkit-gnome.service.j2
-  systemd.user.services.polkit-gnome = {
+  systemd.user.services.polkit-mate = {
     Unit = {
-      Description = "Legacy polkit authentication agent for GNOME";
+      Description = "Graphical Polkit authentication agent";
       PartOf = ["sway-session.target"];
     };
     Service = {
       Type = "simple";
-      ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+      ExecStart = "${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1";
       ExecStop = "kill -2 $MAINPID";
       Restart = "on-failure";
       RestartSec = 1;

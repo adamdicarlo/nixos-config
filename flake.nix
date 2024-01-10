@@ -187,6 +187,8 @@
       };
 
       # Adapted from https://github.com/robbert-vdh/dotfiles/blob/129432dab00500eaeaf512b1d5003a102a08c72f/flake.nix#L71-L77
+      # TODO: Use impurity.nix instead?
+      # https://github.com/outfoxxed/impurity.nix/blob/master/default.nix
       mkAbsoluteSymlink = let
         nixosConfigPath = "/home/adam/nixos-config";
       in

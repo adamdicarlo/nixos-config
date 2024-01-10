@@ -1,4 +1,6 @@
-{pkgs, ...}: {
+{pkgs, ...}: let
+  wallpaper = ./wallpaper/pexels-andy-vu-3484061.jpg;
+in {
   home.pointerCursor = {
     gtk.enable = true;
     # x11.enable = true;
@@ -172,9 +174,13 @@
         command = "${pkgs.swaylock}/bin/swaylock -f";
       }
       {
-        timeout = 915;
+        timeout = 930;
         command = "${pkgs.sway}/bin/swaymsg output * power off";
         resumeCommand = "${pkgs.sway}/bin/swaymsg output * power on";
+      }
+      {
+        timeout = 935;
+        command = "${pkgs.systemd}/bin/systemctl suspend";
       }
     ];
     events = [
@@ -203,6 +209,7 @@
       color = "22d0d2ff";
       font = "Sans";
       ignore-empty-password = true;
+      image = "${wallpaper}";
       indicator-caps-lock = true;
       indicator-thickness = "60";
 
@@ -634,6 +641,7 @@
     };
     extraConfig = ''
       set $laptop eDP-1
+      output * bg '${wallpaper}' fill
       bindswitch --reload --locked lid:on output $laptop disable
       bindswitch --reload --locked lid:off output $laptop enable
       popup_during_fullscreen smart

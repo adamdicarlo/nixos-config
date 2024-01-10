@@ -77,6 +77,8 @@
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
+  security.sudo.wheelNeedsPassword = false;
+
   users.users.adam = {
     isNormalUser = true;
     description = "Adam DiCarlo";

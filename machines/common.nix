@@ -46,15 +46,21 @@
   };
 
   # Console
-  console.font = "Lat2-Terminus16";
+  console = {
+    font = "Lat2-Terminus16";
+    useXkbConfig = true;
+  };
 
   # Keyboard key map
-  console.keyMap = "colemak";
-  services.xserver.layout = "us";
-  services.xserver.xkbVariant = "colemak";
-  services.xserver.xkbOptions = "altwin:swap_lalt_lwin,ctrl:nocaps,shift:both_capslock";
-  services.xserver.autoRepeatDelay = 200;
-  services.xserver.autoRepeatInterval = 20;
+  services.xserver = {
+    layout = "us";
+    xkbVariant = "colemak";
+    xkbOptions = "altwin:swap_lalt_lwin,ctrl:nocaps,shift:both_capslock";
+    autoRepeatDelay = 200;
+    autoRepeatInterval = 20;
+  };
+
+  # Map Caps Lock to Ctrl (when held), Esc (when tapped)
   services.interception-tools = {
     enable = true;
     udevmonConfig = let

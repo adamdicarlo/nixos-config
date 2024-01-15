@@ -25,7 +25,7 @@
   };
 
   # Enable networking
-  networking.networkmanager.enable = true;
+  networking.networkmanager.enable = lib.mkDefault true;
 
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";

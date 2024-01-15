@@ -14,6 +14,7 @@
   boot.kernelParams = ["intel_iommu=on"];
 
   networking.hostName = "oddsy";
+  networking.networkmanager.enable = false;
   networking.defaultGateway = "10.0.0.1";
   networking.bridges.br0.interfaces = ["enp3s0"];
   networking.interfaces.br0 = {
@@ -26,6 +27,7 @@
     ];
   };
   networking.nameservers = ["10.0.0.5"];
+  networking.useDHCP = false;
 
   virtualisation = {
     libvirtd = {

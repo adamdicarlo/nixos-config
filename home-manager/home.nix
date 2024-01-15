@@ -24,7 +24,7 @@
   };
 in {
   imports = [
-    ../modules/default.nix
+    ./modules
   ];
 
   nixpkgs = {

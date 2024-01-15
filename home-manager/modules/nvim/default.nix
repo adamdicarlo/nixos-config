@@ -8,6 +8,6 @@
 
   xdg.configFile.nvim = {
     recursive = true;
-    source = mkAbsoluteSymlink config "modules/nvim/config";
+    source = mkAbsoluteSymlink config "home-manager/modules/nvim/config";
   };
 }

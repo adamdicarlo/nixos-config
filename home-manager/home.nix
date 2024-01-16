@@ -5,7 +5,7 @@
   ...
 }: let
   ezaFlags = "--group-directories-first";
-  ezaLong = "${ezaFlags} --color-scale --git --icons -l";
+  ezaLong = "${ezaFlags} --color-scale --git -l";
   shellAbbrs = {
     ls = "eza ${ezaFlags}";
     ll = "eza ${ezaLong}";
@@ -42,6 +42,11 @@ in {
       if username == "root"
       then "/root"
       else "/home/${username}";
+
+    sessionVariables = {
+      EZA_ICONS_AUTO = "1";
+      EZA_MIN_LUMINANCE = "50";
+    };
 
     shellAliases = {
       urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";

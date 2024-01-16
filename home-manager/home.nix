@@ -164,10 +164,11 @@ in {
     initExtra = ''
       if [[ -z "$(declare -f custom_cd_hook_ls)" ]]; then
         custom_cd_hook_ls() {
+          emulate -L zsh
           [[ $PWD != "$custom_cd_hook_ls_last_dir" ]] && ${shellAbbrs.lah}
           custom_cd_hook_ls_last_dir=$PWD
         }
-        chpwd_functions=(''${chpwd_functions[@]} "custom_cd_hook_ls")
+        add-zsh-hook chpwd custom_cd_hook_ls
       fi
     '';
 

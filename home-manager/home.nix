@@ -170,6 +170,8 @@ in {
         }
         add-zsh-hook chpwd custom_cd_hook_ls
       fi
+      # don't show `nix-shell-env` in devbox shell prompt
+      zstyle :prompt:pure:environment:nix-shell show no
     '';
 
     # `devbox shell` mysteriously fails to execute project init_hook if ZDOTDIR
@@ -198,11 +200,18 @@ in {
         file = "lib/clipboard.zsh";
         src = ohmyzsh;
       }
+      {
+        name = "pure";
+        file = "pure.zsh";
+        src = pkgs.fetchFromGitHub {
+          owner = "sindresorhus";
+          repo = "pure";
+          rev = "4e0ce0a2f8576894e5dad83857e9a9851faa0f5b";
+          hash = "sha256-tDfk4QZ2ApkNE4nPeeD6UVSKSIgld5MdP0qFFheygZA=";
+          sparseCheckout = ["async.zsh" "pure.zsh"];
+        };
+      }
     ];
-    prezto = {
-      enable = true;
-      prompt.theme = "pure";
-    };
     syntaxHighlighting = {
       enable = true;
     };

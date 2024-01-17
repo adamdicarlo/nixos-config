@@ -196,7 +196,7 @@ in {
         src = ohmyzsh;
       }
       {
-        name = "git";
+        name = "clipboard";
         file = "lib/clipboard.zsh";
         src = ohmyzsh;
       }

@@ -625,6 +625,17 @@ in {
       terminal = "${pkgs.kitty}/bin/kitty";
       menu = "${pkgs.fuzzel}/bin/fuzzel";
 
+      floating = {
+        border = 2;
+        titlebar = true;
+      };
+
+      output = {
+        "*" = {
+          bg = "${wallpaper} fill";
+        };
+      };
+
       window = {
         commands = [
           {
@@ -633,17 +644,25 @@ in {
               app_id = "(?i)(?:pavucontrol|nm-connection-editor|gsimplecal|galculator)";
             };
           }
+          {
+            command = "border normal 2, titlebar_padding 24 16";
+            criteria = {
+              class = "(?i)(?:1Password)";
+            };
+          }
         ];
+        border = 2;
         hideEdgeBorders = "smart";
         titlebar = false;
       };
     };
     extraConfig = ''
       set $laptop eDP-1
-      output * bg '${wallpaper}' fill
       bindswitch --reload --locked lid:on output $laptop disable
       bindswitch --reload --locked lid:off output $laptop enable
       popup_during_fullscreen smart
+      titlebar_padding 12 8
+      title_align center
 
       # XF86Display key on 'tiv' is Alt_L+; (well, Super_L+p before Colemak and swap_lalt_lwin)
       bindsym --no-repeat Mod1+semicolon exec wdisplays

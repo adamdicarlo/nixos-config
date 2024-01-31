@@ -29,12 +29,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.systems.follows = "systems";
     };
-    # https://github.com/NixOS/nix/issues/3978#issuecomment-1661075896
-    # devbox = {
-    #   url = "github:adamdicarlo/devbox-nix-flake";
-    #   inputs.flake-utils.follows = "flake-utils";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -100,6 +94,13 @@
   }: let
     inherit (self) outputs;
     system = "x86_64-linux";
+
+    overlays =
+      (import ./overlays {inherit inputs outputs system;})
+      ++ [
+        inputs.nixpkgs-wayland.overlay
+        inputs.nur.overlay
+      ];
   in {
     nixosConfigurations = {
       oddsy = nixpkgs.lib.nixosSystem {
@@ -160,12 +161,7 @@
           ({lib, ...}: {
             # Beware: https://github.com/NixOS/nixpkgs/issues/191910
             nixpkgs.config.allowUnfree = true;
-            nixpkgs.overlays = [
-              (_: _: {
-                openvpn = inputs.openaws-vpn-client.outputs.packages.${system}.openvpn;
-                openaws-vpn-client = inputs.openaws-vpn-client.outputs.packages.${system}.openaws-vpn-client;
-              })
-            ];
+            nixpkgs.overlays = overlays;
           })
           inputs.agenix.nixosModules.default
           ./machines/tiv/default.nix
@@ -175,14 +171,7 @@
 
     homeConfigurations = let
       pkgs = import nixpkgs {
-        overlays = [
-          # (final: prev: {
-          #   # Is there a simpler way to do this?
-          #   devbox = inputs.devbox.outputs.defaultPackage.${system};
-          # })
-          inputs.nixpkgs-wayland.overlay
-          inputs.nur.overlay
-        ];
+        inherit overlays;
         inherit system;
       };
 

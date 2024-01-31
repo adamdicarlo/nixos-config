@@ -77,7 +77,6 @@ in {
     wf-recorder
     wl-clipboard
     wl-gammarelay-rs
-    wlay
     wlogout
     wlsunset
     wob

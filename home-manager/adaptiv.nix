@@ -7,10 +7,17 @@
     _1password-gui
   ];
 
-  programs.zsh.initExtra = ''
-    # Automatically run devbox shell when entering adaptiv repos
-    eval "$(/home/adam/work/localtools/scripts/cd-devbox)"
-  '';
+  programs.zsh = {
+    enable = true;
+    zsh-abbr = {
+      enable = true;
+      abbreviations = {
+        ds = "devbox shell";
+      };
+    };
+    # initExtra = ''
+    # '';
+  };
 
   programs.git.includes = [
     {

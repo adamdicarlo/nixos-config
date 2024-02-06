@@ -4,7 +4,7 @@
   ...
 }: [
   (final: prev: let
-    version = "0.9.0-pre";
+    version = "0.9.1";
   in {
     # Based on https://github.com/rbelem/nix-config/blob/main/overlays/default.nix
     devbox = prev.devbox.override {
@@ -17,8 +17,8 @@
               repo = "devbox";
               rev = version;
               # To update the sha256
-              # sha256 = final.lib.fakeHash;
-              sha256 = "sha256-cM4PiNbfE2sEQHzklBgsJdN/iVK0nT9iZ1F/Cb5tLtM=";
+              # hash = final.lib.fakeHash;
+              hash = "sha256-3KZWXVwvzy3mZkh6pGZpeQQp2aU4V9TyBcJXU4Au4Rs=";
             };
             # To update the vendorHash
             # vendorHash = final.lib.fakeHash;

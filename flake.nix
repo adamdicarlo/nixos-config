@@ -103,6 +103,22 @@
       ];
   in {
     nixosConfigurations = {
+      carbo = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs;
+        };
+        modules = [
+          ({lib, ...}: {
+            # Beware: https://github.com/NixOS/nixpkgs/issues/191910
+            nixpkgs.config.allowUnfree = true;
+            nixpkgs.overlays = overlays;
+          })
+          inputs.agenix.nixosModules.default
+          inputs.disko.nixosModules.disko
+          ./machines/carbo/default.nix
+        ];
+      };
+
       oddsy = nixpkgs.lib.nixosSystem {
         specialArgs = {
           inherit inputs;
@@ -212,6 +228,9 @@
     in {
       "adam@oddsy" = server "adam";
       "root@oddsy" = server "root";
+
+      "adam@carbo" = laptop "adam";
+      "root@carbo" = laptop "root";
 
       "adam@tiv" = laptop "adam";
       "root@tiv" = laptop "root";

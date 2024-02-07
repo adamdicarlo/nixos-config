@@ -53,9 +53,11 @@
 
   # Keyboard key map
   services.xserver = {
-    layout = "us";
-    xkbVariant = "colemak";
-    xkbOptions = "altwin:swap_lalt_lwin,ctrl:nocaps,shift:both_capslock";
+    xkb = {
+      layout = "us";
+      variant = "colemak";
+      options = "altwin:swap_lalt_lwin,ctrl:nocaps,shift:both_capslock";
+    };
     autoRepeatDelay = 200;
     autoRepeatInterval = 20;
   };

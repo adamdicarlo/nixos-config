@@ -86,6 +86,7 @@ in {
     devbox # via ./flakes/devbox
     elmPackages.elm
     elmPackages.elm-format
+    elmPackages.lamdera
     elmPackages.elm-language-server
     elmPackages.elm-review
     gh

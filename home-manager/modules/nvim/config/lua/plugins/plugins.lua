@@ -131,28 +131,13 @@ return {
       servers = {
         elmls = {
           rootPatterns = { "elm.json" },
-          elmLS = {
-            disableElmLSDiagnostics = false,
-            elmReviewDiagnostics = "error",
-            elmPath = "/etc/profiles/per-user/adam/bin/elm",
-            elmReviewPath = "./node_modules/.bin/elm-review",
-            elmTestRunner = {
-              showElmTestOutput = true,
-            },
-            onlyUpdateDiagnosticsOnSave = true,
-            rootPatterns = { "elm.json" },
-            skipInstallPackageConfirmation = false,
-            trace = {
-              server = "messages",
-            },
-          },
           settings = {
             rootPatterns = { "elm.json" },
             elmLS = {
               disableElmLSDiagnostics = false,
               elmReviewDiagnostics = "error",
-              elmPath = "/etc/profiles/per-user/adam/bin/elm",
-              elmReviewPath = "./node_modules/.bin/elm-review",
+              elmPath = "/home/adam/.nix-profile/bin/lamdera",
+              elmReviewPath = "/home/adam/.nix-profile/bin/elm-review",
               elmTestRunner = {
                 showElmTestOutput = true,
               },

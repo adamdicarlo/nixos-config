@@ -1,6 +1,12 @@
-{pkgs, ...}: let
+{
+  config,
+  pkgs,
+  ...
+}: let
   wallpaper = ./wallpaper/pexels-andy-vu-3484061.jpg;
 in {
+  imports = [./modules/tridactyl.nix];
+
   home.pointerCursor = {
     gtk.enable = true;
     # x11.enable = true;
@@ -438,30 +444,9 @@ in {
 
   # cribbed and adapted from Charlotte Van Petegem's configs
   # at https://git.chvp.be/chvp/nixos-config
-  programs.firefox = let
-    ff2mpv-host = pkgs.stdenv.mkDerivation rec {
-      pname = "ff2mpv";
-      version = "4.0.0";
-      src = pkgs.fetchFromGitHub {
-        owner = "woodruffw";
-        repo = "ff2mpv";
-        rev = "v${version}";
-        sha256 = "sxUp/JlmnYW2sPDpIO2/q40cVJBVDveJvbQMT70yjP4=";
-      };
-      buildInputs = [pkgs.python3];
-      buildPhase = ''
-        sed -i "s#/home/william/scripts/ff2mpv#$out/bin/ff2mpv.py#" ff2mpv.json
-        sed -i 's#"mpv"#"${pkgs.mpv}/bin/umpv"#' ff2mpv.py
-      '';
-      installPhase = ''
-        mkdir -p $out/bin
-        cp ff2mpv.py $out/bin
-        mkdir -p $out/lib/mozilla/native-messaging-hosts
-        cp ff2mpv.json $out/lib/mozilla/native-messaging-hosts
-      '';
-    };
-    ffPackage = pkgs.firefox.override {
-      nativeMessagingHosts = [ff2mpv-host];
+  programs.firefox = {
+    enable = true;
+    package = pkgs.firefox.override {
       pkcs11Modules = [];
       extraPolicies = {
         DisableFirefoxAccounts = true;
@@ -473,15 +458,19 @@ in {
           Snippets = false;
         };
         OfferToSaveLogins = false;
+        PasswordManagerEnabled = false;
         UserMessaging = {
           SkipOnboarding = true;
           ExtensionRecommendations = false;
         };
       };
     };
-  in {
-    enable = true;
-    package = ffPackage;
+    # nativeMessagingHosts.ff2mpv = true;
+    # nativeMessagingHosts.tridactyl = true;
+    nativeMessagingHosts = [
+      pkgs.ff2mpv
+      pkgs.tridactyl-native
+    ];
     profiles.default = {
       extensions = with pkgs.nur.repos.rycee.firefox-addons; [
         bitwarden
@@ -491,14 +480,61 @@ in {
         facebook-container
         ff2mpv
         tree-style-tab
+        tridactyl
         ublock-origin
         umatrix
       ];
+      search = {
+        engines = {
+          "Nix Packages" = {
+            urls = [
+              {
+                template = "https://search.nixos.org/packages";
+                params = [
+                  {
+                    name = "type";
+                    value = "packages";
+                  }
+                  {
+                    name = "query";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+            icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+            definedAliases = ["@np"];
+          };
+          "Nix Options" = {
+            urls = [
+              {
+                template = "https://search.nixos.org/options";
+                params = [
+                  {
+                    name = "type";
+                    value = "packages";
+                  }
+                  {
+                    name = "query";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+            icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+            definedAliases = ["@no"];
+          };
+          Bing.metaData.hidden = true;
+          Google.metaData.alias = "@g";
+        };
+        force = true;
+        order = ["DuckDuckGo" "Google"];
+      };
       settings = {
         "app.shield.optoutstudies.enabled" = false;
         "browser.aboutConfig.showWarning" = false;
         "browser.contentblocking.category" = "custom";
-        "browser.download.dir" = "/home/adam/Downloads";
+        "browser.download.dir" = "${config.home.homeDirectory}/Downloads";
         "browser.newtabpage.activity-stream.feeds.recommendationprovider" = false;
         "browser.newtabpage.activity-stream.showSponsored" = false;
         "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;

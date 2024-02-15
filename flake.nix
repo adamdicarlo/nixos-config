@@ -207,14 +207,13 @@
         in
           assert assertion; config.lib.file.mkOutOfStoreSymlink fullPath;
 
-      laptop = username:
+      laptop = username: extras:
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = {inherit inputs outputs mkAbsoluteSymlink username;};
           modules = [
             ./home-manager/home.nix
             ./home-manager/gui.nix
-            ./home-manager/adaptiv.nix
           ];
         };
       server = username:
@@ -229,11 +228,11 @@
       "adam@oddsy" = server "adam";
       "root@oddsy" = server "root";
 
-      "adam@carbo" = laptop "adam";
-      "root@carbo" = laptop "root";
+      "adam@carbo" = laptop "adam" [];
+      "root@carbo" = laptop "root" [];
 
-      "adam@tiv" = laptop "adam";
-      "root@tiv" = laptop "root";
+      "adam@tiv" = laptop "adam" [./home-manager/adaptiv.nix];
+      "root@tiv" = laptop "root" [./home-manager/adaptiv.nix];
 
       "adam@opti" = server "adam";
       "root@opti" = server "root";

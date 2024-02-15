@@ -211,10 +211,12 @@
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = {inherit inputs outputs mkAbsoluteSymlink username;};
-          modules = [
-            ./home-manager/home.nix
-            ./home-manager/gui.nix
-          ];
+          modules =
+            [
+              ./home-manager/home.nix
+              ./home-manager/gui.nix
+            ]
+            ++ extras;
         };
       server = username:
         home-manager.lib.homeManagerConfiguration {

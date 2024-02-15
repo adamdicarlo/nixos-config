@@ -6,6 +6,7 @@
   programs.waybar = {
     enable = true;
     systemd.enable = true;
+    style = ./waybar.css;
     settings = {
       mainBar = {
         # From https://github.com/Pipshag/dotfiles_nord/blob/master/.config/waybar/config

@@ -366,12 +366,18 @@ in {
         "browser.startup.page" = 3;
         "dom.security.https_only_mode" = true;
         "extensions.htmlaboutaddons.recommendations.enabled" = false;
+        "gfx.webrender.all" = true;
+        "gfx.webrender.enabled" = true;
+        "layers.acceleration.force-enabled" = true;
         "network.cookie.cookieBehavior" = 1;
         "privacy.annotate_channels.strict_list.enabled" = true;
         "privacy.trackingprotection.enabled" = true;
         "privacy.trackingprotection.socialtracking.enabled" = true;
         "security.identityblock.show_extended_validation" = true;
+        "svg.context-properties.content.enabled" = true;
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "toolkit.telemetry.cachedClientID" = "c0ffeec0-ffee-c0ff-eec0-ffeec0ffeec0";
+        "userChrome.Tabs.Option6.Enabled" = true;
       };
     };
   };

@@ -272,6 +272,27 @@ in {
 
   programs.ssh = {
     enable = true;
+    addKeysToAgent = "yes";
+    matchBlocks = {
+      "*" = {
+        setEnv = {
+          TERM = "xterm-256color";
+        };
+      };
+      "panthalassa.net" = {
+        user = "bikko";
+      };
+      oddsy = {
+        hostname = "10.0.0.2";
+        user = "adam";
+        forwardAgent = true;
+      };
+      opti = {
+        hostname = "10.0.0.5";
+        user = "adam";
+        forwardAgent = true;
+      };
+    };
   };
 
   # This value determines the home Manager release that your

@@ -42,6 +42,10 @@ in {
   '';
   security.polkit.enable = true;
   services.logind.lidSwitchExternalPower = "ignore";
+
+  hardware.keyboard.uhk.enable = true;
+  users.users.adam.extraGroups = ["input"];
+
   hardware.logitech.wireless.enable = true;
 
   virtualisation = {
@@ -105,7 +109,6 @@ in {
     qemu_kvm
 
     uhk-agent
-    uhk-udev-rules
   ];
 
   programs.dconf.enable = true;

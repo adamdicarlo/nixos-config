@@ -9,11 +9,9 @@
       "https://cache.nixos.org"
       "https://fufexan.cachix.org"
       "https://nix-community.cachix.org"
-      "https://nixpkgs-wayland.cachix.org"
     ];
     extra-trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
       "fufexan.cachix.org-1:LwCDjCJNJQf5XD2BV+yamQIMZfcKWR9ISIFy5curUsY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
@@ -52,13 +50,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # nixpkgs-wayland and dependencies
-    nixpkgs-wayland = {
-      url = "github:nix-community/nixpkgs-wayland";
-      inputs.lib-aggregate.follows = "lib-aggregate";
-      inputs.nix-eval-jobs.follows = "nix-eval-jobs";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     lib-aggregate = {
       url = "github:nix-community/lib-aggregate";
       inputs.flake-utils.follows = "flake-utils";
@@ -97,10 +88,7 @@
 
     overlays =
       (import ./overlays {inherit inputs outputs system;})
-      ++ [
-        inputs.nixpkgs-wayland.overlay
-        inputs.nur.overlay
-      ];
+      ++ [inputs.nur.overlay];
   in {
     nixosConfigurations = {
       carbo = nixpkgs.lib.nixosSystem {

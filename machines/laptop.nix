@@ -103,6 +103,9 @@ in {
     qt6.qtwayland
 
     qemu_kvm
+
+    uhk-agent
+    uhk-udev-rules
   ];
 
   programs.dconf.enable = true;

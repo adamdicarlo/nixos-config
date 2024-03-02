@@ -33,7 +33,10 @@
       # Let's Encrypt staging server:
       # server = "https://acme-staging-v02.api.letsencrypt.org/directory";
     };
-    defaults.email = "contact@sleeping-panda.net";
+    defaults = {
+      email = "contact@sleeping-panda.net";
+      renewInterval = "monthly";
+    };
     preliminarySelfsigned = false;
   };
 

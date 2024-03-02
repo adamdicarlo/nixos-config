@@ -4,6 +4,7 @@
 {pkgs, ...}: {
   imports = [
     ../common.nix
+    ../modules/adguardhome.nix
     ./hardware.nix
     ./disk-config.nix
   ];

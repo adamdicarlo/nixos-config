@@ -4,39 +4,41 @@
   services.traefik = let
     certDir = config.security.acme.certs."sleeping-panda.net".directory;
 
-    mkSimpleRouters = services:
-      builtins.listToAttrs (
-        builtins.map (
-          service: {
-            name = service;
-            value = {
-              inherit service;
-              rule = "Host(`${service}.sleeping-panda.net`)";
-              entryPoints = "websecure";
-              tls = true;
-            };
+    routeMap = {
+      adguardhome = "http://localhost:5300/";
+      adguardhome2 = "http://10.0.0.3:5300/";
+      hass = "http://10.0.0.3:8123/";
+    };
+
+    traefik = {
+      rule = "Host(`traefik.sleeping-panda.net`)";
+      entryPoints = "websecure";
+      service = "api@internal";
+      tls = true;
+    };
+
+    routers =
+      (builtins.mapAttrs (
+          service: url: {
+            inherit service;
+            entryPoints = "websecure";
+            rule = "Host(`${service}.sleeping-panda.net`)";
+            tls = true;
           }
         )
-        services
-      );
+        routeMap)
+      // {inherit traefik;};
+
+    services =
+      builtins.mapAttrs (service: url: {
+        loadBalancer.servers = [{inherit url;}];
+      })
+      routeMap;
   in {
     enable = true;
     dynamicConfigOptions = {
-      http.routers =
-        mkSimpleRouters ["adguardhome" "hass"]
-        // {
-          traefik = {
-            rule = "Host(`traefik.sleeping-panda.net`)";
-            entryPoints = "websecure";
-            service = "api@internal";
-            tls = true;
-          };
-        };
-      http.services.adguardhome = {
-        loadBalancer.servers = [{url = "http://localhost:5300/";}];
-      };
-      http.services.hass = {
-        loadBalancer.servers = [{url = "http://10.0.0.3:8123/";}];
+      http = {
+        inherit routers services;
       };
       tls = {
         certificates = [
@@ -70,4 +72,6 @@
       };
     };
   };
+
+  networking.firewall.allowedTCPPorts = [80 443];
 }

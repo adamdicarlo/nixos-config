@@ -8,6 +8,7 @@
       adguardhome = "http://localhost:5300/";
       adguardhome2 = "http://10.0.0.2:5300/";
       hass = "http://10.0.0.3:8123/";
+      openwrt = "http://10.0.0.1/";
     };
 
     traefik = {

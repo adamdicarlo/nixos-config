@@ -126,6 +126,9 @@
           inherit inputs;
         };
         modules = [
+          ({lib, ...}: {
+            nixpkgs.config.allowUnfree = true;
+          })
           inputs.agenix.nixosModules.default
           ./machines/opti/default.nix
         ];

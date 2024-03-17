@@ -3,6 +3,7 @@
     ../common.nix
     ../modules/adguardhome.nix
     ./hardware.nix
+    ./jellyfin.nix
     ./traefik.nix
   ];
 
@@ -10,9 +11,6 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "opti";
-
-  # environment.systemPackages = with pkgs; [
-  # ];
 
   age.secrets.namecheap_api_key.file = ../../secrets/namecheap_api_key.age;
   age.secrets.namecheap_api_user.file = ../../secrets/namecheap_api_user.age;
@@ -41,9 +39,18 @@
     preliminarySelfsigned = false;
   };
 
-  # Open ports in the firewall.
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  systemd.tmpfiles.rules = let
+    services = "/mnt/slab/services";
+  in [
+    # type   path                  mode  user      group     age  argument
+    "d       /mnt                    0775  root      root      -    -"
+    "d       /mnt/slab               0775  adam      users     -    -"
+    "Z       /mnt/slab/downloads     0775  sabnzbd   sabnzbd   -    -"
+    "d       /mnt/slab/media/tv      0775  sonarr    sonarr    -    -"
+    "d       /mnt/slab/media/movies  0775  radarr    radarr    -    -"
+    "d       ${services}             0775  adam      users     -    -"
+    "d       ${services}/sabnzbd     0775  sabnzbd   sabnzbd   -    -"
+  ];
 
   system.stateVersion = "23.11"; # Did you read the comment?
 }

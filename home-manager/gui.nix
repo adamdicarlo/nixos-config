@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: let
   wallpaper = ./wallpaper/pexels-andy-vu-3484061.jpg;
@@ -469,14 +470,25 @@ in {
       right = "l";
       up = "h";
       down = "k";
-      keybindings = pkgs.lib.mkOptionDefault {
-        "${modifier}+Shift+e" = "exec wlogout --protocol layer-shell";
-        "${modifier}+s" = "exec ~/bin/grim-swappy.sh";
-        "${modifier}+Shift+s" = "exec ~/bin/wf-record-area.sh";
-        "${modifier}+Shift+f" = "exec dolphin";
-        "${modifier}+y" = "exec cliphist list | wofi -dmenu | cliphist decode | wl-copy";
-        "${modifier}+m" = "exec pkill wofi-emoji || wofi-emoji";
-      };
+      keybindings = let
+        brillo = "${lib.getExe pkgs.brillo}";
+        wpctl = "${pkgs.wireplumber}/bin/wpctl";
+      in
+        lib.mkOptionDefault {
+          "${modifier}+Shift+e" = "exec wlogout --protocol layer-shell";
+          "${modifier}+s" = "exec ~/bin/grim-swappy.sh";
+          "${modifier}+Shift+s" = "exec ~/bin/wf-record-area.sh";
+          "${modifier}+Shift+f" = "exec dolphin";
+          "${modifier}+y" = "exec cliphist list | wofi -dmenu | cliphist decode | wl-copy";
+          "${modifier}+m" = "exec pkill wofi-emoji || wofi-emoji";
+
+          "XF86AudioLowerVolume" = "exec ${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+          "XF86AudioMute" = "exec ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          "XF86AudioRaiseVolume" = "exec ${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 5%+";
+
+          "XF86MonBrightnessDown" = "exec ${brillo} -q -U 5%";
+          "XF86MonBrightnessUp" = "exec ${brillo} -q -A 5%";
+        };
 
       startup = [
         {command = "1password --silent";}

@@ -87,7 +87,10 @@
     system = "x86_64-linux";
 
     overlays =
-      (import ./overlays {inherit inputs outputs system;})
+      (import ./overlays {
+        inherit inputs outputs system;
+        inherit (nixpkgs) lib;
+      })
       ++ [inputs.nur.overlay];
   in {
     nixosConfigurations = {

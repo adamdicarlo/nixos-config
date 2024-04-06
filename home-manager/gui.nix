@@ -100,6 +100,7 @@ in {
     glow # markdown previewer in terminal
     nerdfonts
 
+    evince
     dolphin
     google-chrome
     meld

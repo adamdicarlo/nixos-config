@@ -152,4 +152,8 @@ in {
     wlr.enable = true;
     extraPortals = [pkgs.xdg-desktop-portal-gtk];
   };
+
+  services.printing = {
+    drivers = [pkgs.splix];
+  };
 }

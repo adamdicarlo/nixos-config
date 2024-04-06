@@ -30,6 +30,11 @@
     openFirewall = true;
   };
 
+  services.bazarr = {
+    enable = true;
+    openFirewall = true;
+  };
+
   services.radarr = {
     enable = true;
     dataDir = "/mnt/slab/services/radarr";
@@ -48,7 +53,9 @@
     openFirewall = true;
   };
 
-  users.users.adam.extraGroups = ["sabnzbd"];
-  users.users.sonarr.extraGroups = ["sabnzbd"];
+  users.users.adam.extraGroups = ["jellyfin" "sabnzbd" "radarr" "sonarr"];
+  users.users.bazarr.extraGroups = ["radarr" "sonarr"];
   users.users.radarr.extraGroups = ["sabnzbd"];
+  users.users.sonarr.extraGroups = ["sabnzbd"];
+  users.users.jellyfin.extraGroups = ["sabnzbd" "radarr" "sonarr" "bazarr"];
 }

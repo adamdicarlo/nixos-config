@@ -42,14 +42,14 @@
   systemd.tmpfiles.rules = let
     services = "/mnt/slab/services";
   in [
-    # type   path                  mode  user      group     age  argument
-    "d       /mnt                    0775  root      root      -    -"
-    "d       /mnt/slab               0775  adam      users     -    -"
-    "Z       /mnt/slab/downloads     0775  sabnzbd   sabnzbd   -    -"
-    "d       /mnt/slab/media/tv      0775  sonarr    sonarr    -    -"
-    "d       /mnt/slab/media/movies  0775  radarr    radarr    -    -"
-    "d       ${services}             0775  adam      users     -    -"
-    "d       ${services}/sabnzbd     0775  sabnzbd   sabnzbd   -    -"
+    # type   path                    mode  user       group      age  argument
+    "d       /mnt                    0775  root       root       -    -"
+    "d       /mnt/slab               0775  root       root       -    -"
+    "Z       /mnt/slab/downloads     0775  sabnzbd    sabnzbd    -    -"
+    "d       /mnt/slab/media/tv      0775  sonarr     sonarr     -    -"
+    "d       /mnt/slab/media/movies  0775  radarr     radarr     -    -"
+    "d       ${services}             0775  root       root       -    -"
+    "d       ${services}/sabnzbd     0775  sabnzbd    sabnzbd    -    -"
   ];
 
   system.stateVersion = "23.11"; # Did you read the comment?

@@ -7,9 +7,10 @@
     routeMap = {
       adguardhome = "http://localhost:5300/";
       adguardhome2 = "http://10.0.0.2:5300/";
+      bazarr = "http://localhost:6767/";
+      hass = "http://10.0.0.3:8123/";
       jellyfin = "http://localhost:8096/";
       jellyseerr = "http://localhost:5055/";
-      hass = "http://10.0.0.3:8123/";
       openwrt = "http://10.0.0.1/";
       radarr = "http://localhost:7878/";
       sabnzbd = "http://localhost:8080/";

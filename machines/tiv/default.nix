@@ -33,6 +33,19 @@
     enable = true;
     polkitPolicyOwners = ["adam"];
   };
+  security.polkit = {
+    extraConfig = ''
+      polkit.addRule(function(action, subject) {
+        if (action.id === "com.1password.1Password.authorizeSshAgent"
+          && subject.isInGroup("wheel")
+          && action.message
+          && action.message.includes("1Password is trying to allow “kitty” to use the key “GitHub” for SSH")
+        ) {
+          return polkit.Result.AUTH_SELF_KEEP
+        }
+      })
+    '';
+  };
 
   programs.sway = {
     enable = true;
@@ -94,8 +107,8 @@
   };
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [3000 3001];
+  networking.firewall.allowedUDPPorts = [3000 3001];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

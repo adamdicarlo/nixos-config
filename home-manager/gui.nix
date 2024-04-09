@@ -101,6 +101,8 @@ in {
     nerdfonts
 
     evince
+    gimp-with-plugins
+
     dolphin
     google-chrome
     meld

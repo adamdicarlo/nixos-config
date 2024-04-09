@@ -92,11 +92,12 @@ in {
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     brightnessctl
+    ffmpeg
     glib
-    xdg-utils
+    glmark2
     glxinfo
     vulkan-tools
-    glmark2
+    xdg-utils
 
     catppuccin-sddm-corners
     where-is-my-sddm-theme

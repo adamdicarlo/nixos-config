@@ -128,6 +128,7 @@
     gnupg
     gnused
     gnutar
+    httpie
     iftop # network monitoring
     iotop # io monitoring
     ipcalc # calculator for IPv4/v6 addresses

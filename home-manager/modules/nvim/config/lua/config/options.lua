@@ -8,3 +8,4 @@ opt.wrap = true
 opt.autoindent = true
 opt.softtabstop = 2
 opt.formatoptions:append({ "l", "n" })
+opt.backupdir = { vim.fn.expand("$HOME/.local/state/nvim/backup//") }

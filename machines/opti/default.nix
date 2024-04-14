@@ -4,6 +4,7 @@
     ../modules/adguardhome.nix
     ./hardware.nix
     ./jellyfin.nix
+    ./nextcloud.nix
     ./traefik.nix
   ];
 

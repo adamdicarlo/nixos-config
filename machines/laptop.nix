@@ -54,11 +54,17 @@ in {
   };
   programs.virt-manager.enable = true;
 
+  services.displayManager.defaultSession = "sway";
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.greetd}/bin/agreety --cmd sway";
+      };
+    };
+  };
   services.xserver = {
     enable = true;
-    displayManager.defaultSession = "sway";
-    displayManager.sddm.enable = true;
-    displayManager.sddm.wayland.enable = true;
     dpi = 96;
     libinput.enable = true;
   };
@@ -98,10 +104,6 @@ in {
     glxinfo
     vulkan-tools
     xdg-utils
-
-    catppuccin-sddm-corners
-    where-is-my-sddm-theme
-    sddm-chili-theme
 
     pavucontrol
     libsForQt5.qt5.qtwayland

@@ -108,12 +108,10 @@ in {
     gimp-with-plugins
 
     dolphin
-    google-chrome
+    (google-chrome.override {commandLineArgs = "--ozone-platform=wayland";})
     meld
     slack
   ];
-
-  nixpkgs.config.google-chrome.commandLineArgs = "--ozone-platform=wayland";
 
   services.cliphist = {
     enable = true;

@@ -1,10 +1,14 @@
 {
   config,
+  hostname,
   pkgs,
   lib,
   ...
 }: let
-  wallpaper = ./wallpaper/pexels-andy-vu-3484061.jpg;
+  wallpaper =
+    if hostname == "tiv"
+    then ./wallpaper/pexels-eberhard-grossgasteiger-1062249.jpg
+    else ./wallpaper/pexels-andy-vu-3484061.jpg;
 in {
   imports = [
     ./modules/tridactyl.nix
@@ -108,6 +112,8 @@ in {
     meld
     slack
   ];
+
+  nixpkgs.config.google-chrome.commandLineArgs = "--ozone-platform=wayland";
 
   services.cliphist = {
     enable = true;
@@ -545,21 +551,7 @@ in {
       bindsym --no-repeat Mod1+semicolon exec wdisplays
       bindsym --no-repeat --locked Shift+Mod1+semicolon output * enable; output * dpms on
     '';
-    #  export BROWSER=google-chrome-stable
-    #  export CLUTTER_BACKEND=wayland
-    #  export GBM_BACKEND=nvidia-drm
-    #  export GDK_BACKEND=wayland,x11
-    #  export LIBVA_DRIVER_NAME=nvidia
-    #  export NIXOS_OZONE_WL=1
-    #  export QT_QPA_PLATFORM=wayland # wayland;xcb
-    #  export SDL_VIDEODRIVER=wayland
-    #  export TERMINAL=kitty
-    #  export WLR_NO_HARDWARE_CURSORS=1
-    #  export WLR_RENDERER=vulkan
-    #  export XCURSOR_SIZE=24
-    #  export __GLX_VENDOR_LIBRARY_NAME=nvidia
-    #  export __GL_VRR_ALLOWED=1
-    #'';
+
     swaynag = {
       enable = true;
       settings = {

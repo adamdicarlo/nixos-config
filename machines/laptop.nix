@@ -1,14 +1,29 @@
 {
+  config,
   pkgs,
   lib,
   ...
 }: let
   extraEnv = {
+    #  export CLUTTER_BACKEND=wayland
+    #  export GDK_BACKEND=wayland,x11
+    #  export QT_QPA_PLATFORM=wayland # wayland;xcb
+    #  export WLR_RENDERER=vulkan
+    #  export XCURSOR_SIZE=24
+    #  export __GL_VRR_ALLOWED=1
+    # TODO: don't spam all of these into environment.variables?
+    BROWSER =
+      if config.networking.hostName == "tiv"
+      then "google-chrome-stable"
+      else "firefox";
     GDK_BACKEND = "wayland";
     MOZ_ENABLE_WAYLAND = "1";
+    NIXOS_OZONE_WL = "1";
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
     QT_QPA_PLATFORM = "wayland";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+    SDL_VIDEODRIVER = "wayland";
+    TERMINAL = "kitty";
     WLR_DRM_NO_ATOMIC = "1";
     XDG_CURRENT_DESKTOP = "sway";
   };

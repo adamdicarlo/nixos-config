@@ -201,10 +201,10 @@
         in
           assert assertion; config.lib.file.mkOutOfStoreSymlink fullPath;
 
-      laptop = username: extras:
-        home-manager.lib.homeManagerConfiguration {
+      laptop = username: hostname: extras: {
+        "${username}@${hostname}" = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          extraSpecialArgs = {inherit inputs outputs mkAbsoluteSymlink username;};
+          extraSpecialArgs = {inherit hostname inputs outputs mkAbsoluteSymlink username;};
           modules =
             [
               ./home-manager/home.nix
@@ -212,26 +212,36 @@
             ]
             ++ extras;
         };
-      server = username:
-        home-manager.lib.homeManagerConfiguration {
+        "root@${hostname}" = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          extraSpecialArgs = {inherit inputs outputs mkAbsoluteSymlink username;};
-          modules = [
-            ./home-manager/home.nix
-          ];
+          extraSpecialArgs = {
+            inherit hostname inputs outputs mkAbsoluteSymlink;
+            username = "root";
+          };
+          modules = [./home-manager/home.nix];
         };
-    in {
-      "adam@oddsy" = server "adam";
-      "root@oddsy" = server "root";
+      };
 
-      "adam@carbo" = laptop "adam" [];
-      "root@carbo" = laptop "root" [];
-
-      "adam@tiv" = laptop "adam" [./home-manager/adaptiv.nix];
-      "root@tiv" = laptop "root" [./home-manager/adaptiv.nix];
-
-      "adam@opti" = server "adam";
-      "root@opti" = server "root";
-    };
+      server = username: hostname: {
+        "${username}@${hostname}" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = {inherit hostname inputs outputs mkAbsoluteSymlink username;};
+          modules = [./home-manager/home.nix];
+        };
+        "root@${hostname}" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = {
+            inherit hostname inputs outputs mkAbsoluteSymlink;
+            username = "root";
+          };
+          modules = [./home-manager/home.nix];
+        };
+      };
+    in
+      {}
+      // server "adam" "oddsy"
+      // server "adam" "opti"
+      // laptop "adam" "tiv" [./home-manager/adaptiv.nix]
+      // laptop "adam" "carbo" [];
   };
 }

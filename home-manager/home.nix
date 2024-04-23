@@ -71,6 +71,7 @@ in {
     neofetch
     procs
     ripgrep
+    tmux
 
     # networking tools
     aria2 # A lightweight multi-protocol & multi-source command-line download utility

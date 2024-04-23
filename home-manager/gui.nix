@@ -104,9 +104,9 @@ in {
     gimp-with-plugins
 
     dolphin
+    google-chrome
     meld
     slack
-    ungoogled-chromium
   ];
 
   services.cliphist = {

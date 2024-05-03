@@ -17,13 +17,23 @@
       (simple "sonarr" "http://localhost:8989/")
       {
         router = {
+          rule = "Host(`nextcloud-aio.sleeping-panda.net`)";
+          entryPoints = "websecure";
+          middlewares = ["nextcloud-chain"];
+          service = "nextcloud-aio";
+          tls = true;
+        };
+        serverUrl = "http://localhost:8000/";
+      }
+      {
+        router = {
           rule = "Host(`nextcloud.sleeping-panda.net`)";
           entryPoints = "websecure";
           middlewares = ["nextcloud-chain"];
           service = "nextcloud";
           tls = true;
         };
-        serverUrl = "http://localhost:8000/";
+        serverUrl = "http://localhost:11000/";
       }
       {
         router = {

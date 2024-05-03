@@ -50,6 +50,7 @@
     "d       /mnt/slab/media/tv      0775  sonarr     sonarr     -    -"
     "d       /mnt/slab/media/movies  0775  radarr     radarr     -    -"
     "d       ${services}             0775  root       root       -    -"
+    "d       ${services}/nextcloud   0750  33         root       -    -"
     "d       ${services}/sabnzbd     0775  sabnzbd    sabnzbd    -    -"
   ];
 

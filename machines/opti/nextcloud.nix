@@ -1,11 +1,11 @@
-{pkgs, ...}: {
+{pkgs, ...}: let
+  compose = pkgs.lib.getExe' pkgs.docker-compose "docker-compose";
+in {
   virtualisation.docker.enable = true;
 
   environment.systemPackages = [pkgs.docker-compose];
 
-  systemd.services.nextcloud-aio = let
-    compose = pkgs.lib.getExe' pkgs.docker-compose "docker-compose";
-  in {
+  systemd.services.nextcloud-aio = {
     enable = true;
     description = "Nextcloud AIO (all-in-one) via docker-compose";
     partOf = ["docker.service"];
@@ -36,4 +36,8 @@
   users.groups.nextcloud.members = ["nextcloud"];
 
   users.users.adam.extraGroups = ["docker" "nextcloud"];
+
+  environment.shellAliases = {
+    ncd = "${compose} -f ${./nextcloud.compose.yaml}";
+  };
 }

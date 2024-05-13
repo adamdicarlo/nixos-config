@@ -400,7 +400,7 @@ in {
     };
     settings = {
       enable_audio_bell = false;
-      scrollback_lines = 15000;
+      scrollback_lines = 30000;
       sync_to_monitor = false;
       visual_bell_duration = "0.2";
     };

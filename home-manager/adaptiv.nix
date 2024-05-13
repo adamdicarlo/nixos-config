@@ -5,6 +5,9 @@
     # TODO: Fix openaws-vpn-client flake to build with latest nixpkgs
     # openaws-vpn-client
   ];
+  home.sessionVariables = {
+    ADAPTIV_PLATFORM_APPLY_QUIETLY = "1";
+  };
 
   programs.zsh = {
     enable = true;
@@ -38,6 +41,8 @@
       };
     }
   ];
+  programs.git.extraConfig.url."github-work:adamdicarlo0/".insteadOf = "git@github.com:adamdicarlo0/";
+  programs.git.extraConfig.url."github-work:adamdicarlo0/".pushInsteadOf = "git@github.com:adamdicarlo0/";
   programs.git.extraConfig.url."github-work:adaptivsystems/".insteadOf = "git@github.com:adaptivsystems/";
   programs.git.extraConfig.url."github-work:adaptivsystems/".pushInsteadOf = "git@github.com:adaptivsystems/";
 

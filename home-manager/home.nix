@@ -84,7 +84,7 @@ in {
     nix-output-monitor
 
     # dev
-    devbox # via ./flakes/devbox
+    devbox
     elmPackages.elm
     elmPackages.elm-format
     elmPackages.lamdera
@@ -94,7 +94,7 @@ in {
     lua-language-server
     nil
     nodePackages.typescript-language-server
-    nodejs_18
+    nodejs_20
     shellcheck
     shfmt
     stylua

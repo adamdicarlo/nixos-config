@@ -81,8 +81,8 @@ in {
   services.xserver = {
     enable = true;
     dpi = 96;
-    libinput.enable = true;
   };
+  services.libinput.enable = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;

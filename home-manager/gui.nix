@@ -119,9 +119,10 @@ in {
 
   services.kanshi = {
     enable = true;
-    profiles = {
-      dell-ultrawide = {
-        outputs = [
+    settings = [
+      {
+        profile.name = "dell-ultrawide";
+        profile.outputs = [
           {
             criteria = "Dell Inc. DELL U3821DW HH7YZ63";
             status = "enable";
@@ -134,10 +135,10 @@ in {
             status = "disable";
           }
         ];
-      };
-
-      lg-ultrawide = {
-        outputs = [
+      }
+      {
+        profile.name = "lg-ultrawide";
+        profile.outputs = [
           {
             criteria = "Goldstar Company Ltd LG HDR WQHD 0x0000B6E2";
             status = "enable";
@@ -150,10 +151,10 @@ in {
             status = "disable";
           }
         ];
-      };
-
-      x1c7-undocked = {
-        outputs = [
+      }
+      {
+        profile.name = "x1c7-undocked";
+        profile.outputs = [
           {
             criteria = "Unknown 0x07C8 0x00000000";
             status = "enable";
@@ -162,10 +163,10 @@ in {
             scale = 2.0;
           }
         ];
-      };
-
-      addw3-undocked = {
-        outputs = [
+      }
+      {
+        profile.name = "addw3-undocked";
+        profile.outputs = [
           {
             criteria = "BOE 0x08B3";
             status = "enable";
@@ -174,8 +175,8 @@ in {
             scale = 1.0;
           }
         ];
-      };
-    };
+      }
+    ];
   };
 
   services.mako.enable = true;

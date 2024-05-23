@@ -9,6 +9,9 @@ return {
   {
     "stevearc/conform.nvim",
     opts = {
+      formatters_by_ft = {
+        elm = { "elm_format" },
+      },
       formatters = {
         shfmt = {
           prepend_args = { "-i", "2" },
@@ -198,18 +201,17 @@ return {
       -- return true if you don't want this server to be setup with lspconfig
       ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
-        -- elmls = function(_, opts)
-        --   return false
-        -- end,
         elmls = function(_, opts)
           local default_config = require("lspconfig.server_configurations.elmls").default_config
           local final_config = vim.tbl_deep_extend("force", default_config, opts, { on_attach = custom_attach })
+
           -- print(vim.inspect(final_config))
           -- final_config.root_dir = function(a, b)
           --   vim.notify("root_dir" .. vim.inspect({ a, b }))
           --   return "/home/adam/work/marketing-site"
           -- end
           require("lspconfig").elmls.setup(final_config)
+
           return true
         end,
         nil_ls = function(_, opts)
@@ -225,7 +227,6 @@ return {
             -- See: https://github.com/neovim/neovim/pull/22405
             { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
           )
-
           require("lspconfig").nil_ls.setup({
             autostart = true,
             capabilities = caps,

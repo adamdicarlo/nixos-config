@@ -1,5 +1,6 @@
 {
   config,
+  firefox-addons,
   hostname,
   pkgs,
   lib,
@@ -301,7 +302,7 @@ in {
       pkgs.tridactyl-native
     ];
     profiles.default = {
-      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+      extensions = with firefox-addons; [
         bitwarden
         decentraleyes
         don-t-fuck-with-paste

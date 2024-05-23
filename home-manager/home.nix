@@ -61,7 +61,7 @@ in {
   };
 
   home.packages = with pkgs; [
-    nur.repos.arc.packages.duc-cli
+    duc
     eza # A modern replacement for ‘ls’
     fd # Modern `find`
     fzf # A command-line fuzzy finder

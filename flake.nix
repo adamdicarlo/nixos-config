@@ -31,12 +31,17 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nur.url = "github:nix-community/NUR";
+    # for gimp-with-plugins fix: https://github.com/NixOS/nixpkgs/pull/312997
+    nixpkgs.url = "github:NixOS/nixpkgs/master";
 
     # openaws-vpn-client and dependency
     openaws-vpn-client = {
@@ -86,12 +91,10 @@
     inherit (self) outputs;
     system = "x86_64-linux";
 
-    overlays =
-      (import ./overlays {
-        inherit inputs outputs system;
-        inherit (nixpkgs) lib;
-      })
-      ++ [inputs.nur.overlay];
+    overlays = import ./overlays {
+      inherit inputs outputs system;
+      inherit (nixpkgs) lib;
+    };
   in {
     nixosConfigurations = {
       carbo = nixpkgs.lib.nixosSystem {
@@ -181,9 +184,13 @@
 
     homeConfigurations = let
       pkgs = import nixpkgs {
+        config = {allowUnfree = true;};
         inherit overlays;
         inherit system;
       };
+
+      firefox-addons =
+        import inputs.firefox-addons {inherit (pkgs) fetchurl lib stdenv;};
 
       # Adapted from https://github.com/robbert-vdh/dotfiles/blob/129432dab00500eaeaf512b1d5003a102a08c72f/flake.nix#L71-L77
       # TODO: Use impurity.nix instead?
@@ -204,7 +211,7 @@
       laptop = username: hostname: extras: {
         "${username}@${hostname}" = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          extraSpecialArgs = {inherit hostname inputs outputs mkAbsoluteSymlink username;};
+          extraSpecialArgs = {inherit firefox-addons hostname inputs outputs mkAbsoluteSymlink username;};
           modules =
             [
               ./home-manager/home.nix

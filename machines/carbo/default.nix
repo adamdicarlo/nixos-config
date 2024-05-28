@@ -22,7 +22,6 @@
   # fileSystems."/".device = "/dev/mapper/crypted";
 
   environment.systemPackages = with pkgs; [
-    dropbox
     nextcloud-client
     signal-desktop
   ];

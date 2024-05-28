@@ -1,9 +1,14 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  inputs,
+  ...
+}: {
   imports = [
     ../common.nix
     ../laptop.nix
     ./disko.nix
     ./hardware.nix
+    inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-7th-gen
   ];
 
   boot.loader.systemd-boot = {

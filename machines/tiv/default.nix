@@ -1,11 +1,11 @@
-{pkgs, ...}: {
+{inputs, ...}: {
   imports = [
     ../common.nix
     ../laptop.nix
     ./hardware.nix
+    inputs.nixos-hardware.system76
   ];
 
-  hardware.system76.enableAll = true;
   services.system76-scheduler.enable = true;
 
   # Bootloader.

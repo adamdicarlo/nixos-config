@@ -43,6 +43,8 @@
     # for gimp-with-plugins fix: https://github.com/NixOS/nixpkgs/pull/312997
     nixpkgs.url = "github:NixOS/nixpkgs/master";
 
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
+
     # openaws-vpn-client and dependency
     openaws-vpn-client = {
       url = "https://github.com/adamdicarlo/openaws-vpn-client/archive/6462f1449875bb26d0866644c3687e4a82b0d4c1.tar.gz";

@@ -91,7 +91,7 @@
   services.tlp = {
     enable = true;
     settings = {
-      CPU_MAX_PERF_ON_AC = 85;
+      CPU_MAX_PERF_ON_AC = 100;
       CPU_MAX_PERF_ON_BAT = 60;
     };
   };

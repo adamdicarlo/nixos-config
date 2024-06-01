@@ -65,7 +65,7 @@ map("", "j", "h", { desc = "Left", silent = true })
 map("", "k", "j", { desc = "Down", silent = true })
 
 -- map("", "zh", "zk", { desc = "Up" })
--- zK does not exis
+-- zK does not exist
 -- map("", "zj", "zh", { desc = "Chararcter left" })
 -- map("", "zJ", "zH", { desc = "Half screen right" })
 -- map("", "zk", "zj", { desc = "Character down" })

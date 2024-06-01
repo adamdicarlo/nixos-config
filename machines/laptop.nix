@@ -167,8 +167,21 @@ in {
   services.dbus.enable = true;
   xdg.portal = {
     enable = true;
-    wlr.enable = true;
+    wlr = {
+      enable = true;
+      settings = {
+        screencast = {
+          max_fps = 15;
+          chooser_type = "simple";
+          chooser_cmd = "${lib.getExe pkgs.slurp} -f %o -or";
+        };
+      };
+    };
     extraPortals = [pkgs.xdg-desktop-portal-gtk];
+    config.preferred = {
+      default = "gtk";
+      "org.freedesktop.impl.portal.Screencast" = "wlr";
+    };
   };
 
   services.printing = {

@@ -6,10 +6,15 @@
   lib,
   ...
 }: let
+  fileManager = pkgs.gnome.nautilus;
+
+  isPersonalMachine = hostname == "carbo";
+  isWorkMachine = !isPersonalMachine;
+
   wallpaper =
-    if hostname == "tiv"
-    then ./wallpaper/pexels-eberhard-grossgasteiger-1062249.jpg
-    else ./wallpaper/pexels-andy-vu-3484061.jpg;
+    if isPersonalMachine
+    then ./wallpaper/pexels-andy-vu-3484061.jpg
+    else ./wallpaper/pexels-eberhard-grossgasteiger-1062249.jpg;
 in {
   imports = [
     ./modules/tridactyl.nix
@@ -101,16 +106,18 @@ in {
     xdragon
 
     # productivity
+    evince
     font-awesome
+    gimp-with-plugins
     glow # markdown previewer in terminal
+    gnome.nautilus
+    gnome.sushi
+    meld
     nerdfonts
 
-    evince
-    gimp-with-plugins
+    zoom-us
 
-    dolphin
     (google-chrome.override {commandLineArgs = "--ozone-platform=wayland";})
-    meld
     slack
   ];
 
@@ -183,6 +190,11 @@ in {
   services.mako.enable = true;
   services.network-manager-applet.enable = true;
 
+  services.nextcloud-client = {
+    enable = hostname == isPersonalMachine;
+    startInBackground = true;
+  };
+
   services.swayidle = {
     enable = true;
     timeouts = [
@@ -212,7 +224,7 @@ in {
   services.udiskie = {
     enable = true;
     settings = {
-      program_options.file_manager = "${pkgs.dolphin}/bin/dolphin";
+      program_options.file_manager = fileManager;
       notifications.timeout = 3;
     };
   };
@@ -487,7 +499,7 @@ in {
           "${modifier}+Shift+e" = "exec wlogout --protocol layer-shell";
           "${modifier}+s" = "exec ~/bin/grim-swappy.sh";
           "${modifier}+Shift+s" = "exec ~/bin/wf-record-area.sh";
-          "${modifier}+Shift+f" = "exec dolphin";
+          "${modifier}+Shift+f" = "exec ${lib.getExe fileManager}";
           "${modifier}+y" = "exec cliphist list | wofi -dmenu | cliphist decode | wl-copy";
           "${modifier}+m" = "exec pkill wofi-emoji || wofi-emoji";
 
@@ -499,11 +511,9 @@ in {
           "XF86MonBrightnessUp" = "exec ${brillo} -q -A 5%";
         };
 
-      startup = [
-        {command = "1password --silent";}
-        # {command = "slack";}
-        # {command = "firefox";}
-      ];
+      startup =
+        (lib.optionals isPersonalMachine [{command = lib.getExe pkgs.nextcloud-client;}])
+        ++ (lib.optionals isWorkMachine [{command = "1password --silent";}]);
 
       terminal = "${pkgs.kitty}/bin/kitty";
       menu = "${pkgs.fuzzel}/bin/fuzzel";

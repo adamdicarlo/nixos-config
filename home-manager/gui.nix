@@ -129,6 +129,10 @@ in {
 
   services.cliphist = {
     enable = true;
+    extraOptions = [
+      "-max-items"
+      "5000"
+    ];
   };
 
   services.kanshi = {

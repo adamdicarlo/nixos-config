@@ -1,7 +1,34 @@
-{pkgs, ...}: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   home.packages = with pkgs; [
     waybar
   ];
+
+  # https://github.com/Lyr-7D1h/swayest_workstyle
+  systemd.user.services.sworkstyle = {
+    Unit = {
+      Description = "Swayest-Workstyle: Workspace namer";
+      PartOf = ["sway-session.target"];
+    };
+    Service = {
+      Type = "simple";
+      ExecStart = lib.getExe pkgs.swayest-workstyle;
+      ExecStop = "kill -2 $MAINPID";
+      Restart = "on-failure";
+      RestartSec = 1;
+      TimeoutStopSec = 10;
+    };
+    Install = {
+      WantedBy = ["sway-session.target"];
+    };
+  };
+  xdg.configFile."sworkstyle/config.toml" = {
+    source = ./sworkstyle.toml;
+  };
 
   programs.waybar = {
     enable = true;
@@ -40,16 +67,6 @@
         # Modules configuration
         "sway/workspaces" = {
           all-outputs = true;
-          format = "{icon}";
-          format-icons = {
-            "1" = "<span color=\"#D8DEE9\">  </span>";
-            "2" = "<span color=\"#88C0D0\">  </span>";
-            "3" = "<span color=\"#D8DEE9\">  </span>";
-            "4" = "<span color=\"#A3BE8C\">  </span>";
-            urgent = "";
-            focused = "";
-            default = "";
-          };
         };
         "sway/mode" = {
           tooltip = false;

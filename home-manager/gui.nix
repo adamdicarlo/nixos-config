@@ -89,6 +89,7 @@ in {
     slurp
     swappy
     swaybg
+    swayest-workstyle
     swayidle
     swaylock
     swaynag-battery

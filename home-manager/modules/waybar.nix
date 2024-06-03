@@ -5,7 +5,6 @@
   ...
 }: let
   isPersonalMachine = hostname == "carbo";
-  isWorkMachine = !isPersonalMachine;
 in {
   home.packages = with pkgs; [
     waybar

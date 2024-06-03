@@ -3,7 +3,7 @@
     ../common.nix
     ../laptop.nix
     ./hardware.nix
-    inputs.nixos-hardware.system76
+    inputs.nixos-hardware.nixosModules.system76
   ];
 
   services.system76-scheduler.enable = true;

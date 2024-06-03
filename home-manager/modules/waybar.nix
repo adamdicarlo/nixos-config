@@ -1,9 +1,12 @@
 {
-  config,
+  hostname,
   lib,
   pkgs,
   ...
-}: {
+}: let
+  isPersonalMachine = hostname == "carbo";
+  isWorkMachine = !isPersonalMachine;
+in {
   home.packages = with pkgs; [
     waybar
   ];
@@ -37,20 +40,19 @@
     settings = {
       mainBar = {
         # From https://github.com/Pipshag/dotfiles_nord/blob/master/.config/waybar/config
-        "layer" = "top"; # Waybar at top layer
-        "position" = "top"; # Waybar position (top|bottom|left|right)
+        layer = "top"; # Waybar at top layer
+        position = "top"; # Waybar position (top|bottom|left|right)
         # "height" = 36; # Waybar height (to be removed for auto height)
         # Archived modules
         # "custom/gpu" "bluetooth"  "custom/weather" "temperature" "sway/window"
         # Choose the order of the modules
-        "modules-left" = [
+        modules-left = [
           "sway/workspaces"
           # "custom/scratchpad-indicator"
           "sway/mode"
-          "wlr/taskbar"
         ];
-        "modules-center" = ["sway/window"];
-        "modules-right" = [
+        modules-center = ["sway/window"];
+        modules-right = [
           "cpu"
           "temperature#cpu"
           "temperature#gpu"
@@ -71,69 +73,70 @@
         "sway/mode" = {
           tooltip = false;
         };
-        "backlight" = {
+        backlight = {
           device = "acpi_video0";
         };
         bluetooth = {
-          "interval" = 30;
-          "format" = "{icon}";
-          # "format-alt" = "{status}";
-          "format-icons" = {
-            "enabled" = "";
-            "disabled" = "";
+          interval = 30;
+          format = "{icon}";
+          # format-alt = "{status}";
+          format-icons = {
+            enabled = "";
+            disabled = "";
           };
-          "on-click" = "blueberry";
+          on-click = "blueberry";
         };
-        "idle_inhibitor" = {
-          "format" = "{icon}";
-          "format-icons" = {
-            "activated" = "";
-            "deactivated" = " ";
+        idle_inhibitor = {
+          format = "{icon}";
+          format-icons = {
+            activated = "";
+            deactivated = " ";
           };
           tooltip = true;
         };
-        "tray" = {
-          #"icon-size = 11;
+        tray = {
           spacing = 6;
         };
-        "clock" = {
-          "format" = "  {:%r     %b %e}";
-          "tooltip-format" = "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>";
-          "today-format" = "<b>{}</b>";
-          "on-click" = "";
+        clock = {
+          format = "  {:%r     %b %e}";
+          tooltip-format = "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>";
+          today-format = "<b>{}</b>";
+          on-click = "";
         };
-        "cpu" = {
-          "interval" = "1";
-          "format" = "  {max_frequency}GHz <span color=\"darkgray\">| {usage}%</span>";
-          "max-length" = 13;
-          "min-length" = 13;
-          "on-click" = "${pkgs.sway}/bin/swaymsg exec \"${pkgs.kitty}/bin/kitty -e btop\"";
-          "tooltip" = false;
+        cpu = {
+          interval = 1;
+          format = "  {max_frequency}GHz <span color=\"darkgray\">| {usage}%</span>";
+          max-length = 13;
+          min-length = 13;
+          on-click = "${pkgs.sway}/bin/swaymsg exec \"${pkgs.kitty}/bin/kitty -e btop\"";
+          tooltip = false;
         };
         "temperature#cpu" = {
-          "thermal-zone" = 0;
-          "interval" = "2";
-          # "hwmon-path" = "/sys/class/hwmon/hwmon3/temp1_input";
-          "critical-threshold" = 80;
-          "format-critical" = "  {temperatureC}°C";
-          "format" = "{icon}  {temperatureC}°C";
-          "format-icons" = [""];
-          "max-length" = 7;
-          "min-length" = 7;
+          thermal-zone =
+            if isPersonalMachine
+            then 2
+            else 4;
+          interval = 2;
+          critical-threshold = 80;
+          format-critical = "  {temperatureC}°C";
+          format = "{icon}  {temperatureC}°C";
+          format-icons = [""];
+          max-length = 7;
+          min-length = 7;
         };
         "temperature#gpu" = {
           thermal-zone = 1;
-          interval = "2";
+          interval = 2;
           # "hwmon-path" = "/sys/class/hwmon/hwmon3/temp1_input";
           critical-threshold = 74;
           format-critical = "  {temperatureC}°C";
           format = "{icon}  {temperatureC}°C";
-          format-icons = [""];
+          format-icons = [""];
           max-length = 7;
           min-length = 7;
         };
         network = {
-          # "interface" = "wlan0", # (Optional) To force the use of this interface,
+          # "interface" = "wlan0", # (Optional) To force the use of an interface.
           format-wifi = " ";
           format-ethernet = "{ifname}: {ipaddr}/{cidr} ";
           format-linked = "{ifname} (No IP) ";
@@ -167,14 +170,14 @@
         };
         pulseaudio = {
           scroll-step = 2.5; # %, can be a float
-          format = "{icon}  {volume}% {format_source}";
+          format = "{icon}   {volume}% {format_source}";
           format-bluetooth = "{volume}% {icon} {format_source}";
           format-bluetooth-muted = " {icon} {format_source}";
           format-muted = " {format_source}";
           #"format-source-muted" = "";
           # format-source = "";
-          format-source = "{volume}% ";
-          format-source-muted = "";
+          format-source = "  {volume}%";
+          format-source-muted = "  ";
           format-icons = {
             "headphone" = "";
             "hands-free" = "";

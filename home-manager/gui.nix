@@ -1,12 +1,15 @@
 {
   config,
-  firefox-addons,
   hostname,
+  inputs,
   pkgs,
   lib,
   ...
 }: let
   fileManager = pkgs.gnome.nautilus;
+
+  firefox-addons =
+    import inputs.firefox-addons {inherit (pkgs) fetchurl lib stdenv;};
 
   isPersonalMachine = hostname == "carbo";
   isWorkMachine = !isPersonalMachine;

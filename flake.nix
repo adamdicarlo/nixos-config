@@ -185,14 +185,12 @@
     };
 
     homeConfigurations = let
+      extraSpecialArgs = {inherit inputs outputs mkAbsoluteSymlink system;};
       pkgs = import nixpkgs {
         config = {allowUnfree = true;};
         inherit overlays;
         inherit system;
       };
-
-      firefox-addons =
-        import inputs.firefox-addons {inherit (pkgs) fetchurl lib stdenv;};
 
       # Adapted from https://github.com/robbert-vdh/dotfiles/blob/129432dab00500eaeaf512b1d5003a102a08c72f/flake.nix#L71-L77
       # TODO: Use impurity.nix instead?
@@ -213,7 +211,7 @@
       laptop = username: hostname: extras: {
         "${username}@${hostname}" = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          extraSpecialArgs = {inherit firefox-addons hostname inputs outputs mkAbsoluteSymlink username;};
+          extraSpecialArgs = extraSpecialArgs // {inherit hostname username;};
           modules =
             [
               ./home-manager/home.nix
@@ -223,10 +221,12 @@
         };
         "root@${hostname}" = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          extraSpecialArgs = {
-            inherit hostname inputs outputs mkAbsoluteSymlink;
-            username = "root";
-          };
+          extraSpecialArgs =
+            extraSpecialArgs
+            // {
+              inherit hostname;
+              username = "root";
+            };
           modules = [./home-manager/home.nix];
         };
       };
@@ -234,15 +234,17 @@
       server = username: hostname: {
         "${username}@${hostname}" = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          extraSpecialArgs = {inherit hostname inputs outputs mkAbsoluteSymlink username;};
+          extraSpecialArgs = extraSpecialArgs // {inherit hostname username;};
           modules = [./home-manager/home.nix];
         };
         "root@${hostname}" = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          extraSpecialArgs = {
-            inherit hostname inputs outputs mkAbsoluteSymlink;
-            username = "root";
-          };
+          extraSpecialArgs =
+            extraSpecialArgs
+            // {
+              inherit hostname;
+              username = "root";
+            };
           modules = [./home-manager/home.nix];
         };
       };

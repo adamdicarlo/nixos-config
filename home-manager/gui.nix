@@ -109,6 +109,8 @@ in {
     wtype
     xdragon
 
+    onlyoffice-bin_latest
+
     # productivity
     evince
     font-awesome

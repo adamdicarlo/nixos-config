@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
     _1password-gui
+    clamav
 
     # TODO: Fix openaws-vpn-client flake to build with latest nixpkgs
     # openaws-vpn-client

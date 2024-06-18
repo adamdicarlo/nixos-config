@@ -6,6 +6,8 @@
   lib,
   ...
 }: let
+  c = import ../lib/dracula.nix;
+
   fileManager = pkgs.gnome.nautilus;
 
   firefox-addons =
@@ -112,6 +114,7 @@ in {
     onlyoffice-bin_latest
 
     # productivity
+    (google-chrome.override {commandLineArgs = "--ozone-platform=wayland";})
     evince
     font-awesome
     gimp-with-plugins
@@ -123,7 +126,6 @@ in {
 
     zoom-us
 
-    (google-chrome.override {commandLineArgs = "--ozone-platform=wayland";})
     slack
   ];
 
@@ -197,7 +199,32 @@ in {
     ];
   };
 
-  services.mako.enable = true;
+  services.mako = {
+    enable = true;
+    backgroundColor = "${c.blue}E0";
+    borderColor = c.black;
+    borderRadius = 8;
+    borderSize = 2;
+    font = "FiraCode Nerd Font Mono 10";
+    height = 120;
+    maxVisible = 6;
+    padding = "12";
+    width = 360;
+    textColor = c.white;
+
+    extraConfig = ''
+      [urgency=critical]
+      background-color=${c.purple}E0
+
+      [app-name=clamav-alert]
+      background-color=${c.red}
+      width=600
+      height=240
+      padding=24
+      font=FiraCode Nerd Font Mono 15
+      on-notify=exec ${lib.getExe pkgs.kitty} -o window_padding_width=12 --class=floating journalctl -eu clamav-daemon.service
+    '';
+  };
   services.network-manager-applet.enable = true;
 
   services.nextcloud-client = {
@@ -427,6 +454,7 @@ in {
       scrollback_lines = 30000;
       sync_to_monitor = false;
       visual_bell_duration = "0.2";
+      window_padding_width = 4;
     };
   };
 
@@ -544,6 +572,12 @@ in {
           {
             command = "floating enable";
             criteria = {
+              app_id = "floating";
+            };
+          }
+          {
+            command = "floating enable";
+            criteria = {
               app_id = "(?i)(?:pavucontrol|nm-connection-editor|gsimplecal|galculator)";
             };
           }
@@ -570,6 +604,26 @@ in {
       # XF86Display key on 'tiv' is Alt_L+; (well, Super_L+p before Colemak and swap_lalt_lwin)
       bindsym --no-repeat Mod1+semicolon exec wdisplays
       bindsym --no-repeat --locked Shift+Mod1+semicolon output * enable; output * dpms on
+
+      #
+      # man 5 sway
+      #
+      # client.<class> <border> <background> <text> [<indicator> [<child_border>]]
+      #
+      # border: The border around the title bar.
+      # background: The background of the title bar.
+      # text: The text color of the title bar.
+      # indicator: The color used to indicate where a new view will open. In a
+      #   tiled container, this would paint the right border of the current
+      #   view if a new view would be opened to the right.
+      #
+      # child_border: The border around the view itself.
+      #
+      client.focused          ${c.cyan}  ${c.black} ${c.white} ${c.brightCyan} ${c.cyan}
+      client.focused_inactive ${c.blue}  ${c.black} ${c.gray}  ${c.blue}       ${c.black}
+      client.unfocused        ${c.blue}  ${c.black} ${c.gray}  ${c.blue}       ${c.black}
+      client.urgent           ${c.red}   ${c.black} ${c.white} ${c.red}        ${c.red}
+      client.background       ${c.black}
     '';
 
     swaynag = {

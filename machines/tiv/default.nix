@@ -1,4 +1,9 @@
-{inputs, ...}: {
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}: {
   imports = [
     ../common.nix
     ../laptop.nix
@@ -7,6 +12,47 @@
   ];
 
   services.system76-scheduler.enable = true;
+
+  services.clamav.daemon = let
+    onVirusEvent =
+      pkgs.writeTextFile
+      {
+        name = "on-virus-event";
+        executable = true;
+        destination = "/bin/on-virus-event.sh";
+        # Script based on https://github.com/Cisco-Talos/clamav/issues/1062#issuecomment-1771546865 (2024-06-04)
+        text = ''
+          #!/usr/bin/env bash
+          ALERT="Signature detected by clamav: $CLAM_VIRUSEVENT_VIRUSNAME in $CLAM_VIRUSEVENT_FILENAME"
+          # Send an alert to all graphical users.
+          for ADDRESS in /run/user/*; do
+            USERID=''${ADDRESS#/run/user/}
+            sudo -u "#$USERID" DBUS_SESSION_BUS_ADDRESS="unix:path=$ADDRESS/bus" \
+              ${lib.getExe pkgs.libnotify} \
+                --app-name=clamav-alert \
+                --urgency=critical \
+                "VIRUS DETECTED" \
+                "$ALERT"
+          done
+        '';
+      };
+  in {
+    enable = true;
+    settings = {
+      MaxThreads = 4;
+      MaxQueue = 12;
+      VirusEvent = "${onVirusEvent}/bin/on-virus-event.sh";
+    };
+  };
+  services.clamav.scanner = {
+    enable = true;
+    interval = "*-*-* 18:45:00";
+  };
+  services.clamav.updater = {
+    enable = true;
+    frequency = 3;
+    interval = "daily";
+  };
 
   # Bootloader.
   boot.loader.systemd-boot = {
@@ -91,7 +137,7 @@
   services.tlp = {
     enable = true;
     settings = {
-      CPU_MAX_PERF_ON_AC = 100;
+      CPU_MAX_PERF_ON_AC = 90;
       CPU_MAX_PERF_ON_BAT = 60;
     };
   };

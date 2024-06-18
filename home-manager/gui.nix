@@ -81,7 +81,6 @@ in {
     gst_all_1.gst-vaapi
     hyprpicker
     imv
-    kooha
     libappindicator-gtk3
     libnotify
     mako
@@ -111,8 +110,6 @@ in {
     wtype
     xdragon
 
-    onlyoffice-bin_latest
-
     # productivity
     (google-chrome.override {commandLineArgs = "--ozone-platform=wayland";})
     evince
@@ -123,10 +120,9 @@ in {
     gnome.sushi
     meld
     nerdfonts
-
-    zoom-us
-
+    onlyoffice-bin_latest
     slack
+    zoom-us
   ];
 
   services.cliphist = {

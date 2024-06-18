@@ -84,6 +84,10 @@ in {
   };
   services.libinput.enable = true;
 
+  services.opensnitch = {
+    enable = true;
+  };
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 

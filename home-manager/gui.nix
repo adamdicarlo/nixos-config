@@ -121,6 +121,7 @@ in {
     meld
     nerdfonts
     onlyoffice-bin_latest
+    opensnitch-ui
     slack
     zoom-us
   ];

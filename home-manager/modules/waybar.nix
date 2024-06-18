@@ -41,7 +41,7 @@ in {
         # From https://github.com/Pipshag/dotfiles_nord/blob/master/.config/waybar/config
         layer = "top"; # Waybar at top layer
         position = "top"; # Waybar position (top|bottom|left|right)
-        # "height" = 36; # Waybar height (to be removed for auto height)
+        height = 36; # Waybar height (to be removed for auto height)
         # Archived modules
         # "custom/gpu" "bluetooth"  "custom/weather" "temperature" "sway/window"
         # Choose the order of the modules
@@ -114,7 +114,7 @@ in {
           thermal-zone =
             if isPersonalMachine
             then 2
-            else 4;
+            else 0;
           interval = 2;
           critical-threshold = 80;
           format-critical = "  {temperatureC}°C";
@@ -123,17 +123,22 @@ in {
           max-length = 7;
           min-length = 7;
         };
-        "temperature#gpu" = {
-          thermal-zone = 1;
-          interval = 2;
-          # "hwmon-path" = "/sys/class/hwmon/hwmon3/temp1_input";
-          critical-threshold = 74;
-          format-critical = "  {temperatureC}°C";
-          format = "{icon}  {temperatureC}°C";
-          format-icons = [""];
-          max-length = 7;
-          min-length = 7;
-        };
+        "temperature#gpu" =
+          {
+            interval = 2;
+            critical-threshold = 74;
+            format-critical = "  {temperatureC}°C";
+            format = "{icon}  {temperatureC}°C";
+            format-icons = [""];
+            max-length = 7;
+            min-length = 7;
+          }
+          // (
+            if isPersonalMachine
+            then {thermal-zone = 1;}
+            else {hwmon-path = "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/17761776:00/hwmon/hwmon3/temp2_input";}
+          );
+
         network = {
           # "interface" = "wlan0", # (Optional) To force the use of an interface.
           format-wifi = " ";

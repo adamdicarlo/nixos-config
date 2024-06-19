@@ -547,11 +547,12 @@ in {
         };
 
       startup =
-        (lib.optionals isPersonalMachine [{command = lib.getExe pkgs.nextcloud-client;}])
+        [{command = lib.getExe pkgs.opensnitch-ui;}]
+        ++ (lib.optionals isPersonalMachine [{command = lib.getExe pkgs.nextcloud-client;}])
         ++ (lib.optionals isWorkMachine [{command = "1password --silent";}]);
 
-      terminal = "${pkgs.kitty}/bin/kitty";
-      menu = "${pkgs.fuzzel}/bin/fuzzel";
+      terminal = lib.getExe pkgs.kitty;
+      menu = lib.getExe pkgs.fuzzel;
 
       floating = {
         border = 2;

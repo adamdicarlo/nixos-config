@@ -74,6 +74,7 @@ in {
     kitty-themes
 
     # Wayland, GUI stuff
+    chayang
     cliphist
     drm_info
     fuzzel
@@ -234,22 +235,18 @@ in {
     timeouts = [
       {
         timeout = 900;
-        command = "${pkgs.swaylock}/bin/swaylock -f";
-      }
-      {
-        timeout = 930;
-        command = "${pkgs.sway}/bin/swaymsg output * power off";
+        command = "${lib.getExe pkgs.chayang} -d 10 && ${pkgs.sway}/bin/swaymsg output * power off";
         resumeCommand = "${pkgs.sway}/bin/swaymsg output * power on";
       }
       {
-        timeout = 935;
+        timeout = 915;
         command = "${pkgs.systemd}/bin/systemctl suspend";
       }
     ];
     events = [
       {
         event = "before-sleep";
-        command = "${pkgs.swaylock}/bin/swaylock -f";
+        command = "${lib.getExe pkgs.swaylock} -f";
       }
     ];
   };
@@ -265,46 +262,49 @@ in {
 
   programs.swaylock = {
     enable = true;
-    settings = {
-      bs-hl-color = "ee2e24ff";
-      caps-lock-bs-hl-color = "ee2e24ff";
-      caps-lock-key-hl-color = "ffd204ff";
-      color = "22d0d2ff";
-      font = "Sans";
+    settings = let
+      transparent = "00000000";
+    in {
+      bs-hl-color = "${c.u.cyan}BB";
+      caps-lock-bs-hl-color = "${c.u.brightYellow}BB";
+      caps-lock-key-hl-color = "${c.u.brightYellow}BB";
+      color = c.u.blue;
+      font = "Inter";
       ignore-empty-password = true;
       image = "${wallpaper}";
       indicator-caps-lock = true;
-      indicator-thickness = "60";
+      indicator-radius = "200";
+      indicator-thickness = "28";
 
-      inside-caps-lock-color = "009ddc00";
-      inside-clear-color = "ffd20400";
-      inside-color = "009ddc00";
-      inside-ver-color = "d9d8d800";
-      inside-wrong-color = "ee2e2400";
+      inside-caps-lock-color = "${c.u.background}BB";
+      inside-clear-color = "${c.u.background}BB";
+      inside-color = "${c.u.background}BB";
+      inside-ver-color = "${c.u.background}DD";
+      inside-wrong-color = "${c.u.background}DD";
 
-      key-hl-color = "009ddcFF";
+      key-hl-color = c.u.green;
 
-      line-caps-lock-color = "009ddcff";
-      line-clear-color = "ffd204ff";
-      line-color = "009ddc00";
-      line-ver-color = "d9d8d8ff";
-      line-wrong-color = "ee2e24ff";
+      line-caps-lock-color = transparent;
+      line-clear-color = transparent;
+      line-color = transparent;
+      line-ver-color = transparent;
+      line-wrong-color = transparent;
 
-      ring-caps-lock-color = "231f20d9";
-      ring-clear-color = "231f20d9";
-      ring-color = "231f20d9";
-      ring-ver-color = "231f20d9";
-      ring-wrong-color = "231f20d9";
+      ring-caps-lock-color = "${c.u.brightYellow}BB";
+      ring-clear-color = "${c.u.cyan}BB";
+      ring-color = "${c.u.purple}BB";
+      ring-ver-color = "${c.u.purple}BB";
+      ring-wrong-color = "${c.u.red}BB";
 
-      separator-color = "231f20dd";
+      separator-color = transparent;
       show-failed-attempts = true;
-      show-keyboard-layout = true;
+      show-keyboard-layout = false;
 
-      text-caps-lock-color = "009ddc00";
-      text-clear-color = "ffd20400";
-      text-color = "009ddc00";
-      text-ver-color = "d9d8d800";
-      text-wrong-color = "ee2e2400";
+      text-caps-lock-color = c.u.white;
+      text-clear-color = c.u.white;
+      text-color = c.u.white;
+      text-ver-color = c.u.white;
+      text-wrong-color = c.u.white;
     };
   };
 

@@ -474,6 +474,36 @@ in {
     enable = true;
   };
 
+  xdg.configFile."wlogout/layout" = {
+    text = ''
+      {
+        "label" : "lock",
+        "action" : "swaylock",
+        "text" : "Lock"
+      } {
+        "label" : "hibernate",
+        "action" : "systemctl hibernate",
+        "text" : "Hibernate"
+      } {
+        "label" : "logout",
+        "action" : "swaymsg exit",
+        "text" : "Log out"
+      } {
+        "label" : "shutdown",
+        "action" : "systemctl poweroff",
+        "text" : "Shutdown"
+      } {
+        "label" : "suspend",
+        "action" : "systemctl suspend",
+        "text" : "Suspend"
+      } {
+        "label" : "reboot",
+        "action" : "systemctl reboot",
+        "text" : "Reboot"
+      }
+    '';
+  };
+
   wayland.windowManager.sway = let
     # Mod1: Alt
     # Mod4: Super

@@ -24,10 +24,11 @@
         text = ''
           #!/usr/bin/env bash
           ALERT="Signature detected by clamav: $CLAM_VIRUSEVENT_VIRUSNAME in $CLAM_VIRUSEVENT_FILENAME"
+          echo "$ALERT"
           # Send an alert to all graphical users.
           for ADDRESS in /run/user/*; do
             USERID=''${ADDRESS#/run/user/}
-            sudo -u "#$USERID" DBUS_SESSION_BUS_ADDRESS="unix:path=$ADDRESS/bus" \
+            ${lib.getExe pkgs.sudo} -u "#$USERID" DBUS_SESSION_BUS_ADDRESS="unix:path=$ADDRESS/bus" \
               ${lib.getExe pkgs.libnotify} \
                 --app-name=clamav-alert \
                 --urgency=critical \

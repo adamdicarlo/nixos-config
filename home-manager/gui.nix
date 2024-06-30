@@ -514,6 +514,52 @@ in {
     systemd.enable = true;
     config = {
       bars = [];
+
+      colors = {
+        #
+        # man 5 sway
+        #
+        # client.<class> <border> <background> <text> [<indicator> [<child_border>]]
+        #
+        # border: The border around the title bar.
+        # background: The background of the title bar.
+        # text: The text color of the title bar.
+        # indicator: The color used to indicate where a new view will open. In a
+        #   tiled container, this would paint the right border of the current
+        #   view if a new view would be opened to the right.
+        # child_border: The border around the view itself.
+        #
+        focused = {
+          border = c.cyan;
+          background = c.black;
+          text = c.white;
+          indicator = c.brightCyan;
+          childBorder = c.cyan;
+        };
+        focusedInactive = {
+          border = c.blue;
+          background = c.black;
+          text = c.gray;
+          indicator = c.blue;
+          childBorder = c.black;
+        };
+        unfocused = {
+          border = c.blue;
+          background = c.black;
+          text = c.gray;
+          indicator = c.blue;
+          childBorder = c.black;
+        };
+        urgent = {
+          border = c.red;
+          background = c.black;
+          text = c.white;
+          indicator = c.red;
+          childBorder = c.red;
+        };
+        background = c.black;
+      };
+
       fonts = {
         names = ["FiraCode Nerd Font Mono" "FontAwesome6Free"];
         size = 11.0;
@@ -632,26 +678,6 @@ in {
       # XF86Display key on 'tiv' is Alt_L+; (well, Super_L+p before Colemak and swap_lalt_lwin)
       bindsym --no-repeat Mod1+semicolon exec wdisplays
       bindsym --no-repeat --locked Shift+Mod1+semicolon output * enable; output * dpms on
-
-      #
-      # man 5 sway
-      #
-      # client.<class> <border> <background> <text> [<indicator> [<child_border>]]
-      #
-      # border: The border around the title bar.
-      # background: The background of the title bar.
-      # text: The text color of the title bar.
-      # indicator: The color used to indicate where a new view will open. In a
-      #   tiled container, this would paint the right border of the current
-      #   view if a new view would be opened to the right.
-      #
-      # child_border: The border around the view itself.
-      #
-      client.focused          ${c.cyan}  ${c.black} ${c.white} ${c.brightCyan} ${c.cyan}
-      client.focused_inactive ${c.blue}  ${c.black} ${c.gray}  ${c.blue}       ${c.black}
-      client.unfocused        ${c.blue}  ${c.black} ${c.gray}  ${c.blue}       ${c.black}
-      client.urgent           ${c.red}   ${c.black} ${c.white} ${c.red}        ${c.red}
-      client.background       ${c.black}
     '';
 
     swaynag = {

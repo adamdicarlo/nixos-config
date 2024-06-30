@@ -64,8 +64,11 @@ in {
 
   # set cursor size and dpi
   xresources.properties = {
-    "Xcursor.size" = 24;
-    "Xft.dpi" = 96;
+    "Xcursor.size" = 32;
+    "Xft.dpi" =
+      if isPersonalMachine
+      then 192
+      else 96;
   };
 
   home.packages = with pkgs; [

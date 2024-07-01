@@ -164,7 +164,7 @@ in {
   services.network-manager-applet.enable = true;
 
   services.nextcloud-client = {
-    enable = hostname == isPersonalMachine;
+    enable = isPersonalMachine;
     startInBackground = true;
   };
 

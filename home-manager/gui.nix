@@ -120,6 +120,7 @@ in {
     glow # markdown previewer in terminal
     gnome.nautilus
     gnome.sushi
+    ianny
     meld
     nerdfonts
     onlyoffice-bin_latest

@@ -38,7 +38,7 @@
         profile.name = "x1c7-undocked";
         profile.outputs = [
           {
-            criteria = "Unknown 0x07C8 0x00000000";
+            criteria = "BOE 0x07C8 Unknown";
             status = "enable";
             mode = "3840x2160@60Hz";
             position = "0,0";

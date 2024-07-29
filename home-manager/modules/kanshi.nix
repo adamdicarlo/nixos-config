@@ -8,7 +8,7 @@
           {
             criteria = "Dell Inc. DELL U3821DW HH7YZ63";
             status = "enable";
-            mode = "3840x1600@60Hz";
+            mode = "3840x1600@30Hz";
             position = "0,0";
             scale = 1.0;
           }
@@ -50,7 +50,7 @@
         profile.name = "addw3-undocked";
         profile.outputs = [
           {
-            criteria = "BOE 0x08B3";
+            criteria = "BOE 0x08B3 Unknown";
             status = "enable";
             mode = "1920x1080@144Hz";
             position = "0,0";

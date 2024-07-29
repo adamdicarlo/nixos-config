@@ -7,7 +7,7 @@
     # openaws-vpn-client
   ];
   home.sessionVariables = {
-    ADAPTIV_PLATFORM_APPLY_QUIETLY = "1";
+    TIV_PLATFORM_APPLY_QUIETLY = "1";
   };
 
   programs.zsh = {

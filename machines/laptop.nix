@@ -55,7 +55,10 @@ in {
     session required pam_env.so conffile=/etc/pam/environment readenv=0
     session required pam_unix.so
   '';
-  security.polkit.enable = true;
+  security.polkit = {
+    enable = true;
+  };
+
   services.logind.lidSwitchExternalPower = "ignore";
 
   hardware.keyboard.uhk.enable = true;
@@ -124,8 +127,9 @@ in {
     vulkan-tools
     xdg-utils
 
-    pavucontrol
     libsForQt5.qt5.qtwayland
+    pavucontrol
+    swayosd
     qt6.qtwayland
 
     qemu_kvm
@@ -139,6 +143,17 @@ in {
     enable = true;
     wrapperFeatures.gtk = true;
   };
+
+  services.dbus.enable = true;
+
+  # This was an attempt to get swayosd-libinput-backend to work properly. The
+  # service would start (though only when manually via systemctl), and dbus
+  # messages would be generated when pressing volume keys, but nothing
+  # happened, and the message send destination was null (problem or red
+  # herring?).
+  # services.udev.packages = [pkgs.swayosd];
+  # services.dbus.packages = [pkgs.swayosd];
+  # systemd.packages = [pkgs.swayosd];
 
   services.tlp = {
     enable = true;
@@ -168,7 +183,6 @@ in {
     enable = true;
   };
 
-  services.dbus.enable = true;
   xdg.portal = {
     enable = true;
     wlr = {

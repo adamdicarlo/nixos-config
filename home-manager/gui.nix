@@ -20,6 +20,7 @@ in {
     ./modules/kanshi.nix
     ./modules/firefox.nix
     ./modules/polkit-mate.nix
+    ./modules/swayosd.nix
     ./modules/waybar.nix
   ];
 
@@ -421,28 +422,29 @@ in {
       up = "h";
       down = "k";
       keybindings = let
-        brillo = "${lib.getExe pkgs.brillo}";
-        wpctl = "${pkgs.wireplumber}/bin/wpctl";
+        swayosd = lib.getExe' pkgs.swayosd "swayosd-client";
       in
         lib.mkOptionDefault {
           "${modifier}+Shift+e" = "exec ${lib.getExe pkgs.wlogout} --protocol layer-shell";
           "${modifier}+s" = "exec ~/bin/grim-swappy.sh";
           "${modifier}+Shift+s" = "exec ~/bin/wf-record-area.sh";
           "${modifier}+Shift+f" = "exec ${lib.getExe fileManager}";
-          "${modifier}+y" = "exec cliphist list | wofi -dmenu | cliphist decode | wl-copy";
-          "${modifier}+m" = "exec pkill wofi-emoji || wofi-emoji";
+          "${modifier}+y" = "exec pkill wofi || cliphist list | wofi -dmenu | cliphist decode | wl-copy";
+          "${modifier}+m" = "exec pkill wofi || wofi-emoji";
 
-          "XF86AudioLowerVolume" = "exec ${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 5%-";
-          "XF86AudioMute" = "exec ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle";
-          "XF86AudioRaiseVolume" = "exec ${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 5%+";
-
-          "XF86MonBrightnessDown" = "exec ${brillo} -q -U 5%";
-          "XF86MonBrightnessUp" = "exec ${brillo} -q -A 5%";
+          "--release Caps_Lock" = "exec ${swayosd} --caps-lock";
+          "XF86AudioRaiseVolume" = "exec ${swayosd} --output-volume raise";
+          "XF86AudioLowerVolume" = "exec ${swayosd} --output-volume lower";
+          "XF86AudioMute" = "exec ${swayosd} --output-volume mute-toggle";
+          "XF86MonBrightnessUp" = "exec ${swayosd} --brightness raise";
+          "XF86MonBrightnessDown" = "exec ${swayosd} --brightness lower";
         };
 
       startup =
         [
           {
+            # Always run this when Sway starts, so that GUI services like
+            # portals and polkit agent don't break!
             command = "systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK";
             always = true;
           }

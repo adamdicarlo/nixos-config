@@ -152,7 +152,7 @@ in {
         };
         privacy = {
           icon-spacing = 4;
-          icon-size = 18;
+          icon-size = 16;
           transition-duration = 350;
           modules = [
             {

@@ -4,6 +4,7 @@
   lib,
   ...
 }: let
+  q-zandronum = pkgs.callPackage (import ./modules/q-zandronum) {};
   c = import ../lib/dracula.nix;
 
   fileManager = pkgs.gnome.nautilus;
@@ -69,65 +70,67 @@ in {
       else 96;
   };
 
-  home.packages = with pkgs; [
-    kitty
-    kitty-img
-    kitty-themes
+  home.packages = with pkgs;
+    [
+      kitty
+      kitty-img
+      kitty-themes
 
-    # Wayland, GUI stuff
-    chayang
-    cliphist
-    drm_info
-    fuzzel
-    grim
-    gst_all_1.gst-vaapi
-    hyprpicker
-    imv
-    libappindicator-gtk3
-    libnotify
-    mako
-    networkmanagerapplet
-    nwg-displays
-    playerctl
-    slurp
-    swappy
-    swaybg
-    swayest-workstyle
-    swayidle
-    swaylock
-    swaynag-battery
-    udiskie
-    wbg
-    wdisplays
-    wev
-    wf-recorder
-    wl-clipboard
-    wl-gammarelay-rs
-    wlogout
-    wlsunset
-    wob
-    wofi
-    wofi-emoji
-    wshowkeys
-    wtype
-    xdragon
+      # Wayland, GUI stuff
+      chayang
+      cliphist
+      drm_info
+      fuzzel
+      grim
+      gst_all_1.gst-vaapi
+      hyprpicker
+      imv
+      libappindicator-gtk3
+      libnotify
+      mako
+      networkmanagerapplet
+      nwg-displays
+      playerctl
+      slurp
+      swappy
+      swaybg
+      swayest-workstyle
+      swayidle
+      swaylock
+      swaynag-battery
+      udiskie
+      wbg
+      wdisplays
+      wev
+      wf-recorder
+      wl-clipboard
+      wl-gammarelay-rs
+      wlogout
+      wlsunset
+      wob
+      wofi
+      wofi-emoji
+      wshowkeys
+      wtype
+      xdragon
 
-    # productivity
-    (google-chrome.override {commandLineArgs = "--ozone-platform=wayland";})
-    evince
-    font-awesome
-    gimp-with-plugins
-    glow # markdown previewer in terminal
-    gnome.nautilus
-    gnome.sushi
-    ianny
-    meld
-    nerdfonts
-    onlyoffice-bin_latest
-    opensnitch-ui
-    slack
-    zoom-us
-  ];
+      # productivity
+      (google-chrome.override {commandLineArgs = "--ozone-platform=wayland";})
+      evince
+      font-awesome
+      gimp-with-plugins
+      glow # markdown previewer in terminal
+      gnome.nautilus
+      gnome.sushi
+      ianny
+      meld
+      nerdfonts
+      onlyoffice-bin_latest
+      opensnitch-ui
+      slack
+      zoom-us
+    ]
+    ++ (lib.lists.optionals isPersonalMachine [doomseeker doomretro gzdoom lgogdownloader zandronum-alpha q-zandronum]);
 
   services.cliphist = {
     enable = true;

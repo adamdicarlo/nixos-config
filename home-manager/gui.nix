@@ -130,7 +130,16 @@ in {
       slack
       zoom-us
     ]
-    ++ (lib.lists.optionals isPersonalMachine [doomseeker doomretro gzdoom lgogdownloader zandronum-alpha q-zandronum]);
+    ++ (lib.lists.optionals isPersonalMachine [
+      doomseeker
+      doomretro
+      gzdoom
+      lgogdownloader
+      zandronum-alpha
+      q-zandronum
+
+      freecad
+    ]);
 
   services.cliphist = {
     enable = true;

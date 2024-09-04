@@ -148,6 +148,7 @@
     lshw
     mtr # A network diagnostic tool
     neovim
+    nh # nix CLI helper: https://github.com/viperML/nh
     nmap # A utility for network discovery and security auditing
     p7zip
     pciutils # lspci

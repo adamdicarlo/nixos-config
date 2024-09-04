@@ -19,8 +19,8 @@
     # I really hope I never need to use ghostscript.
     gs = "git status";
 
-    hm = "home-manager --flake . --impure";
-    nos = "sudo nixos-rebuild --flake . --impure";
+    hm = "nh home switch ~/nixos-config --ask -- --impure";
+    nos = "nh os rebuild ~/nixos-config --ask";
   };
 in {
   imports = [

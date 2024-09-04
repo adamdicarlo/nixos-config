@@ -18,6 +18,6 @@ let
   # ];
   # workKeys = workUsers ++ workMachines;
 in {
-  "secrets/namecheap_api_user.age".publicKeys = personalKeys;
-  "secrets/namecheap_api_key.age".publicKeys = personalKeys;
+  "secrets/cloudflare_email.age".publicKeys = personalKeys;
+  "secrets/cloudflare_api_key.age".publicKeys = personalKeys;
 }

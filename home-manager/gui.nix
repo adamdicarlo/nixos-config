@@ -138,6 +138,7 @@ in {
       zandronum-alpha
       q-zandronum
 
+      bambu-studio
       freecad
     ]);
 

@@ -19,8 +19,8 @@
     # I really hope I never need to use ghostscript.
     gs = "git status";
 
-    hm = "nh home switch ~/nixos-config --ask -- --impure";
-    nos = "nh os rebuild ~/nixos-config --ask";
+    hm = "nh home switch --ask -- --impure";
+    nos = "nh os switch --ask";
   };
 in {
   imports = [

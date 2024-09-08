@@ -78,6 +78,10 @@
     '';
   };
 
+  programs.nh = {
+    enable = true;
+    flake = "/home/adam/nixos-config";
+  };
   programs.fish.enable = true;
   programs.zsh.enable = true;
 

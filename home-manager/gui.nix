@@ -120,8 +120,8 @@ in {
       font-awesome
       gimp-with-plugins
       glow # markdown previewer in terminal
-      gnome.nautilus
-      gnome.sushi
+      nautilus
+      sushi
       ianny
       meld
       nerdfonts

@@ -9,3 +9,12 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.shiftwidth = 4
   end,
 })
+
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+  group = augroup("devbox"),
+  pattern = { "devbox.json" },
+  callback = function()
+    vim.opt_local.shiftwidth = 2
+    vim.opt_local.filetype = "jsonc"
+  end,
+})

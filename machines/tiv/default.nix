@@ -66,6 +66,26 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.initrd.luks.devices."luks-89774725-33d7-4569-98ca-969947979248".device = "/dev/disk/by-uuid/89774725-33d7-4569-98ca-969947979248";
 
+  # Support building arm64 Docker images.
+  boot.binfmt.emulatedSystems = ["aarch64-linux"];
+  virtualisation.docker.daemon.settings = {
+    features = {
+      # https://docs.docker.com/build/building/multi-platform/#enable-the-containerd-image-store
+      containerd-snapshotter = true;
+    };
+  };
+  # Need to create a custom builder (and set it as the default builder)
+  system.activationScripts.ensureDockerBuildxBuilder = {
+    deps = ["etc"];
+    text = let
+      docker = lib.getExe pkgs.docker;
+    in ''
+      ${docker} buildx inspect container-builder &>/dev/null || \
+        ${docker} buildx create --name container-builder \
+          --driver docker-container --use --bootstrap
+    '';
+  };
+
   boot.blacklistedKernelModules = ["nvidia"];
   networking.hostName = "tiv";
 

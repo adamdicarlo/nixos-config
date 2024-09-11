@@ -68,6 +68,7 @@
 
   # Support building arm64 Docker images.
   boot.binfmt.emulatedSystems = ["aarch64-linux"];
+  virtualisation.containerd.enable = true;
   virtualisation.docker.daemon.settings = {
     features = {
       # https://docs.docker.com/build/building/multi-platform/#enable-the-containerd-image-store

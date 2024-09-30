@@ -27,6 +27,27 @@
         "type": "github"
       }
     },
+    "devbox": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1727668758,
+        "narHash": "sha256-yhEo1c35Z2AMKCt11uY+9C9UV+dFkjmQytacoqmcFeU=",
+        "owner": "adamdicarlo",
+        "repo": "devbox-nix-flake",
+        "rev": "faa389fb07fac076e0e3c5e1d8915c5689eedccf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "adamdicarlo",
+        "repo": "devbox-nix-flake",
+        "type": "github"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -215,16 +236,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1725420514,
-        "narHash": "sha256-B83depegqaTeaBSEwW+nzAtd98KY29cGzHDP8loVK5Q=",
+        "lastModified": 1727460295,
+        "narHash": "sha256-6GeLUedObUxjrofmNnd80M1VxEtEfRva7oOP5sJg4l8=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "2591b261a3fa5608268c1e548fc75da1d4c02a2e",
+        "rev": "c101f2dc94c1a109823709a1b39f73f31ca0a682",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "master",
+        "ref": "staging",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -241,6 +262,22 @@
       "original": {
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1727348695,
+        "narHash": "sha256-J+PeFKSDV+pHL7ukkfpVzCOO7mBSrrpJ3svwBFABbhI=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "1925c603f17fc89f4c8f6bf6f631a802ad85d784",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
         "type": "github"
       }
     },
@@ -267,6 +304,7 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "devbox": "devbox",
         "disko": "disko",
         "firefox-addons": "firefox-addons",
         "flake-utils": "flake-utils",
@@ -274,7 +312,7 @@
         "lib-aggregate": "lib-aggregate",
         "nix-eval-jobs": "nix-eval-jobs",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": "nixpkgs_2",
         "openaws-vpn-client": "openaws-vpn-client",
         "rust-overlay": "rust-overlay",
         "systems": "systems"

@@ -27,6 +27,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.systems.follows = "systems";
     };
+    devbox = {
+      url = "github:adamdicarlo/devbox-nix-flake";
+      inputs.flake-utils.follows = "flake-utils";
+    };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";

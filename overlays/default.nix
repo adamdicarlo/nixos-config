@@ -22,4 +22,8 @@
       postPatch = prev.lib.replaceStrings ["mv -v *.ppd ppd/"] ["cd splix"] old.postPatch;
     });
   })
+
+  (final: prev: {
+    devbox = inputs.devbox.outputs.defaultPackage.${system};
+  })
 ]

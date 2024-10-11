@@ -24,6 +24,6 @@
   })
 
   (final: prev: {
-    devbox = inputs.devbox.outputs.defaultPackage.${system};
+    devbox = inputs.devbox.outputs.packages.${system}.default;
   })
 ]

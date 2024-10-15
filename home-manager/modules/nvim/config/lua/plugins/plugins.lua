@@ -50,12 +50,10 @@ return {
 
   {
     "williamboman/mason.nvim",
-    enabled = false,
+    enabled = true,
     opts = {
       ensure_installed = {
-        "stylua",
-        "shellcheck",
-        "shfmt",
+        "vtsls",
       },
     },
   },
@@ -132,6 +130,7 @@ return {
 
   {
     "neovim/nvim-lspconfig",
+    ---@class PluginLspOpts
     opts = {
       -- LSP Server Settings
       ---@type lspconfig.options
@@ -139,6 +138,7 @@ return {
       -- @see https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/configs/elmls.lua
       servers = {
         elmls = {
+          mason = false,
           rootPatterns = { "elm.json" },
           init_options = {
             disableElmLSDiagnostics = false,
@@ -189,15 +189,18 @@ return {
           },
         },
 
-        tsserver = {},
-        ["nil_ls"] = {
+        -- Nix language server
+        nil_ls = {
+          mason = false,
           init_options = {
             formatting = {
               command = { "alejandra" },
             },
           },
         },
+
         tailwindcss = {
+          mason = false,
           filetypes = {
             "elm",
           },
@@ -234,6 +237,42 @@ return {
             },
           },
         },
+
+        ---@deprecated -- tsserver renamed to ts_ls but not yet released, so keep this for now
+        tsserver = { enabled = false },
+
+        ts_ls = {
+          enabled = false,
+        },
+
+        vtsls = {
+          settings = {
+            complete_function_calls = true,
+            vtsls = {
+              enableMoveToFileCodeAction = true,
+              autoUseWorkspaceTsdk = true,
+              experimental = {
+                completion = {
+                  enableServerSideFuzzyMatch = true,
+                },
+              },
+            },
+            typescript = {
+              updateImportsOnFileMove = { enabled = "always" },
+              suggest = {
+                completeFunctionCalls = true,
+              },
+              inlayHints = {
+                enumMemberValues = { enabled = true },
+                functionLikeReturnTypes = { enabled = true },
+                parameterNames = { enabled = "literals" },
+                parameterTypes = { enabled = true },
+                propertyDeclarationTypes = { enabled = true },
+                variableTypes = { enabled = false },
+              },
+            },
+          },
+        },
       },
 
       -- you can do any additional lsp server setup here
@@ -257,6 +296,7 @@ return {
           return true
         end,
 
+        -- Nix language server
         nil_ls = function(_, opts)
           -- Lovingly copied from https://github.com/oxalica/nil/blob/main/dev/nvim-lsp.nix:
 
@@ -279,11 +319,15 @@ return {
           })
           return true
         end,
-        -- example to setup with typescript.nvim
-        -- tsserver = function(_, opts)
-        --   require("typescript").setup({ server = opts })
-        --   return true
-        -- end,
+
+        --- @deprecated -- tsserver renamed to ts_ls but not yet released, so keep this for now
+        tsserver = function() return true end,
+
+        ts_ls = function()
+          -- disable tsserver
+          return true
+        end,
+
         -- Specify * to use this function as a fallback for any server
         -- ["*"] = function(server, opts) end,
       },

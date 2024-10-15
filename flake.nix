@@ -44,9 +44,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # for gimp-with-plugins fix: https://github.com/NixOS/nixpkgs/pull/312997
-    nixpkgs.url = "github:NixOS/nixpkgs/master";
-
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     # openaws-vpn-client and dependency

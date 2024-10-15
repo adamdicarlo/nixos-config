@@ -1,4 +1,10 @@
-{pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: let
+  home = config.home.homeDirectory;
+in {
   home.packages = with pkgs; [
     _1password-gui
     clamav
@@ -18,8 +24,9 @@
         ds = "devbox shell";
       };
     };
-    # initExtra = ''
-    # '';
+    initExtra = ''
+      export PATH="${home}/work/common/cli/bin:$PATH"
+    '';
   };
 
   programs.git.includes = [
@@ -60,7 +67,7 @@
     github-work = {
       hostname = "github.com";
       user = "git";
-      identityFile = "/home/adam/.ssh/id_adaptiv";
+      identityFile = "${home}/.ssh/id_adaptiv";
       extraOptions = {
         AddKeysToAgent = "yes";
         IdentityAgent = "~/.1password/agent.sock";
@@ -70,7 +77,7 @@
       extraOptions = {
         AddKeysToAgent = "yes";
       };
-      identityFile = "/home/adam/.ssh/id_personal";
+      identityFile = "${home}/.ssh/id_personal";
       user = "git";
     };
   };

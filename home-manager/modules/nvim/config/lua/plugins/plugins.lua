@@ -117,13 +117,8 @@ return {
   },
 
   -- { "nvim-treesitter/nvim-treesitter-textobjects", enabled = false },
-
-  -- treesitter "Foo.|" CRASH CAUSER?!?!?!?!? fuhhhh, guess not
   -- { "RRethy/vim-illuminate", enabled = false },
   -- { "tpope/vim-repeat", enabled = false },
-
-  -- /FIND THE CRASH
-
   -- { "nvim-treesitter/nvim-treesitter", enabled = false },
 
   {
@@ -161,6 +156,39 @@ return {
             },
           },
         },
+
+        lua_ls = {
+          mason = false, -- set to false if you don't want this server to be installed with mason
+          -- Use this to add any additional keymaps
+          -- for specific lsp servers
+          -- ---@type LazyKeysSpec[]
+          -- keys = {},
+          settings = {
+            Lua = {
+              workspace = {
+                checkThirdParty = false,
+              },
+              codeLens = {
+                enable = true,
+              },
+              completion = {
+                callSnippet = "Replace",
+              },
+              doc = {
+                privateName = { "^_" },
+              },
+              hint = {
+                enable = true,
+                setType = true,
+                paramType = true,
+                paramName = "Disable",
+                semicolon = "Disable",
+                arrayIndex = "Disable",
+              },
+            },
+          },
+        },
+
         tsserver = {},
         ["nil_ls"] = {
           init_options = {

@@ -40,8 +40,8 @@
   in {
     enable = true;
     settings = {
-      MaxThreads = 4;
-      MaxQueue = 12;
+      MaxThreads = 2;
+      MaxQueue = 8;
       VirusEvent = "${onVirusEvent}/bin/on-virus-event.sh";
     };
   };

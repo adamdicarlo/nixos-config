@@ -136,7 +136,7 @@ return {
       -- LSP Server Settings
       ---@type lspconfig.options
       -- @see https://github.com/elm-tooling/elm-language-server#server-settings
-      -- @see https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/elmls.lua
+      -- @see https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/configs/elmls.lua
       servers = {
         elmls = {
           rootPatterns = { "elm.json" },
@@ -241,18 +241,22 @@ return {
       ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
         elmls = function(_, opts)
-          local default_config = require("lspconfig.server_configurations.elmls").default_config
+          local default_config = require("lspconfig.configs.elmls").default_config
           local final_config = vim.tbl_deep_extend("force", default_config, opts, { on_attach = custom_attach })
 
-          -- print(vim.inspect(final_config))
+          -- :Notifications
+          -- vim.notify(vim.inspect(final_config))
+          -- local root_dir = final_config.root_dir
           -- final_config.root_dir = function(a, b)
-          --   vim.notify("root_dir" .. vim.inspect({ a, b }))
-          --   return "/home/adam/work/marketing-site"
+          --   local root = root_dir(a, b)
+          --   vim.notify("root_dir: " .. root)
+          --   return root
           -- end
           require("lspconfig").elmls.setup(final_config)
 
           return true
         end,
+
         nil_ls = function(_, opts)
           -- Lovingly copied from https://github.com/oxalica/nil/blob/main/dev/nvim-lsp.nix:
 

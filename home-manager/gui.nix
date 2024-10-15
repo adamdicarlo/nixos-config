@@ -7,7 +7,7 @@
   q-zandronum = pkgs.callPackage (import ./modules/q-zandronum) {};
   c = import ../lib/dracula.nix;
 
-  fileManager = pkgs.gnome.nautilus;
+  fileManager = pkgs.nautilus;
 
   isPersonalMachine = hostname == "carbo";
   isWorkMachine = !isPersonalMachine;

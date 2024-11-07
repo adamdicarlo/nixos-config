@@ -26,6 +26,8 @@ vim.filetype.add({
         local content = vim.api.nvim_buf_get_lines(bufnr, 0, 1, false)[1] or ""
         if vim.regex([[^#!.*\<tiv\>.*\<bash\>]]):match_str(content) ~= nil then
           return "bash"
+        elseif vim.regex([[^#!.*\<tiv\>.*\<node\>]]):match_str(content) ~= nil then
+          return "javascript"
         end
       end,
       { priority = -math.huge },

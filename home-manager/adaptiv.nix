@@ -8,6 +8,7 @@ in {
   home.packages = with pkgs; [
     _1password-gui
     clamav
+    mu-repo
 
     # TODO: Fix openaws-vpn-client flake to build with latest nixpkgs
     # openaws-vpn-client

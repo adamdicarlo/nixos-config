@@ -273,7 +273,7 @@ in {
 
   programs.kitty = {
     enable = true;
-    themeFile = "Catppuccin-Mocha";
+    themeFile = "Dracula";
     font = {
       package = pkgs.nerdfonts;
       name = "FiraCode Nerd Font Mono";

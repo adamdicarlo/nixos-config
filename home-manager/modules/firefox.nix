@@ -48,7 +48,7 @@ in {
         dracula-dark-colorscheme
         facebook-container
         ff2mpv
-        tree-style-tab
+        # tree-style-tab
         tridactyl
         ublock-origin
         umatrix

@@ -447,11 +447,11 @@ in {
           "${modifier}+m" = "exec pkill wofi || wofi-emoji";
 
           "--release Caps_Lock" = "exec ${swayosd} --caps-lock";
-          "XF86AudioRaiseVolume" = "exec ${swayosd} --output-volume raise";
-          "XF86AudioLowerVolume" = "exec ${swayosd} --output-volume lower";
-          "XF86AudioMute" = "exec ${swayosd} --output-volume mute-toggle";
-          "XF86MonBrightnessUp" = "exec ${swayosd} --brightness raise";
-          "XF86MonBrightnessDown" = "exec ${swayosd} --brightness lower";
+          "--locked XF86AudioRaiseVolume" = "exec ${swayosd} --output-volume raise";
+          "--locked XF86AudioLowerVolume" = "exec ${swayosd} --output-volume lower";
+          "--locked XF86AudioMute" = "exec ${swayosd} --output-volume mute-toggle";
+          "--locked XF86MonBrightnessUp" = "exec ${swayosd} --brightness raise";
+          "--locked XF86MonBrightnessDown" = "exec ${swayosd} --brightness lower";
         };
 
       startup =

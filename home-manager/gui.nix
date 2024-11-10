@@ -139,7 +139,7 @@ in {
       q-zandronum
 
       bambu-studio
-      freecad
+      freecad-wayland
     ]);
 
   services.cliphist = {

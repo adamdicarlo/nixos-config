@@ -27,4 +27,8 @@ let
     dimWhite = "#B8B8B2";
   };
   # colors plus a 'u' attribute containing the colors without the # prefix
-in (colors // {u = builtins.mapAttrs (name: value: builtins.substring 1 (-1) value) colors;})
+in
+  colors
+  // {
+    u = builtins.mapAttrs (_name: value: builtins.substring 1 (-1) value) colors;
+  }

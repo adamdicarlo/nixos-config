@@ -142,9 +142,11 @@ return {
           rootPatterns = { "elm.json" },
           init_options = {
             disableElmLSDiagnostics = false,
-            elmReviewDiagnostics = "error",
-            elmPath = "/home/adam/.nix-profile/bin/lamdera",
-            elmReviewPath = "./node_modules/.bin/elm-review",
+            elmReviewDiagnostics = "warning",
+            elmPath = vim.fn.exepath("lamdera") or vim.fn.exepath("elm"),
+            elmReviewPath = vim.fn.executable("./node_modules/.bin/elm-review") and "./node_modules/.bin/elm-review"
+              or vim.fn.exepath("elm-review"),
+            elmTestPath = vim.fn.exepath("elm-test-rs") or vim.fn.exepath("elm-test") or nil,
             elmTestRunner = {
               showElmTestOutput = true,
             },

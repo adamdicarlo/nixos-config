@@ -55,19 +55,23 @@
     interval = "daily";
   };
 
-  # Bootloader.
-  boot.loader.systemd-boot = {
-    enable = true;
-    configurationLimit = 4;
-  };
-  boot.kernelParams = [
-    "blacklist=nvidia"
-  ];
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.initrd.luks.devices."luks-89774725-33d7-4569-98ca-969947979248".device = "/dev/disk/by-uuid/89774725-33d7-4569-98ca-969947979248";
+  boot = {
+    loader.systemd-boot = {
+      enable = true;
+      configurationLimit = 4;
+    };
+    kernelParams = [
+      "blacklist=nvidia"
+    ];
+    loader.efi.canTouchEfiVariables = true;
+    initrd.luks.devices."luks-89774725-33d7-4569-98ca-969947979248".device = "/dev/disk/by-uuid/89774725-33d7-4569-98ca-969947979248";
 
-  # Support building arm64 Docker images.
-  boot.binfmt.emulatedSystems = ["aarch64-linux"];
+    # Support building arm64 Docker images.
+    binfmt.emulatedSystems = ["aarch64-linux"];
+
+    blacklistedKernelModules = ["nvidia"];
+  };
+
   virtualisation.containerd.enable = true;
   virtualisation.docker.daemon.settings = {
     features = {
@@ -75,6 +79,7 @@
       containerd-snapshotter = true;
     };
   };
+
   # Need to create a custom builder (and set it as the default builder)
   system.activationScripts.ensureDockerBuildxBuilder = {
     deps = ["etc"];
@@ -86,8 +91,6 @@
           --driver docker-container --use --bootstrap
     '';
   };
-
-  boot.blacklistedKernelModules = ["nvidia"];
   networking.hostName = "tiv";
 
   # List packages installed in system profile. To search, run:

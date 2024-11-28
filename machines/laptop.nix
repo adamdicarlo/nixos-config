@@ -107,7 +107,6 @@ in {
     wireplumber.enable = true;
   };
 
-  programs.fish.enable = true;
   programs.zsh.enable = true;
   environment.variables = extraEnv;
   environment.sessionVariables = extraEnv;

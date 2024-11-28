@@ -224,38 +224,6 @@ in {
     };
   };
 
-  programs.fish = {
-    enable = true;
-
-    shellInit = ''
-      set -g fish_greeting
-      function chdir_hook_ls --on-variable=PWD
-        eza -l
-      end
-    '';
-
-    shellAbbrs = shellAbbrs;
-    functions = {
-    };
-
-    plugins = [
-      {
-        name = "done";
-        src = pkgs.fishPlugins.done.src;
-      }
-      {
-        name = "plugin-git";
-        src = pkgs.fetchFromGitHub {
-          owner = "jhillyerd";
-          repo = "plugin-git";
-          # https://github.com/jhillyerd/plugin-git/issues/102
-          rev = "c2b38f53f0b04bc67f9a0fa3d583bafb3f558718";
-          sha256 = "sha256-efKPbsXxjHm1wVWPJCV8teG4DgZN5dshEzX8PWuhKo4=";
-        };
-      }
-    ];
-  };
-
   programs.lazygit = {
     enable = true;
   };

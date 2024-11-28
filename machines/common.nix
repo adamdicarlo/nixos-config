@@ -82,7 +82,6 @@
     enable = true;
     flake = "/home/adam/nixos-config";
   };
-  programs.fish.enable = true;
   programs.zsh.enable = true;
 
   services.fstrim.enable = true;
@@ -125,7 +124,6 @@
     curl
     dnsutils # `dig` + `nslookup`
     file
-    fish
     gawk
     gcc
     gnumake

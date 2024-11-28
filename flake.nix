@@ -30,6 +30,7 @@
     devbox = {
       url = "github:jetify-com/devbox/0.13.6";
       inputs.flake-utils.follows = "flake-utils";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     disko = {
       url = "github:nix-community/disko";
@@ -45,6 +46,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     # openaws-vpn-client and dependency
@@ -61,6 +63,7 @@
     lib-aggregate = {
       url = "github:nix-community/lib-aggregate";
       inputs.flake-utils.follows = "flake-utils";
+      inputs.nixpkgs-lib.follows = "nixpkgs-lib";
     };
     nix-eval-jobs = {
       url = "github:nix-community/nix-eval-jobs";
@@ -71,6 +74,7 @@
     # Common flake dependencies.
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs-lib";
     };
     flake-utils = {
       url = "github:numtide/flake-utils";

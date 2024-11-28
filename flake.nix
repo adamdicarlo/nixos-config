@@ -65,9 +65,13 @@
     nix-eval-jobs = {
       url = "github:nix-community/nix-eval-jobs";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
     };
 
     # Common flake dependencies.
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+    };
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
@@ -97,6 +101,12 @@
     overlays = import ./overlays {
       inherit inputs outputs system;
       inherit (nixpkgs) lib;
+    };
+
+    pkgs = import nixpkgs {
+      config = {allowUnfree = true;};
+      inherit overlays;
+      inherit system;
     };
   in {
     nixosConfigurations = {
@@ -187,11 +197,7 @@
 
     homeConfigurations = let
       extraSpecialArgs = {inherit inputs outputs mkAbsoluteSymlink system;};
-      pkgs = import nixpkgs {
-        config = {allowUnfree = true;};
-        inherit overlays;
-        inherit system;
-      };
+      inherit pkgs;
 
       # Adapted from https://github.com/robbert-vdh/dotfiles/blob/129432dab00500eaeaf512b1d5003a102a08c72f/flake.nix#L71-L77
       # TODO: Use impurity.nix instead?
@@ -209,51 +215,32 @@
         in
           assert assertion; config.lib.file.mkOutOfStoreSymlink fullPath;
 
-      laptop = username: hostname: extras: {
+      mkHome = username: hostname: extras: let
+        modules =
+          [
+            ./home-manager/home.nix
+          ]
+          ++ extras;
+      in {
         "${username}@${hostname}" = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
           extraSpecialArgs = extraSpecialArgs // {inherit hostname username;};
-          modules =
-            [
-              ./home-manager/home.nix
-              ./home-manager/gui.nix
-            ]
-            ++ extras;
+          inherit modules pkgs;
         };
         "root@${hostname}" = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
           extraSpecialArgs =
             extraSpecialArgs
             // {
               inherit hostname;
               username = "root";
             };
-          modules = [./home-manager/home.nix];
-        };
-      };
-
-      server = username: hostname: {
-        "${username}@${hostname}" = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          extraSpecialArgs = extraSpecialArgs // {inherit hostname username;};
-          modules = [./home-manager/home.nix];
-        };
-        "root@${hostname}" = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          extraSpecialArgs =
-            extraSpecialArgs
-            // {
-              inherit hostname;
-              username = "root";
-            };
-          modules = [./home-manager/home.nix];
+          inherit modules pkgs;
         };
       };
     in
       {}
-      // server "adam" "oddsy"
-      // server "adam" "opti"
-      // laptop "adam" "tiv" [./home-manager/adaptiv.nix]
-      // laptop "adam" "carbo" [];
+      // mkHome "adam" "oddsy" []
+      // mkHome "adam" "opti" []
+      // mkHome "adam" "tiv" [./home-manager/gui.nix ./home-manager/adaptiv.nix]
+      // mkHome "adam" "carbo" [./home-manager/gui.nix];
   };
 }

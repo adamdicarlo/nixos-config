@@ -65,6 +65,7 @@ in {
     eza # A modern replacement for ‘ls’
     fd # Modern `find`
     fzf # A command-line fuzzy finder
+    jujutsu
     jq
     imagemagick
     libwebp

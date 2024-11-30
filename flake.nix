@@ -60,6 +60,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    zen-browser.url = "github:MarceColl/zen-browser-flake";
+
+    # Common flake dependencies.
     lib-aggregate = {
       url = "github:nix-community/lib-aggregate";
       inputs.flake-utils.follows = "flake-utils";
@@ -70,8 +73,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
     };
-
-    # Common flake dependencies.
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs-lib";

@@ -1,5 +1,6 @@
 {
   hostname,
+  inputs,
   pkgs,
   lib,
   ...
@@ -72,6 +73,8 @@ in {
 
   home.packages = with pkgs;
     [
+      inputs.zen-browser.packages."${system}".specific
+
       kitty
       kitty-img
       kitty-themes

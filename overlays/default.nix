@@ -24,6 +24,7 @@
   })
 
   (final: prev: {
-    devbox = inputs.devbox.outputs.packages.${system}.default;
+    # Remove override once https://github.com/jetify-com/devbox/pull/2426 is merged
+    devbox = inputs.devbox.outputs.packages.${system}.default.overrideAttrs {excludedPackages = ["testscripts"];};
   })
 ]

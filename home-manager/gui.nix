@@ -120,14 +120,25 @@ in {
       # productivity
       (google-chrome.override {commandLineArgs = "--ozone-platform=wayland";})
       evince
-      font-awesome
       gimp-with-plugins
       glow # markdown previewer in terminal
       nautilus
       sushi
       ianny
       meld
-      nerdfonts
+
+      # fonts
+      cantarell-fonts
+      font-awesome
+      inter
+      nerd-fonts.dejavu-sans-mono
+      nerd-fonts.fira-mono
+      nerd-fonts.monaspace
+      nerd-fonts.sauce-code-pro
+      nerd-fonts.symbols-only
+      nerd-fonts.ubuntu
+      nerd-fonts.ubuntu-mono
+
       onlyoffice-bin_latest
       opensnitch-ui
       slack
@@ -159,7 +170,7 @@ in {
     borderColor = c.black;
     borderRadius = 8;
     borderSize = 2;
-    font = "FiraCode Nerd Font Mono 10";
+    font = "FiraCode/FiraCode Nerd Font Mono 10";
     height = 120;
     maxVisible = 6;
     padding = "12";
@@ -278,8 +289,8 @@ in {
     enable = true;
     themeFile = "Dracula";
     font = {
-      package = pkgs.nerdfonts;
-      name = "FiraCode Nerd Font Mono";
+      package = pkgs.nerd-fonts.fira-code;
+      name = "FiraCode/FiraCode Nerd Font Mono";
       size = 11;
     };
     settings = {
@@ -397,7 +408,7 @@ in {
       };
 
       fonts = {
-        names = ["FiraCode Nerd Font Mono" "FontAwesome6Free"];
+        names = ["FiraCode/FiraCode Nerd Font Mono" "FontAwesome6Free"];
         size = 11.0;
       };
 
@@ -528,7 +539,7 @@ in {
       settings = {
         "<config>" = {
           edge = "bottom";
-          font = "Dina 12";
+          font = "SauceCodePro/SauceCodePro Nerd Font 12";
         };
 
         green = {

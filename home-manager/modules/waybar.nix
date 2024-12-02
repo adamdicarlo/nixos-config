@@ -7,6 +7,8 @@
   isPersonalMachine = hostname == "carbo";
 in {
   home.packages = with pkgs; [
+    cantarell-fonts
+    font-awesome_5
     waybar
   ];
 

@@ -69,9 +69,7 @@
 #waybar {
     background: @bg;
     color: @light;
-    font-family: "Cantarell", "Font Awesome 5 Pro";
-    font-size: 12px;
-    font-weight: bold;
+    font-family: "Inter", "Cantarell", "Font Awesome 6 Free", "Font Awesome 6 Brands", "Font Awesome 5 Free", "Font Awesome 5 Brands";
 }
 
 /* Each module */

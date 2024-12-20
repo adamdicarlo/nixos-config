@@ -22,7 +22,7 @@
         profile.name = "lg-ultrawide";
         profile.outputs = [
           {
-            criteria = "Goldstar Company Ltd LG HDR WQHD 0x0000B6E2";
+            criteria = "LG Electronics LG HDR WQHD 0x0000B6E2";
             status = "enable";
             mode = "3440x1440@60Hz";
             position = "0,0";

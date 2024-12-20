@@ -85,6 +85,10 @@ in {
   };
   services.libinput.enable = true;
 
+  services.fwupd = {
+    enable = true;
+  };
+
   services.opensnitch = {
     enable = true;
   };
@@ -116,6 +120,7 @@ in {
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     brightnessctl
+    firmware-updater
     ffmpeg
     glib
     glmark2

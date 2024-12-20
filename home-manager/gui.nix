@@ -23,7 +23,8 @@ in {
     ./modules/firefox.nix
     ./modules/polkit-mate.nix
     ./modules/swayosd.nix
-    ./modules/waybar.nix
+    ./modules/nwg.nix
+    # ./modules/waybar.nix
   ];
 
   home.pointerCursor = {

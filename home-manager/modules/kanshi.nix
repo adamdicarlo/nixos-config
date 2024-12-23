@@ -8,7 +8,7 @@
           {
             criteria = "Dell Inc. DELL U3821DW HH7YZ63";
             status = "enable";
-            mode = "3840x1600@30Hz";
+            mode = "3840x1600@60Hz";
             position = "0,0";
             scale = 1.0;
           }

@@ -24,7 +24,15 @@
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
     SDL_VIDEODRIVER = "wayland";
     TERMINAL = "kitty";
-    WLR_DRM_NO_ATOMIC = "1";
+
+    # Ugh: after updating to Sway 1.10, kanshi started crashing, and sway would
+    # also crash when trying to set the highest resolution on my DELL
+    # ultrawide. I had to switch from WLR_DRM_NO_ATOMIC to WLR_DRM_NO_MODIFIERS
+    # WLR_DRM_NO_ATOMIC = "1"; Enabling NO_MODIFIERS seemed to fix sway's mode
+    # setting (at least when logging in disconnected, then connecting, and
+    # manually setting the mode); kanshi still crashed, but disabling NO_ATOMIC
+    # seems to have fixed that.
+    WLR_DRM_NO_MODIFIERS = "1";
     XDG_CURRENT_DESKTOP = "sway";
   };
 in {
@@ -75,7 +83,7 @@ in {
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.greetd.greetd}/bin/agreety --cmd sway";
+        command = "${pkgs.greetd.greetd}/bin/agreety --cmd ${lib.getExe pkgs.zsh}";
       };
     };
   };

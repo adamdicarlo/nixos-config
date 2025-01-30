@@ -154,8 +154,9 @@ in {
     };
   };
 
-  programs.autojump = {
+  programs.zoxide = {
     enable = true;
+    enableZshIntegration = true;
   };
 
   programs.zsh = {
@@ -163,6 +164,7 @@ in {
     autosuggestion.enable = true;
     enableCompletion = true;
     enableVteIntegration = true;
+    syntaxHighlighting.enable = true;
 
     initExtra = ''
       if [[ -z "$(declare -f custom_cd_hook_ls)" ]]; then
@@ -173,8 +175,14 @@ in {
         }
         add-zsh-hook chpwd custom_cd_hook_ls
       fi
+
       # don't show `nix-shell-env` in devbox shell prompt
       zstyle :prompt:pure:environment:nix-shell show no
+
+      # Bind 'v' to edit command line in EDITOR when in vi command mode.
+      autoload edit-command-line
+      zle -N edit-command-line
+      bindkey -M vicmd v edit-command-line
     '';
 
     # `devbox shell` mysteriously fails to execute project init_hook if ZDOTDIR
@@ -215,9 +223,6 @@ in {
         };
       }
     ];
-    syntaxHighlighting = {
-      enable = true;
-    };
     zsh-abbr = {
       enable = true;
       abbreviations = shellAbbrs;

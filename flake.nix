@@ -28,7 +28,7 @@
       inputs.systems.follows = "systems";
     };
     devbox = {
-      url = "github:jetify-com/devbox/0.13.6";
+      url = "github:jetify-com/devbox/0.13.7";
       inputs.flake-utils.follows = "flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
     };

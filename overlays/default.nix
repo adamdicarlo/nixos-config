@@ -22,9 +22,4 @@
       postPatch = prev.lib.replaceStrings ["mv -v *.ppd ppd/"] ["cd splix"] old.postPatch;
     });
   })
-
-  (final: prev: {
-    # Remove override once https://github.com/jetify-com/devbox/pull/2426 is merged
-    devbox = inputs.devbox.outputs.packages.${system}.default.overrideAttrs {excludedPackages = ["testscripts"];};
-  })
 ]

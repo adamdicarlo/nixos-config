@@ -22,10 +22,12 @@
   inputs = {
     agenix = {
       url = "github:ryantm/agenix";
-      inputs.darwin.follows = "";
-      inputs.home-manager.follows = "home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.systems.follows = "systems";
+      inputs = {
+        darwin.follows = "";
+        home-manager.follows = "home-manager";
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      };
     };
     devbox = {
       url = "github:jetify-com/devbox/0.13.7";
@@ -45,6 +47,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
     nixos-hardware.url = "github:NixOS/nixos-hardware";
@@ -65,17 +68,31 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Common flake dependencies.
+    # Common flake dependency
     lib-aggregate = {
       url = "github:nix-community/lib-aggregate";
       inputs.flake-utils.follows = "flake-utils";
       inputs.nixpkgs-lib.follows = "nixpkgs-lib";
     };
+
     nix-eval-jobs = {
       url = "github:nix-community/nix-eval-jobs";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
     };
+
+    # My NeoVim configuration
+    my-nvf = {
+      url = "path:./nvf";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+        rust-overlay.follows = "rust-overlay";
+        systems.follows = "systems";
+      };
+    };
+
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs-lib";
@@ -204,7 +221,9 @@
     };
 
     homeConfigurations = let
-      extraSpecialArgs = {inherit inputs outputs mkAbsoluteSymlink system;};
+      extraSpecialArgs = {
+        inherit inputs outputs mkAbsoluteSymlink system;
+      };
       inherit pkgs;
 
       # Adapted from https://github.com/robbert-vdh/dotfiles/blob/129432dab00500eaeaf512b1d5003a102a08c72f/flake.nix#L71-L77
@@ -225,14 +244,13 @@
 
       mkHome = username: hostname: extras: let
         modules =
-          [
-            ./home-manager/home.nix
-          ]
+          [./home-manager/home.nix]
           ++ extras;
       in {
         "${username}@${hostname}" = home-manager.lib.homeManagerConfiguration {
           extraSpecialArgs = extraSpecialArgs // {inherit hostname username;};
           inherit modules pkgs;
+          lib = nixpkgs.lib;
         };
         "root@${hostname}" = home-manager.lib.homeManagerConfiguration {
           extraSpecialArgs =
@@ -242,6 +260,7 @@
               username = "root";
             };
           inherit modules pkgs;
+          lib = nixpkgs.lib;
         };
       };
     in

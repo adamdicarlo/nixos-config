@@ -179,6 +179,81 @@
         "type": "github"
       }
     },
+    "mnw": {
+      "locked": {
+        "lastModified": 1735150973,
+        "narHash": "sha256-OJhcCAoaMMXeD6o4qI/hxBCNELJp4dN8D5LJZc8w8XA=",
+        "owner": "Gerg-L",
+        "repo": "mnw",
+        "rev": "40cd0b006cc48dffd0f8698ad7f54cf1d56779a6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Gerg-L",
+        "repo": "mnw",
+        "type": "github"
+      }
+    },
+    "my-nvf": {
+      "inputs": {
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nil": "nil",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "nvf": "nvf",
+        "rust-overlay": [
+          "rust-overlay"
+        ],
+        "systems": [
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1,
+        "narHash": "sha256-rfIr9LK2E0qGRJbsuoJOS1rHtrPVc0AXxgPMgUq2WVA=",
+        "path": "./nvf",
+        "type": "path"
+      },
+      "original": {
+        "path": "./nvf",
+        "type": "path"
+      }
+    },
+    "nil": {
+      "inputs": {
+        "flake-utils": [
+          "my-nvf",
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "my-nvf",
+          "nixpkgs"
+        ],
+        "rust-overlay": [
+          "my-nvf",
+          "rust-overlay"
+        ]
+      },
+      "locked": {
+        "lastModified": 1732053863,
+        "narHash": "sha256-DCIVdlb81Fct2uwzbtnawLBC/U03U2hqx8trqTJB7WA=",
+        "owner": "oxalica",
+        "repo": "nil",
+        "rev": "2e24c9834e3bb5aa2a3701d3713b43a6fb106362",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "nil",
+        "type": "github"
+      }
+    },
     "nix-eval-jobs": {
       "inputs": {
         "flake-parts": [
@@ -271,6 +346,61 @@
         "type": "github"
       }
     },
+    "nmd": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1705050560,
+        "narHash": "sha256-x3zzcdvhJpodsmdjqB4t5mkVW22V3wqHLOun0KRBzUI=",
+        "owner": "~rycee",
+        "repo": "nmd",
+        "rev": "66d9334933119c36f91a78d565c152a4fdc8d3d3",
+        "type": "sourcehut"
+      },
+      "original": {
+        "owner": "~rycee",
+        "repo": "nmd",
+        "type": "sourcehut"
+      }
+    },
+    "nvf": {
+      "inputs": {
+        "flake-parts": [
+          "my-nvf",
+          "flake-parts"
+        ],
+        "flake-utils": [
+          "my-nvf",
+          "flake-utils"
+        ],
+        "mnw": "mnw",
+        "nil": [
+          "my-nvf",
+          "nil"
+        ],
+        "nixpkgs": [
+          "my-nvf",
+          "nixpkgs"
+        ],
+        "nmd": "nmd",
+        "systems": [
+          "my-nvf",
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1739751511,
+        "narHash": "sha256-aKM96IPTHxpnPDSGl8+jo4WIPFUUDQTQKHGTZ3IkYhE=",
+        "owner": "notashelf",
+        "repo": "nvf",
+        "rev": "e42bcbe1ecb3392ecd8a7638edf991b9628f4d55",
+        "type": "github"
+      },
+      "original": {
+        "owner": "notashelf",
+        "repo": "nvf",
+        "type": "github"
+      }
+    },
     "openaws-vpn-client": {
       "inputs": {
         "nixpkgs": [
@@ -301,6 +431,7 @@
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "lib-aggregate": "lib-aggregate",
+        "my-nvf": "my-nvf",
         "nix-eval-jobs": "nix-eval-jobs",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
@@ -374,11 +505,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1737354427,
-        "narHash": "sha256-KMKd5YuoxO5ni/CCKcueZMmgq1yvHfVV1+RiOzKGz6o=",
+        "lastModified": 1739222645,
+        "narHash": "sha256-6FsTAjrO0TN5+gVxx3hmWqEJWs1sJ1p3E8DKWHdlN6M=",
         "owner": "youwen5",
         "repo": "zen-browser-flake",
-        "rev": "5582118b9db26dd5f8ce45386e4cf5cdd4995c06",
+        "rev": "7e60ade066a54797b376ebaf554bc2efa255ff8a",
         "type": "github"
       },
       "original": {

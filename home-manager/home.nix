@@ -1,6 +1,9 @@
 {
   config,
+  inputs,
+  lib,
   pkgs,
+  system,
   username,
   ...
 }: let
@@ -22,6 +25,8 @@
     hm = "nh home switch --ask -- --impure";
     nos = "nh os switch --ask";
   };
+
+  neovimConfigured = inputs.my-nvf.outputs.packages.${system}.default;
 in {
   imports = [
     ./modules
@@ -104,6 +109,8 @@ in {
     tflint
     tflint-plugins.tflint-ruleset-aws
     vscode-langservers-extracted
+
+    neovimConfigured
   ];
 
   programs.git = {
@@ -116,7 +123,7 @@ in {
       branch.autoSetupRebase = "always";
       checkout.guess = true;
       commit.gpgsign = true;
-      core.editor = "${pkgs.neovim}/bin/nvim";
+      core.editor = lib.getExe neovimConfigured;
       init.defaultbranch = "main";
       merge.guitool = "meld";
       #  cmd = ''meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"'';

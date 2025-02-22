@@ -90,7 +90,7 @@ in {
     nix-output-monitor
 
     # dev
-    devbox
+    inputs.devbox.packages.${system}.default
     elmPackages.elm
     elmPackages.elm-format
     elmPackages.lamdera

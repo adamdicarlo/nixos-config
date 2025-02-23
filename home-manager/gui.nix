@@ -129,8 +129,18 @@ in {
 
       # fonts
       cantarell-fonts
+      dina-font
+      fira-code
+      fira-code-symbols
       font-awesome
+      gyre-fonts
       inter
+      iosevka
+      jetbrains-mono
+      joypixels
+      liberation_ttf
+      monaspace # "texture healing"?
+      mplus-outline-fonts.githubRelease
       nerd-fonts.dejavu-sans-mono
       nerd-fonts.fira-mono
       nerd-fonts.monaspace
@@ -138,6 +148,16 @@ in {
       nerd-fonts.symbols-only
       nerd-fonts.ubuntu
       nerd-fonts.ubuntu-mono
+      noto-fonts
+      noto-fonts-cjk-sans
+      noto-fonts-color-emoji # a good fallback font
+      noto-fonts-emoji
+      proggyfonts
+      twemoji-color-font
+      twitter-color-emoji
+      unifont
+      unifont_upper
+      vollkorn
 
       onlyoffice-bin_latest
       opensnitch-ui
@@ -155,6 +175,32 @@ in {
       bambu-studio
       freecad-wayland
     ]);
+
+  fontconfig = {
+    enable = true;
+    antialias = true;
+    hinting.enable = true;
+    defaultFonts = {
+      monospace = ["DejaVu Sans Mono" "Noto Mono"];
+      serif = ["Vollkorn" "Noto Serif" "Times New Roman"];
+      sansSerif = ["Open Sans" "Noto Sans"];
+      emoji = [
+        "Noto Color Emoji"
+        "NotoEmoji Nerd Font Mono"
+        "Twitter Color Emoji"
+        "JoyPixels"
+        "Unifont"
+        "Unifont Upper"
+      ];
+    };
+    localConf = ''
+      <!-- use a less horrible font substition for pdfs such as https://www.bkent.net/Doc/mdarchiv.pdf -->
+      <match target="pattern">
+        <test qual="any" name="family"><string>NewCenturySchlbk</string></test>
+        <edit name="family" mode="assign" binding="same"><string>TeX Gyre Schola</string></edit>
+      </match>
+    '';
+  };
 
   services.cliphist = {
     enable = true;

@@ -88,6 +88,7 @@
         flake-parts.follows = "flake-parts";
         flake-utils.follows = "flake-utils";
         nixpkgs.follows = "nixpkgs";
+        nixpkgs-lib.follows = "nixpkgs-lib";
         rust-overlay.follows = "rust-overlay";
         systems.follows = "systems";
       };

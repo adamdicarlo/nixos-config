@@ -15,6 +15,8 @@
       mapKeyLua = mode: key: action: desc: {
         inherit mode key action desc;
         expr = true;
+        lua = true;
+        silent = false;
       };
       mapKeys = mode: keys: action: desc:
         lib.lists.map (k: mapKey mode k action desc) keys;
@@ -23,7 +25,10 @@
         (mapKey "" "<C-s>" ":w<CR>" "Save")
         (mapKey "" "<C-q>" ":q<CR>" "Quit")
 
-        (mapKeyLua "c" "%%" "function() return vim.fn.expand('%:h') .. '/' end" "Insert active buffer's path")
+        (mapKeyLua "c" "%%" ''
+          function()
+            return vim.fn.expand("%:h") .. "/"
+          end'' "Insert active buffer's path")
 
         # Basic movement, originally adapted from: https://forum.colemak.com/topic/50-colemak-vim/#p184
         (mapKey "" "h" "k" "Up")

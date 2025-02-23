@@ -129,9 +129,28 @@
     };
 
     pkgs = import nixpkgs {
-      config = {allowUnfree = true;};
       inherit overlays;
       inherit system;
+    };
+
+    unfreePackages = [
+      "joypixels"
+      "uhk-agent"
+      "uhk-udev-rules"
+    ];
+
+    nixpkgsConfigModule = {lib, ...}: {
+      nixpkgs = {
+        # See https://github.com/NixOS/nixpkgs/issues/191910
+        # > [When] nixpkgs.pkgs is set, all other options in nixpkgs except for
+        # > overlays are silently ignored.
+        inherit overlays;
+        config = {
+          allowUnfreePredicate = pkg:
+            builtins.elem (lib.getName pkg) unfreePackages;
+          joypixels.acceptLicense = true;
+        };
+      };
     };
   in {
     nixosConfigurations = {
@@ -140,11 +159,7 @@
           inherit inputs;
         };
         modules = [
-          ({lib, ...}: {
-            # Beware: https://github.com/NixOS/nixpkgs/issues/191910
-            nixpkgs.config.allowUnfree = true;
-            nixpkgs.overlays = overlays;
-          })
+          nixpkgsConfigModule
           inputs.agenix.nixosModules.default
           inputs.disko.nixosModules.disko
           ./machines/carbo/default.nix
@@ -156,6 +171,7 @@
           inherit inputs;
         };
         modules = [
+          nixpkgsConfigModule
           inputs.agenix.nixosModules.default
           inputs.disko.nixosModules.disko
           ./machines/oddsy/default.nix
@@ -167,9 +183,7 @@
           inherit inputs;
         };
         modules = [
-          ({lib, ...}: {
-            nixpkgs.config.allowUnfree = true;
-          })
+          nixpkgsConfigModule
           inputs.agenix.nixosModules.default
           ./machines/opti/default.nix
         ];
@@ -209,11 +223,7 @@
           inherit inputs;
         };
         modules = [
-          ({lib, ...}: {
-            # Beware: https://github.com/NixOS/nixpkgs/issues/191910
-            nixpkgs.config.allowUnfree = true;
-            nixpkgs.overlays = overlays;
-          })
+          nixpkgsConfigModule
           inputs.agenix.nixosModules.default
           ./machines/tiv/default.nix
         ];

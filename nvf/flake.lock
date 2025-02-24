@@ -149,15 +149,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1739751511,
-        "narHash": "sha256-aKM96IPTHxpnPDSGl8+jo4WIPFUUDQTQKHGTZ3IkYhE=",
-        "owner": "notashelf",
+        "lastModified": 1740361985,
+        "narHash": "sha256-bOo23F8gXGAWplNIsZHPydPwfNTw+BRnAw9E0cZ/aDc=",
+        "owner": "adamdicarlo",
         "repo": "nvf",
-        "rev": "e42bcbe1ecb3392ecd8a7638edf991b9628f4d55",
+        "rev": "b607f5ce9147d8a9cf349439154998f4f77a4f9b",
         "type": "github"
       },
       "original": {
-        "owner": "notashelf",
+        "owner": "adamdicarlo",
+        "ref": "feature-language-elm",
         "repo": "nvf",
         "type": "github"
       }

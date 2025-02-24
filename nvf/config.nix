@@ -80,6 +80,7 @@
 
       bash.enable = true;
       css.enable = true;
+      elm.enable = true;
       html.enable = true;
       lua.enable = true;
       markdown.enable = true;

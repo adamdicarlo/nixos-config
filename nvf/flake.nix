@@ -27,7 +27,8 @@
     # Modular, extensible and distro-agnostic NeoVim configuration framework
     # https://github.com/NotAShelf/nvf
     nvf = {
-      url = "github:notashelf/nvf";
+      # url = "github:notashelf/nvf";
+      url = "github:adamdicarlo/nvf/feature-language-elm";
       inputs = {
         flake-parts.follows = "flake-parts";
         flake-utils.follows = "flake-utils";

@@ -134,13 +134,17 @@
       inherit system;
     };
 
-    unfreePackages = [
+    commonUnfreePackages = [
       "joypixels"
       "uhk-agent"
       "uhk-udev-rules"
     ];
+    tivUnfreePackages = [
+      "1password"
+      "1password-cli"
+    ];
 
-    nixpkgsConfigModule = {lib, ...}: {
+    nixpkgsConfigModule = extraUnfreePkgs: {lib, ...}: {
       nixpkgs = {
         # See https://github.com/NixOS/nixpkgs/issues/191910
         # > [When] nixpkgs.pkgs is set, all other options in nixpkgs except for
@@ -148,7 +152,7 @@
         inherit overlays;
         config = {
           allowUnfreePredicate = pkg:
-            builtins.elem (lib.getName pkg) unfreePackages;
+            builtins.elem (lib.getName pkg) (extraUnfreePkgs ++ commonUnfreePackages);
           joypixels.acceptLicense = true;
         };
       };
@@ -160,7 +164,7 @@
           inherit inputs;
         };
         modules = [
-          nixpkgsConfigModule
+          (nixpkgsConfigModule [])
           inputs.agenix.nixosModules.default
           inputs.disko.nixosModules.disko
           ./machines/carbo/default.nix
@@ -172,7 +176,7 @@
           inherit inputs;
         };
         modules = [
-          nixpkgsConfigModule
+          (nixpkgsConfigModule [])
           inputs.agenix.nixosModules.default
           inputs.disko.nixosModules.disko
           ./machines/oddsy/default.nix
@@ -184,7 +188,7 @@
           inherit inputs;
         };
         modules = [
-          nixpkgsConfigModule
+          (nixpkgsConfigModule [])
           inputs.agenix.nixosModules.default
           ./machines/opti/default.nix
         ];
@@ -224,7 +228,7 @@
           inherit inputs;
         };
         modules = [
-          nixpkgsConfigModule
+          (nixpkgsConfigModule tivUnfreePackages)
           inputs.agenix.nixosModules.default
           ./machines/tiv/default.nix
         ];

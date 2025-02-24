@@ -55,7 +55,11 @@
       enable = true;
       name = "dracula";
     };
-    spellcheck.enable = true;
+    spellcheck = {
+      enable = true;
+      ignoredFiletypes = ["checkhealth"];
+      programmingWordlist.enable = true;
+    };
     statusline.lualine = {
       enable = true;
       theme = "dracula";

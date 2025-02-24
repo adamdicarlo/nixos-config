@@ -1,5 +1,6 @@
 {
   config,
+  hostname,
   inputs,
   lib,
   pkgs,
@@ -7,6 +8,28 @@
   username,
   ...
 }: let
+  isPersonalMachine = hostname == "carbo";
+  isWorkMachine = !isPersonalMachine;
+
+  unfreePackages =
+    [
+      "dracula-dark-colorscheme" # firefox theme
+      "google-chrome"
+      "slack"
+      "zoom"
+      "zsh-abbr"
+    ]
+    ++ (
+      if isWorkMachine
+      then [
+        # tiv
+        "1password"
+        "1password-cli"
+        "1password-gui"
+      ]
+      else ["signal-desktop"]
+    );
+
   ezaFlags = "--group-directories-first";
   ezaLong = "${ezaFlags} --color-scale --git -l";
   shellAbbrs = {
@@ -34,10 +57,8 @@ in {
 
   nixpkgs = {
     config = {
-      allowUnfreePredicate = _: true;
-      # allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
-      #   "zsh-abbr-5.2.0"
-      # ];
+      allowUnfreePredicate = pkg:
+        builtins.elem (lib.getName pkg) unfreePackages;
     };
   };
 

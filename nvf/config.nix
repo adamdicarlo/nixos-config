@@ -25,6 +25,8 @@
         (mapKey "" "<C-s>" ":w<CR>" "Save")
         (mapKey "" "<C-q>" ":q<CR>" "Quit")
 
+        (mapKey "n" "gl" "`." "Jump to the last change in the file")
+
         (mapKeyLua "c" "%%" ''
           function()
             return vim.fn.expand("%:h") .. "/"

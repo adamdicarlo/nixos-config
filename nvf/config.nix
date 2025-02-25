@@ -53,7 +53,8 @@
 
     theme = {
       enable = true;
-      name = "dracula";
+      name = "tokyonight";
+      style = "moon";
     };
     spellcheck = {
       enable = true;
@@ -62,10 +63,8 @@
     };
     statusline.lualine = {
       enable = true;
-      theme = "dracula";
     };
     treesitter.context.enable = true;
-
     lsp = {
       formatOnSave = true;
       lightbulb.enable = true;

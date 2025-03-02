@@ -237,25 +237,9 @@
 
     homeConfigurations = let
       extraSpecialArgs = {
-        inherit inputs outputs mkAbsoluteSymlink system;
+        inherit inputs outputs system;
       };
       inherit pkgs;
-
-      # Adapted from https://github.com/robbert-vdh/dotfiles/blob/129432dab00500eaeaf512b1d5003a102a08c72f/flake.nix#L71-L77
-      # TODO: Use impurity.nix instead?
-      # https://github.com/outfoxxed/impurity.nix/blob/master/default.nix
-      mkAbsoluteSymlink = let
-        nixosConfigPath = "/home/adam/nixos-config";
-      in
-        # FIXME: I couldn't figure out how to define this in a module so we
-        #        don't need to pass config in here
-        config: repoRelativePath: let
-          fullPath = "${nixosConfigPath}/${repoRelativePath}";
-          assertion =
-            pkgs.lib.asserts.assertMsg (builtins.pathExists fullPath)
-            "mkAbsoluteSymlink: '${fullPath}' does not seem to exist";
-        in
-          assert assertion; config.lib.file.mkOutOfStoreSymlink fullPath;
 
       mkHome = username: hostname: extras: let
         modules =

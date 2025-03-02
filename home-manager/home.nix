@@ -46,7 +46,7 @@
     # I really hope I never need to use ghostscript.
     gs = "git status";
 
-    hm = "nh home switch --ask -- --impure";
+    hm = "nh home switch --ask";
     nos = "nh os switch --ask";
   };
 

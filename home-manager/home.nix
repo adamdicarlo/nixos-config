@@ -14,6 +14,7 @@
   unfreePackages =
     [
       "dracula-dark-colorscheme" # firefox theme
+      "fmod"
       "google-chrome"
       "slack"
       "zoom"

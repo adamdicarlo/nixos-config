@@ -1,7 +1,6 @@
 {
   stdenv,
   lib,
-  fetchFromGitHub,
   cmake,
   pkg-config,
   makeWrapper,
@@ -26,13 +25,13 @@
   sqlite = callPackage ./sqlite.nix {};
   clientLibPath = lib.makeLibraryPath [fluidsynth];
 in
-  stdenv.mkDerivation rec {
+  stdenv.mkDerivation {
     pname = "q-zandronum${suffix}";
-    version = "1.4.14";
+    version = "1.4.20";
 
     src = fetchTarball {
-      url = "https://github.com/IgeNiaI/Q-Zandronum/archive/refs/tags/1.4.14.tar.gz";
-      sha256 = "0nrc9mrsbvnidqz5iqpm177k53qilannkfxhpa0jc04wnfs6v10p";
+      url = "https://github.com/IgeNiaI/Q-Zandronum/archive/refs/tags/1.4.20.tar.gz";
+      sha256 = "078r5isgh4gxmlq5my987iin4phpfbqalm5digmdzczzr8bhddyn";
     };
 
     # q-zandronum tries to download sqlite now when running cmake, don't let it

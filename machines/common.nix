@@ -13,7 +13,8 @@
     };
     gc = {
       automatic = true;
-      dates = "weekly";
+      dates = "monthly";
+      persistent = true;
     };
 
     # Add each flake input as a registry
@@ -24,6 +25,24 @@
     # This lets nix2 commands still use <nixpkgs>
     nixPath = ["nixpkgs=${inputs.nixpkgs.outPath}"];
   };
+
+  boot.kernel.sysctl = {
+    # Increase the amount of inotify watchers
+    # Note that inotify watches consume 1kB on 64-bit machines.
+    kernel.sysctl = {
+      "fs.inotify.max_user_watches" = 64 * 1024; # default:  8192
+      "fs.inotify.max_user_instances" = 1024; # default:   128
+      "fs.inotify.max_queued_events" = 32768; # default: 16384
+    };
+  };
+
+  # Set limits for systemd units (not systemd itself).
+  #
+  # From `man 5 systemd-system.conf`:
+  # DefaultLimitNOFILE= defaults to 1024:524288.
+  systemd.extraConfig = ''
+    DefaultLimitNOFILE=8192:524288
+  '';
 
   # Enable networking
   networking.networkmanager.enable = lib.mkDefault true;
@@ -95,7 +114,10 @@
     };
   };
 
-  security.sudo.wheelNeedsPassword = false;
+  # Don't ask for password quite as often
+  security.sudo.extraConfig = ''
+    Defaults        timestamp_timeout=120
+  '';
 
   users.users.adam = {
     isNormalUser = true;

@@ -1,4 +1,4 @@
-{...}: {
+_: {
   services.adguardhome = let
     host = "0.0.0.0";
     port = 5300;

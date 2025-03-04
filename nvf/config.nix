@@ -6,6 +6,8 @@
   # You may browse available options for nvf on the online manual. Please see
   # <https://notashelf.github.io/nvf/options.html>
   config.vim = {
+    useSystemClipboard = true;
+
     keymaps = let
       # keymaps.*.silent defaults to true
       # keymaps.*.noremap defaults to true

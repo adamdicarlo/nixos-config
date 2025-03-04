@@ -41,7 +41,7 @@ in {
       pkgs.tridactyl-native
     ];
     profiles.default = {
-      extensions = with firefox-addons; [
+      extensions.packages = with firefox-addons; [
         bitwarden
         decentraleyes
         don-t-fuck-with-paste

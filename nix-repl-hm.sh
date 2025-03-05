@@ -1,4 +1,4 @@
-#/bin/bash
+#!/usr/bin/env bash
 echo "Useful paths:"
 echo
 echo '- homeConfigurations."adam@tiv".config'

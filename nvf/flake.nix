@@ -54,9 +54,6 @@
         inherit pkgs;
 
         modules = [
-          # Configuration module to be imported. You may define multiple modules
-          # or even import them from other files (e.g., ./modules/lsp.nix) to
-          # better modularize your configuration.
           (import ./config.nix {inherit lib;})
         ];
       };

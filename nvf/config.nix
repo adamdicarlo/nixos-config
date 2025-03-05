@@ -49,91 +49,22 @@
         (mapKeys "n" ["<C-l>" "<C-w>l"] "<C-w>l" "Go to the right window")
       ];
 
-    binds.whichKey = {
-      enable = true;
+    autocomplete.nvim-cmp.enable = true;
+    bell = "visual";
+    binds = {
+      whichKey.enable = true;
+      cheatsheet.enable = true;
     };
-
-    theme = {
+    git = {
       enable = true;
-      name = "tokyonight";
-      style = "moon";
-    };
-    spellcheck = {
-      enable = true;
-      ignoredFiletypes = ["checkhealth"];
-      programmingWordlist.enable = true;
-      extraSpellWords = {
-        "en.utf-8" = [
-          "AWS"
-          "DeviceManager"
-          "LSP"
-          "TODO"
-          "activable"
-          "adaptiv"
-          "adaptivsystems"
-          "args"
-          "argv"
-          "arm64"
-          "ascii"
-          "aws"
-          "base64"
-          "bool"
-          "cjs"
-          "colemak"
-          "config"
-          "deserialized"
-          "env"
-          "eslint"
-          "evalModules"
-          "execa"
-          "gh"
-          "github"
-          "hex"
-          "js"
-          "json"
-          "kleur"
-          "leclerc"
-          "localdev"
-          "localtools"
-          "lockfile"
-          "lockfiles"
-          "lsp"
-          "mjs"
-          "mts"
-          "multiselect"
-          "noremap"
-          "nvf"
-          "param"
-          "params"
-          "releasable"
-          "releasables"
-          "sam"
-          "samsic"
-          "shellcheck"
-          "shfmt"
-          "src"
-          "tiv"
-          "ts"
-          "utf"
-          "utf-16"
-          "utf-8"
-          "utf16"
-          "utf8"
-          "util"
-          "yargs"
-          "zod"
-        ];
+      gitsigns = {
+        codeActions.enable = true;
+        enable = true;
       };
     };
-    statusline.lualine = {
-      enable = true;
-    };
-    treesitter.context.enable = true;
-    lsp = {
-      formatOnSave = true;
-      lightbulb.enable = true;
-      lspSignature.enable = true;
-    };
+
+    luaConfigRC.custom-autocmds = builtins.readFile ./lua/autocmds.lua;
+    luaConfigRC.custom-options = builtins.readFile ./lua/options.lua;
 
     # Language support and automatic configuration of companion plugins.
     # Note that enabling, e.g., languages.<lang>.diagnostics will automatically
@@ -151,7 +82,10 @@
       html.enable = true;
       lua.enable = true;
       markdown.enable = true;
-      nix.enable = true;
+      nix = {
+        enable = true;
+        lsp.options.nix.flake.autoArchive = true;
+      };
       python.enable = true;
       tailwind.enable = true;
       terraform.enable = true;
@@ -159,6 +93,45 @@
         enable = true;
         extensions.ts-error-translator.enable = true;
       };
+    };
+    lsp = {
+      formatOnSave = true;
+      lightbulb.enable = true;
+      lspSignature.enable = true;
+      trouble.enable = true;
+      lsplines.enable = true;
+    };
+    mini = {
+      bufremove.enable = true;
+    };
+    options = {
+      backup = true;
+      writebackup = true;
+      tabstop = 2;
+    };
+    statusline.lualine = {
+      enable = true;
+    };
+    snippets.luasnip.enable = true;
+    spellcheck = {
+      enable = true;
+      ignoredFiletypes = ["checkhealth"];
+      programmingWordlist.enable = true;
+      extraSpellWords = import ./spellcheck-extrawords.nix;
+    };
+    tabline.nvimBufferline.enable = true;
+    telescope.enable = true;
+    theme = {
+      enable = true;
+      name = "tokyonight";
+      style = "moon";
+    };
+    treesitter.context.enable = true;
+    visuals = {
+      nvim-web-devicons.enable = true;
+      nvim-cursorline.enable = true;
+      highlight-undo.enable = true;
+      indent-blankline.enable = true;
     };
   };
 }

@@ -50,7 +50,7 @@
     nos = "nh os switch --ask";
   };
 
-  neovimConfigured = inputs.my-nvf.outputs.packages.${system}.default;
+  neovimConfigured = inputs.my-nvf.packages.${system}.default;
 in {
   imports = [
     ./modules
@@ -113,6 +113,7 @@ in {
 
     # dev
     inputs.devbox.packages.${system}.default
+    inputs.fh.packages.${system}.default
     elmPackages.elm
     elmPackages.elm-format
     elmPackages.elm-language-server

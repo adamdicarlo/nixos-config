@@ -1,5 +1,3 @@
--- autocmds.lua
-
 local function augroup(name)
   return vim.api.nvim_create_augroup("custom_" .. name, { clear = true })
 end

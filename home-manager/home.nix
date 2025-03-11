@@ -71,6 +71,7 @@ in {
       else "/home/${username}";
 
     sessionVariables = {
+      EDITOR = "nvim";
       EZA_ICONS_AUTO = "1";
       EZA_MIN_LUMINANCE = "50";
     };

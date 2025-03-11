@@ -124,8 +124,16 @@
       "--unsupported-gpu"
     ];
     # Render via the iGPU (intel device) only! (Is --unsupported-gpu actually necessary?)
+    # Usually the graphics cards come up as /dev/dri/card{0,1}... but sometimes
+    # they are /dev/dri/card{1,2}! (sigh)
+    #
+    # 0x10de is NVIDIA's vendor ID.
     extraSessionCommands = ''
-      WLR_DRM_DEVICES="$(if test -d /sys/class/drm/card1/card1-eDP-1; then echo /dev/dri/card1; else echo /dev/dri/card0; fi)"
+      WLR_DRM_DEVICES=$(
+        [ -e /sys/class/drm/card0/device/vendor ] &&
+          (grep -q 0x10de /sys/class/drm/card0/device/vendor && echo /dev/dri/card1 || echo /dev/dri/card0) ||
+          (grep -q 0x10de /sys/class/drm/card1/device/vendor && echo /dev/dri/card2 || echo /dev/dri/card1)
+      )
       export WLR_DRM_DEVICES
     '';
   };

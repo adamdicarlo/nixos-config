@@ -411,7 +411,7 @@ in {
         "type:keyboard" = {
           xkb_layout = "us";
           xkb_variant = "colemak";
-          xkb_options = "altwin:swap_lalt_lwin,ctrl:nocaps,shift:both_capslock";
+          xkb_options = "altwin:swap_lalt_lwin";
           repeat_delay = "200";
           repeat_rate = "50";
         };

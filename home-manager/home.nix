@@ -191,6 +191,7 @@ in {
 
   programs.zsh = {
     enable = true;
+    defaultKeymap = "viins";
     autosuggestion.enable = true;
     enableCompletion = true;
     enableVteIntegration = true;
@@ -213,6 +214,11 @@ in {
       autoload edit-command-line
       zle -N edit-command-line
       bindkey -M vicmd v edit-command-line
+
+      # Colemak movement
+      bindkey -a "j" vi-backward-char
+      bindkey -a "h" up-line-or-history
+      bindkey -a "k" down-line-or-history
     '';
 
     # `devbox shell` mysteriously fails to execute project init_hook if ZDOTDIR

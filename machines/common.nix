@@ -91,9 +91,11 @@
       uinput = "${pkgs.interception-tools}/bin/uinput";
       intercept = "${pkgs.interception-tools}/bin/intercept";
       caps2esc = "${pkgs.interception-tools-plugins.caps2esc}/bin/caps2esc";
+
+      # Generated via:
       # sudo uinput -p -d /dev/input/by-id/usb-Ultimate_Gadget_Laboratories_UHK_60_v2_0884155970-event-kbd
       virtualKeyboardYAML = builtins.toFile "virtual-kbd.yaml" ''
-        NAME: Virtual UHK 60 v2
+        NAME: Magic Keyboard
         PRODUCT: 3
         VENDOR: 14248
         BUSTYPE: BUS_USB
@@ -104,15 +106,14 @@
           EV_MSC: [MSC_SCAN]
           EV_LED: [LED_NUML, LED_CAPSL, LED_SCROLLL, LED_COMPOSE, LED_KANA]
           EV_REP:
-            REP_DELAY: 250
-            REP_PERIOD: 33
+            REP_DELAY: 200
+            REP_PERIOD: 50
       '';
     in ''
       - CMD: "${mux} -c virtualKB"
       - JOB: "${mux} -i virtualKB | ${caps2esc} | ${uinput} -c ${virtualKeyboardYAML}"
       - JOB: "${intercept} -g $DEVNODE | ${mux} -o virtualKB"
         DEVICE:
-          NAME: "Ultimate Gadget Laboratories UHK 60 v2"
           EVENTS:
             EV_KEY: [[KEY_CAPSLOCK, KEY_ESC]]
           LINK: .*-event-kbd
@@ -195,6 +196,7 @@
     ethtool
     gtop
     interception-tools
+    libinput
     lm_sensors # for `sensors` command
     lshw
     mtr # A network diagnostic tool

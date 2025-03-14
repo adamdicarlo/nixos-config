@@ -60,16 +60,13 @@
       enable = true;
       configurationLimit = 4;
     };
-    kernelParams = [
-      "blacklist=nvidia"
-    ];
     loader.efi.canTouchEfiVariables = true;
     initrd.luks.devices."luks-89774725-33d7-4569-98ca-969947979248".device = "/dev/disk/by-uuid/89774725-33d7-4569-98ca-969947979248";
 
     # Support building arm64 Docker images.
     binfmt.emulatedSystems = ["aarch64-linux"];
 
-    blacklistedKernelModules = ["nvidia"];
+    blacklistedKernelModules = ["nouveau" "nvidia"];
   };
 
   virtualisation.containerd.enable = true;

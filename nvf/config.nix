@@ -2,7 +2,10 @@
 # All options supported by nvf will go under config.vim to create the final
 # wrapped package. You may also add some new *options* under options.* to
 # expand the module system.
-{lib}: {
+{
+  lib,
+  nvim,
+}: {
   # You may browse available options for nvf on the online manual. Please see
   # <https://notashelf.github.io/nvf/options.html>
   config.vim = {
@@ -63,8 +66,10 @@
       };
     };
 
-    luaConfigRC.custom-autocmds = builtins.readFile ./lua/autocmds.lua;
-    luaConfigRC.custom-options = builtins.readFile ./lua/options.lua;
+    luaConfigRC = {
+      custom-autocmds = nvim.dag.entryAnywhere (builtins.readFile ./lua/autocmds.lua);
+      custom-options = nvim.dag.entryAfter ["optionsScript"] (builtins.readFile ./lua/options.lua);
+    };
 
     # Language support and automatic configuration of companion plugins.
     # Note that enabling, e.g., languages.<lang>.diagnostics will automatically

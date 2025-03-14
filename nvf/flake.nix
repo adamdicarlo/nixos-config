@@ -54,7 +54,10 @@
         inherit pkgs;
 
         modules = [
-          (import ./config.nix {inherit lib;})
+          (import ./config.nix {
+            inherit lib;
+            inherit (inputs.nvf.lib) nvim;
+          })
         ];
       };
     in rec {

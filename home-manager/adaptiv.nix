@@ -25,8 +25,8 @@ in {
         ds = "devbox shell";
       };
     };
-    initExtra = ''
-      export PATH="${home}/work/common/cli/bin:$PATH"
+    envExtra = ''
+      export PATH=${home}/work/common/cli/bin:$PATH
     '';
   };
 

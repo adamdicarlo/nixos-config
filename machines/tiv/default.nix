@@ -114,6 +114,18 @@
       })
     '';
   };
+  security.sudo.extraRules = [
+    {
+      users = ["adam"];
+      runAs = "root";
+      commands = [
+        {
+          command = "/home/adam/work/localtools/.devbox/nix/profile/default/bin/traefik";
+          options = ["NOPASSWD" "SETENV"];
+        }
+      ];
+    }
+  ];
 
   programs.sway = {
     enable = true;

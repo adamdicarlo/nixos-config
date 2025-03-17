@@ -43,7 +43,7 @@ in {
         # From https://github.com/Pipshag/dotfiles_nord/blob/master/.config/waybar/config
         layer = "top"; # Waybar at top layer
         position = "top"; # Waybar position (top|bottom|left|right)
-        height = 36; # Waybar height (to be removed for auto height)
+        height = 38; # Waybar height (to be removed for auto height)
         # Archived modules
         # "custom/gpu" "bluetooth"  "custom/weather" "temperature" "sway/window"
         # Choose the order of the modules

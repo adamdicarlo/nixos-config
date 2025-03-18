@@ -28,7 +28,8 @@
           # Send an alert to all graphical users.
           for ADDRESS in /run/user/*; do
             USERID=''${ADDRESS#/run/user/}
-            ${lib.getExe pkgs.sudo} -u "#$USERID" DBUS_SESSION_BUS_ADDRESS="unix:path=$ADDRESS/bus" \
+            # We must use the wrapper (which has setuid)
+            /run/wrappers/bin/sudo -u "#$USERID" DBUS_SESSION_BUS_ADDRESS="unix:path=$ADDRESS/bus" \
               ${lib.getExe pkgs.libnotify} \
                 --app-name=clamav-alert \
                 --urgency=critical \
@@ -40,15 +41,50 @@
   in {
     enable = true;
     settings = {
+      OnAccessIncludePath = ["/home" "/var/lib" "/tmp"];
+      # Exclude accesses by the clamav daemon user and root (onacc user) to
+      # avoid infinite scanning loops.
+      OnAccessExcludeRootUID = "yes";
+      OnAccessExcludeUname = ["clamav"];
+
+      OnAccessExcludePath = [
+        # The volumes in /var/lib/docker can't be watched, and fail clamonacc
+        "/var/lib/docker"
+        # These paths seem to be problematic too
+        "/var/lib/containerd"
+      ];
       MaxThreads = 2;
-      MaxQueue = 8;
+      MaxQueue = 16;
       VirusEvent = "${onVirusEvent}/bin/on-virus-event.sh";
     };
   };
-  services.clamav.scanner = {
-    enable = true;
-    interval = "*-*-* 18:45:00";
+
+  boot.kernel.sysctl = {
+    "fs.inotify.max_user_watches" = lib.mkForce (1024 * 1024); # default:  8192
+    "fs.inotify.max_user_instances" = lib.mkForce (256 * 1024); # default: 128
   };
+
+  systemd.services.clamav-onacc = {
+    description = "ClamAV daemon (clamd)";
+    after = ["clamav-daemon.service"];
+    requires = ["clamav-daemon.service"];
+    wantedBy = ["multi-user.target"];
+    restartTriggers = [pkgs.clamav];
+
+    serviceConfig = {
+      ExecReload = "${pkgs.coreutils}/bin/kill -USR2 $MAINPID";
+      ExecStart = "${pkgs.clamav}/bin/clamonacc --foreground --wait --fdpass";
+      PrivateDevices = "yes";
+      PrivateNetwork = "yes";
+      PrivateTmp = "yes";
+      Restart = "on-failure";
+      RestartSec = "15s";
+      Slice = "system-clamav.slice";
+      StateDirectory = "clamav";
+      User = "root";
+    };
+  };
+
   services.clamav.updater = {
     enable = true;
     frequency = 3;
@@ -101,6 +137,7 @@
     enable = true;
     polkitPolicyOwners = ["adam"];
   };
+
   security.polkit = {
     extraConfig = ''
       polkit.addRule(function(action, subject) {
@@ -121,6 +158,16 @@
       commands = [
         {
           command = "/home/adam/work/localtools/.devbox/nix/profile/default/bin/traefik";
+          options = ["NOPASSWD" "SETENV"];
+        }
+      ];
+    }
+    {
+      users = ["clamav"];
+      runAs = "adam";
+      commands = [
+        {
+          command = lib.getExe pkgs.libnotify;
           options = ["NOPASSWD" "SETENV"];
         }
       ];

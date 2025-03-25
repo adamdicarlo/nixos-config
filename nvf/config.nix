@@ -96,7 +96,7 @@
       terraform.enable = true;
       ts = {
         enable = true;
-        extensions.ts-error-translator.enable = true;
+        extensions.ts-error-translator.enable = false;
       };
     };
     lsp = {

@@ -98,6 +98,7 @@
         enable = true;
         extensions.ts-error-translator.enable = false;
       };
+      yaml.enable = true;
     };
     lsp = {
       formatOnSave = true;

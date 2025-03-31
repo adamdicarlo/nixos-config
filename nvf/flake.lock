@@ -42,11 +42,11 @@
     },
     "mnw": {
       "locked": {
-        "lastModified": 1735150973,
-        "narHash": "sha256-OJhcCAoaMMXeD6o4qI/hxBCNELJp4dN8D5LJZc8w8XA=",
+        "lastModified": 1742255973,
+        "narHash": "sha256-XfEGVKatTgEMMOVb4SNp1LYLQOSzzrFTDMVDTZFyMVE=",
         "owner": "Gerg-L",
         "repo": "mnw",
-        "rev": "40cd0b006cc48dffd0f8698ad7f54cf1d56779a6",
+        "rev": "b982dbd5e6d55d4438832b3567c09bc2a129649d",
         "type": "github"
       },
       "original": {
@@ -112,22 +112,6 @@
         "type": "github"
       }
     },
-    "nmd": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1705050560,
-        "narHash": "sha256-x3zzcdvhJpodsmdjqB4t5mkVW22V3wqHLOun0KRBzUI=",
-        "owner": "~rycee",
-        "repo": "nmd",
-        "rev": "66d9334933119c36f91a78d565c152a4fdc8d3d3",
-        "type": "sourcehut"
-      },
-      "original": {
-        "owner": "~rycee",
-        "repo": "nmd",
-        "type": "sourcehut"
-      }
-    },
     "nvf": {
       "inputs": {
         "flake-parts": [
@@ -143,17 +127,16 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "nmd": "nmd",
         "systems": [
           "systems"
         ]
       },
       "locked": {
-        "lastModified": 1740362986,
-        "narHash": "sha256-t2wzynm/BwRKrJMcKU0XfjxaJfz4oS/yV6UUicM3KXQ=",
+        "lastModified": 1743028529,
+        "narHash": "sha256-iqqanNo2sAny4wAJHKvP6zEwOcRTPaEkqYJkFSq+lhk=",
         "owner": "adamdicarlo",
         "repo": "nvf",
-        "rev": "a9d2e43facebe5ce4cdbe9370b3a31ad123eefe9",
+        "rev": "2d395255e52ce015fa25ed47b39fc836e096788a",
         "type": "github"
       },
       "original": {

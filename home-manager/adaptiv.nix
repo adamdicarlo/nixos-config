@@ -4,9 +4,40 @@
   ...
 }: let
   home = config.home.homeDirectory;
+
+  bruno-app = pkgs.callPackage (import ./modules/bruno.nix) {};
+  # TODO: Figure out why this overrideAttrs method doesn't work... build output:
+  #
+  # trying https://github.com/usebruno/bruno/archive/refs/tags/v2.0.1.tar.gz
+  #   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+  #                                  Dload  Upload   Total   Spent    Left  Speed
+  #
+  # 0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  # 0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  #
+  # 100 2973k    0 2973k    0     0  7368k      0 --:--:-- --:--:-- --:--:-- 7368k
+  # unpacking source archive /build/download.tar.gz
+  # mkdir: cannot create directory '/build/unpack': File exists
+  #
+  #
+  #   pkgs.bruno.overrideAttrs (previousAttrs: rec {
+  #   version = "2.0.1";
+  #
+  #   src = pkgs.fetchFromGitHub {
+  #     owner = "usebruno";
+  #     repo = "bruno";
+  #     tag = "v${version}";
+  #     hash = pkgs.lib.fakeHash;
+  #
+  #     inherit (previousAttrs.src) postFetch;
+  #   };
+  #
+  #   npmDepsHash = pkgs.lib.fakeHash;
+  # });
 in {
   home.packages = with pkgs; [
     _1password-gui
+    bruno-app
     clamav
     mu-repo
 

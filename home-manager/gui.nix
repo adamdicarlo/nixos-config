@@ -129,6 +129,7 @@ in {
 
       onlyoffice-bin_latest
       opensnitch-ui
+      discord
       slack
       zoom-us
     ]

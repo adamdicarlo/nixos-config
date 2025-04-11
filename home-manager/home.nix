@@ -13,6 +13,7 @@
 
   unfreePackages =
     [
+      "discord"
       "dracula-dark-colorscheme" # firefox theme
       "fmod"
       "google-chrome"

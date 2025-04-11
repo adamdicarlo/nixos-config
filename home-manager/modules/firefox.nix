@@ -93,11 +93,11 @@ in {
             icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
             definedAliases = ["@no"];
           };
-          Bing.metaData.hidden = true;
-          Google.metaData.alias = "@g";
+          bing.metaData.hidden = true;
+          google.metaData.alias = "@g";
         };
         force = true;
-        order = ["DuckDuckGo" "Google"];
+        order = ["ddg" "google"];
       };
       settings = {
         "app.shield.optoutstudies.enabled" = false;

@@ -38,11 +38,11 @@
         profile.name = "x1c7-undocked";
         profile.outputs = [
           {
-            criteria = "BOE 0x07C8 Unknown";
+            criteria = "AU Optronics 0x233D Unknown";
             status = "enable";
-            mode = "3840x2160@60Hz";
+            mode = "1920x1080@60Hz";
             position = "0,0";
-            scale = 2.0;
+            scale = 1.0;
           }
         ];
       }

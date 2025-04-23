@@ -105,7 +105,6 @@
       lightbulb.enable = true;
       lspSignature.enable = true;
       trouble.enable = true;
-      lsplines.enable = true;
     };
     mini = {
       bufremove.enable = true;

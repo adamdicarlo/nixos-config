@@ -95,7 +95,7 @@ in {
     enableScDaemon = false;
     enableSshSupport = true;
     sshKeys = ["689797597435372AAE566787A29AFFB7B862D0B6"];
-    pinentryPackage = pkgs.pinentry-gnome3;
+    pinentry.package = pkgs.pinentry-gnome3;
   };
 
   programs.ssh.matchBlocks = {

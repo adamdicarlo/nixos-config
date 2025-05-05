@@ -156,29 +156,33 @@ in {
 
   services.mako = {
     enable = true;
-    backgroundColor = "${c.blue}E0";
-    borderColor = c.black;
-    borderRadius = 8;
-    borderSize = 2;
-    font = "FiraCode/FiraCode Nerd Font Mono 10";
-    height = 120;
-    maxVisible = 6;
-    padding = "12";
-    width = 360;
-    textColor = c.white;
 
-    extraConfig = ''
-      [urgency=critical]
-      background-color=${c.purple}E0
+    criteria = {
+      "urgency=critical" = {
+        background-color = "${c.purple}E0";
+      };
 
-      [app-name=clamav-alert]
-      background-color=${c.red}
-      width=600
-      height=240
-      padding=24
-      font=FiraCode Nerd Font Mono 15
-      on-notify=exec ${lib.getExe pkgs.kitty} -o window_padding_width=12 --class=floating journalctl -eu clamav-daemon.service
-    '';
+      "app-name=clamav-alert" = {
+        background-color = c.red;
+        width = "600";
+        height = "240";
+        padding = "24";
+        font = "FiraCode Nerd Font Mono 15";
+        on-notify = "exec ${lib.getExe pkgs.kitty} -o window_padding_width=12 --class=floating journalctl -eu clamav-daemon.service";
+      };
+    };
+    settings = {
+      background-color = "${c.blue}E0";
+      border-color = c.black;
+      border-radius = 8;
+      border-size = 2;
+      font = "FiraCode/FiraCode Nerd Font Mono 10";
+      height = 120;
+      max-visible = 6;
+      padding = "12";
+      width = 360;
+      text-color = c.white;
+    };
   };
   services.network-manager-applet.enable = true;
 

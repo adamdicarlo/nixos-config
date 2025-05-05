@@ -75,6 +75,7 @@ in {
       EDITOR = "nvim";
       EZA_ICONS_AUTO = "1";
       EZA_MIN_LUMINANCE = "50";
+      NH_FLAKE = "/home/adam/nix-config";
     };
 
     shellAliases = {
@@ -198,7 +199,7 @@ in {
     enableVteIntegration = true;
     syntaxHighlighting.enable = true;
 
-    initExtra = ''
+    initContent = ''
       if [[ -z "$(declare -f custom_cd_hook_ls)" ]]; then
         custom_cd_hook_ls() {
           emulate -L zsh

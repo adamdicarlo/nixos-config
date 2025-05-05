@@ -76,7 +76,6 @@
     # enable top-level options such as enableLSP or enableExtraDiagnostics as
     # they are needed.
     languages = {
-      enableLSP = true;
       enableFormat = true;
       enableTreesitter = true;
       enableExtraDiagnostics = true;
@@ -101,6 +100,7 @@
       yaml.enable = true;
     };
     lsp = {
+      enable = true;
       formatOnSave = true;
       lightbulb.enable = true;
       lspSignature.enable = true;

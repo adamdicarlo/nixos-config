@@ -56,9 +56,11 @@ in {
         ds = "devbox shell";
       };
     };
+    initContent = ''
+      compdef "_arguments -s : \"1: :(local horse testing staging production)\" \"2: :(build deploy lint tests build-js build-lambdas deploy-lambdas deploy-to-s3 if-ci invalidate invoke list-urls logs new-tiv-script release)\"" tiv
+    '';
     envExtra = ''
       export PATH=${home}/work/common/cli/bin:$PATH
-      compdef "_arguments -s : \"1: :(local horse testing staging production)\" \"2: :(build deploy lint tests build-js build-lambdas deploy-lambdas deploy-to-s3 if-ci invalidate invoke list-urls logs new-tiv-script release)\"" tiv
     '';
   };
 

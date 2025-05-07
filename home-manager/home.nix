@@ -75,7 +75,7 @@ in {
       EDITOR = "nvim";
       EZA_ICONS_AUTO = "1";
       EZA_MIN_LUMINANCE = "50";
-      NH_FLAKE = "/home/adam/nix-config";
+      NH_FLAKE = "/home/adam/nixos-config";
     };
 
     shellAliases = {

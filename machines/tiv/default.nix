@@ -242,8 +242,20 @@
   };
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [3000 3001];
-  networking.firewall.allowedUDPPorts = [3000 3001];
+  networking.firewall = {
+    # 80, 443 so a lambda container (run by SAM) can access traefik on host;
+    # 3000, 3001 are for `sam local`.
+    allowedTCPPorts = [80 443 3000 3001];
+    allowedUDPPorts = [80 443 3000 3001];
+
+    # Allow traffic from a lambda container to access (traefik on) the host.
+    # https://discourse.nixos.org/t/docker-container-not-resolving-to-host/30259/8
+    extraCommands = ''
+      iptables -I INPUT 1 -s 172.16.0.0/12 -p tcp -d 172.17.0.1 -j ACCEPT
+      iptables -I INPUT 2 -s 172.16.0.0/12 -p udp -d 172.17.0.1 -j ACCEPT
+    '';
+  };
+
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

@@ -18,6 +18,7 @@
       "fmod"
       "google-chrome"
       "slack"
+      "vivaldi"
       "zoom"
       "zsh-abbr"
     ]
@@ -51,7 +52,8 @@
     nos = "nh os switch --ask";
   };
 
-  neovimConfigured = inputs.my-nvf.packages.${system}.default;
+  # neovimConfigured = inputs.my-nvf.packages.${system}.default;
+  neovimConfigured = pkgs.neovim;
 in {
   imports = [
     ./modules

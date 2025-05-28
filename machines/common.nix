@@ -69,6 +69,8 @@
     useXkbConfig = true;
   };
 
+  services.avahi.enable = true;
+
   # Keyboard key map for virtual ttys.
   services.xserver = {
     xkb = {

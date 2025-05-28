@@ -85,17 +85,17 @@
     };
 
     # My NeoVim configuration
-    my-nvf = {
-      url = "path:./nvf";
-      inputs = {
-        flake-parts.follows = "flake-parts";
-        flake-utils.follows = "flake-utils";
-        nixpkgs.follows = "nixpkgs";
-        nixpkgs-lib.follows = "nixpkgs-lib";
-        rust-overlay.follows = "rust-overlay";
-        systems.follows = "systems";
-      };
-    };
+    # my-nvf = {
+    #   url = "path:./nvf";
+    #   inputs = {
+    #     flake-parts.follows = "flake-parts";
+    #     flake-utils.follows = "flake-utils";
+    #     nixpkgs.follows = "nixpkgs";
+    #     nixpkgs-lib.follows = "nixpkgs-lib";
+    #     rust-overlay.follows = "rust-overlay";
+    #     systems.follows = "systems";
+    #   };
+    # };
 
     flake-parts = {
       url = "github:hercules-ci/flake-parts";

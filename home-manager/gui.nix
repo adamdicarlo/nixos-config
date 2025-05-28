@@ -5,7 +5,7 @@
   lib,
   ...
 }: let
-  q-zandronum = pkgs.callPackage (import ./modules/q-zandronum) {};
+  # q-zandronum = pkgs.callPackage (import ./modules/q-zandronum) {};
   c = import ../lib/dracula.nix;
 
   fileManager = pkgs.nautilus;
@@ -119,7 +119,10 @@ in {
       xdragon
 
       # productivity
-      (google-chrome.override {commandLineArgs = "--ozone-platform=wayland";})
+      (vivaldi.overrideAttrs (_oldAttrs: {
+        inherit vivaldi-ffmpeg-codecs;
+      }))
+
       evince
       gimp-with-plugins
       glow # markdown previewer in terminal
@@ -135,12 +138,13 @@ in {
       zoom-us
     ]
     ++ (lib.lists.optionals isPersonalMachine [
+      chromium
       doomseeker
       doomretro
       gzdoom
       lgogdownloader
-      zandronum-alpha
-      q-zandronum
+      # zandronum-alpha
+      # q-zandronum
 
       bambu-studio
       freecad-wayland
@@ -157,7 +161,18 @@ in {
   services.mako = {
     enable = true;
 
-    criteria = {
+    settings = {
+      background-color = "${c.blue}E0";
+      border-color = c.black;
+      border-radius = 8;
+      border-size = 2;
+      font = "FiraCode/FiraCode Nerd Font Mono 10";
+      height = 120;
+      max-visible = 6;
+      padding = "12";
+      width = 360;
+      text-color = c.white;
+
       "urgency=critical" = {
         background-color = "${c.purple}E0";
       };
@@ -170,18 +185,6 @@ in {
         font = "FiraCode Nerd Font Mono 15";
         on-notify = "exec ${lib.getExe pkgs.kitty} -o window_padding_width=12 --class=floating journalctl -eu clamav-daemon.service";
       };
-    };
-    settings = {
-      background-color = "${c.blue}E0";
-      border-color = c.black;
-      border-radius = 8;
-      border-size = 2;
-      font = "FiraCode/FiraCode Nerd Font Mono 10";
-      height = 120;
-      max-visible = 6;
-      padding = "12";
-      width = 360;
-      text-color = c.white;
     };
   };
   services.network-manager-applet.enable = true;

@@ -124,7 +124,7 @@ in {
       }))
 
       evince
-      gimp-with-plugins
+      gimp3
       glow # markdown previewer in terminal
       nautilus
       sushi

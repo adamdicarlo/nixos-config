@@ -9,14 +9,6 @@
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
     };
-    nil = {
-      url = "github:oxalica/nil";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-        rust-overlay.follows = "rust-overlay";
-      };
-    };
     nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
@@ -32,7 +24,6 @@
       inputs = {
         flake-parts.follows = "flake-parts";
         flake-utils.follows = "flake-utils";
-        nil.follows = "nil";
         nixpkgs.follows = "nixpkgs";
         systems.follows = "systems";
       };

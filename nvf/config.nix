@@ -9,7 +9,16 @@
   # You may browse available options for nvf on the online manual. Please see
   # <https://notashelf.github.io/nvf/options.html>
   config.vim = {
-    useSystemClipboard = true;
+    clipboard = {
+      enable = true;
+      registers = "unnamed";
+      providers = {
+        wl-copy = {
+          enable = true;
+          package = null;
+        };
+      };
+    };
 
     keymaps = let
       # keymaps.*.silent defaults to true
@@ -73,7 +82,7 @@
 
     # Language support and automatic configuration of companion plugins.
     # Note that enabling, e.g., languages.<lang>.diagnostics will automatically
-    # enable top-level options such as enableLSP or enableExtraDiagnostics as
+    # enable top-level options such as lsp.enable or enableExtraDiagnostics as
     # they are needed.
     languages = {
       enableFormat = true;
@@ -83,6 +92,7 @@
       bash.enable = true;
       css.enable = true;
       elm.enable = true;
+      # elm.lsp.package = ["/home/adam/src/elm-language-server/result/bin/elm-language-server"];
       html.enable = true;
       lua.enable = true;
       markdown.enable = true;

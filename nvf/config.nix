@@ -70,7 +70,6 @@
     git = {
       enable = true;
       gitsigns = {
-        codeActions.enable = true;
         enable = true;
       };
     };

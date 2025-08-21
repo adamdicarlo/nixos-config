@@ -38,9 +38,9 @@
   #
   # From `man 5 systemd-system.conf`:
   # DefaultLimitNOFILE= defaults to 1024:524288.
-  systemd.extraConfig = ''
-    DefaultLimitNOFILE=8192:524288
-  '';
+  systemd.settings.Manager = {
+    DefaultLimitNOFILE = "8192:524288";
+  };
 
   # Enable networking
   networking.networkmanager.enable = lib.mkDefault true;

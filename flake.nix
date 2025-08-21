@@ -30,7 +30,7 @@
       };
     };
     devbox = {
-      url = "github:jetify-com/devbox/0.14.0";
+      url = "github:jetify-com/devbox/0.16.0";
       inputs.flake-utils.follows = "flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
     };

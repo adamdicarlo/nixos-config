@@ -67,6 +67,11 @@ in {
 
   services.logind.lidSwitchExternalPower = "ignore";
 
+  hardware.bluetooth = {
+    enable = true;
+  };
+  services.blueman.enable = true;
+
   hardware.keyboard.uhk.enable = true;
   users.users.adam.extraGroups = ["input"];
 

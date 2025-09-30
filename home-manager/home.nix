@@ -174,7 +174,8 @@ in {
   programs.bash = {
     enable = true;
     bashrcExtra = ''
-      export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/go/bin"
+      PATH=$HOME/nixos-config/nvf/result/bin:$PATH
+      export PATH
     '';
   };
 
@@ -210,6 +211,9 @@ in {
         }
         add-zsh-hook chpwd custom_cd_hook_ls
       fi
+
+      path=("$HOME/nixos-config/nvf/result/bin" $path)
+      export PATH
 
       # don't show `nix-shell-env` in devbox shell prompt
       zstyle :prompt:pure:environment:nix-shell show no

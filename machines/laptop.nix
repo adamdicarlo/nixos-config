@@ -88,7 +88,7 @@ in {
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.greetd.greetd}/bin/agreety --cmd ${lib.getExe pkgs.zsh}";
+        command = "${pkgs.greetd}/bin/agreety --cmd ${lib.getExe pkgs.zsh}";
       };
     };
   };

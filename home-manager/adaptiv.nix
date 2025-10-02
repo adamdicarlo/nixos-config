@@ -7,7 +7,6 @@
 in {
   home.packages = with pkgs; [
     (google-chrome.override {commandLineArgs = "--ozone-platform=wayland";})
-    _1password-gui
     bruno
     clamav
     mu-repo

@@ -207,6 +207,7 @@
     nmap # A utility for network discovery and security auditing
     p7zip
     pciutils # lspci
+    psmisc # pstree
     socat # replacement of openbsd-netcat
     sysstat
     tree

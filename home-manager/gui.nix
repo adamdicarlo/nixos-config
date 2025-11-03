@@ -21,7 +21,6 @@ in {
   imports = [
     ./modules/kanshi.nix
     ./modules/firefox.nix
-    ./modules/polkit-mate.nix
     ./modules/swayosd.nix
     ./modules/waybar.nix
   ];
@@ -193,6 +192,8 @@ in {
     enable = isPersonalMachine;
     startInBackground = true;
   };
+
+  services.polkit-gnome.enable = true;
 
   services.swayidle = {
     enable = true;

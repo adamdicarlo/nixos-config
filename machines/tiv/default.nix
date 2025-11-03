@@ -138,6 +138,17 @@
     polkitPolicyOwners = ["adam"];
   };
 
+  environment.etc = {
+    "1password/custom_allowed_browsers" = {
+      text = ''
+        google-chrome-stable
+        vivaldi
+        zen
+      '';
+      mode = "0755";
+    };
+  };
+
   security.polkit = {
     extraConfig = ''
       polkit.addRule(function(action, subject) {

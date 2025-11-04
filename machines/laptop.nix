@@ -84,6 +84,12 @@ in {
   programs.virt-manager.enable = true;
 
   services.displayManager.defaultSession = "sway";
+
+  services.flatpak.enable = true;
+  system.userActivationScripts.ensureFlatHub = ''
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+  '';
+
   services.greetd = {
     enable = true;
     settings = {

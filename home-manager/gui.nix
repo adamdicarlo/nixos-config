@@ -78,7 +78,6 @@ in {
       kitty
       kitty-img
       kitty-themes
-      zed-editor-fhs
 
       # Wayland, GUI stuff
       chayang

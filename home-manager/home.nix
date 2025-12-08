@@ -118,7 +118,6 @@ in {
 
     # dev
     inputs.devbox.packages.${system}.default
-    inputs.fh.packages.${system}.default
     elmPackages.elm
     elmPackages.elm-format
     elmPackages.elm-language-server
@@ -140,19 +139,18 @@ in {
     neovimConfigured
   ];
 
+  programs.difftastic.enable = true;
+
   programs.git = {
     enable = true;
 
-    difftastic.enable = true;
-    userName = "Adam DiCarlo";
-    userEmail = "adam@bikko.org";
-    extraConfig = {
+    settings = {
       branch.autoSetupRebase = "always";
       checkout.guess = true;
-      commit.gpgsign = true;
+      commit.gpgsign = false;
       core.editor = lib.getExe neovimConfigured;
       init.defaultbranch = "main";
-      merge.guitool = "meld";
+      merge.guitool = lib.getExe pkgs.meld;
       #  cmd = ''meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"'';
       pull.rebase = true;
       push.autoSetupRemote = true;
@@ -161,8 +159,13 @@ in {
         "git+ssh://git@github.com/".insteadOf = ["gh:" "git://github.com/" "ssh://git@github.com:"];
         "git+ssh://git@github.com/".pushInsteadOf = ["git://github.com/" "https://github.com/" "ssh://git@github.com:"];
       };
-      # My 2023 GPG key
-      user.signingkey = "C8CB1DB6E4EA5801";
+
+      user = {
+        name = "Adam DiCarlo";
+        email = "adam@bikko.org";
+        # My 2023 GPG key
+        signingkey = "C8CB1DB6E4EA5801";
+      };
     };
   };
 
@@ -291,9 +294,12 @@ in {
 
   programs.ssh = {
     enable = true;
-    addKeysToAgent = "yes";
+    enableDefaultConfig = false;
     matchBlocks = {
       "*" = {
+        extraOptions = {
+          AddKeysToAgent = "yes";
+        };
         setEnv = {
           TERM = "xterm-256color";
         };

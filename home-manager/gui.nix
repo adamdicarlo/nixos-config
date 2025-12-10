@@ -473,7 +473,6 @@ in {
           }
         ]
         ++ [{command = lib.getExe pkgs.opensnitch-ui;}]
-        ++ (lib.optionals isPersonalMachine [{command = lib.getExe pkgs.nextcloud-client;}])
         ++ (lib.optionals isWorkMachine [{command = "1password --silent";}]);
 
       terminal = lib.getExe pkgs.kitty;

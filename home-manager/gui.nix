@@ -82,6 +82,7 @@ in {
       # Wayland, GUI stuff
       chayang
       cliphist
+      dragon-drop
       drm_info
       fuzzel
       grim
@@ -115,7 +116,6 @@ in {
       wofi-emoji
       wshowkeys
       wtype
-      xdragon
 
       # productivity
       (vivaldi.overrideAttrs (_oldAttrs: {
@@ -130,7 +130,7 @@ in {
       ianny
       meld
 
-      onlyoffice-bin_latest
+      onlyoffice-desktopeditors
       opensnitch-ui
       discord
       slack
@@ -208,12 +208,9 @@ in {
         command = "${pkgs.systemd}/bin/systemctl suspend";
       }
     ];
-    events = [
-      {
-        event = "before-sleep";
-        command = "${lib.getExe pkgs.swaylock} -f";
-      }
-    ];
+    events = {
+      before-sleep = "${lib.getExe pkgs.swaylock} -f";
+    };
   };
 
   # Requires services.udisks2 in system config.

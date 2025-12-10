@@ -133,8 +133,7 @@
     };
 
     pkgs = import nixpkgs {
-      inherit overlays;
-      inherit system;
+      inherit overlays system;
     };
 
     commonUnfreePackages = [
@@ -149,6 +148,8 @@
 
     nixpkgsConfigModule = extraUnfreePkgs: {lib, ...}: {
       nixpkgs = {
+        hostPlatform = system;
+
         # See https://github.com/NixOS/nixpkgs/issues/191910
         # > [When] nixpkgs.pkgs is set, all other options in nixpkgs except for
         # > overlays are silently ignored.

@@ -4,10 +4,11 @@
   inputs,
   lib,
   pkgs,
-  system,
   username,
   ...
 }: let
+  inherit (pkgs.stdenv.hostPlatform) system;
+
   isPersonalMachine = hostname == "carbo";
   isWorkMachine = !isPersonalMachine;
 

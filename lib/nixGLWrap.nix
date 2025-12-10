@@ -2,9 +2,10 @@
   pkgs,
   lib,
   inputs,
-  system,
   ...
 }: let
+  inherit (pkgs.stdenv.hostPlatform) system;
+
   mkNixGLWrapper =
     # Based on https://github.com/nix-community/nixGL/issues/44#issuecomment-1182548777 and further comments
     cmd: pkg:

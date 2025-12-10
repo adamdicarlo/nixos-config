@@ -42,7 +42,7 @@ in {
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
-      vaapiVdpau
+      libva-vdpau-driver
     ];
   };
 
@@ -144,7 +144,7 @@ in {
     ffmpeg
     glib
     glmark2
-    glxinfo
+    mesa-demos
     vulkan-tools
     xdg-utils
 
@@ -172,7 +172,6 @@ in {
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-color-emoji # a good fallback font
-    noto-fonts-emoji
     proggyfonts
     twemoji-color-font
     twitter-color-emoji

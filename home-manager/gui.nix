@@ -11,7 +11,7 @@
 
   fileManager = pkgs.nautilus;
 
-  isPersonalMachine = hostname == "carbo";
+  isPersonalMachine = hostname == "carbo" || hostname == "echo";
   isWorkMachine = !isPersonalMachine;
 
   wallpaper =

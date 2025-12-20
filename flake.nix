@@ -175,6 +175,18 @@
         ];
       };
 
+      echo = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs;
+        };
+        modules = [
+          (nixpkgsConfigModule [])
+          inputs.agenix.nixosModules.default
+          inputs.disko.nixosModules.disko
+          ./machines/echo/default.nix
+        ];
+      };
+
       oddsy = nixpkgs.lib.nixosSystem {
         specialArgs = {
           inherit inputs;
@@ -271,6 +283,7 @@
       // mkHome "adam" "oddsy" []
       // mkHome "adam" "opti" []
       // mkHome "adam" "tiv" [./home-manager/gui.nix ./home-manager/adaptiv.nix]
-      // mkHome "adam" "carbo" [./home-manager/gui.nix];
+      // mkHome "adam" "carbo" [./home-manager/gui.nix]
+      // mkHome "adam" "echo" [./home-manager/gui.nix];
   };
 }

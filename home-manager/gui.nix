@@ -24,7 +24,10 @@ in {
     ./modules/firefox.nix
     ./modules/swayosd.nix
     ./modules/waybar.nix
+    ./modules/bambu-studio.nix
   ];
+
+  bambuStudio.enable = isPersonalMachine;
 
   home.pointerCursor = {
     gtk.enable = true;
@@ -145,7 +148,6 @@ in {
       # zandronum-alpha
       # q-zandronum
 
-      bambu-studio
       freecad-wayland
     ]);
 

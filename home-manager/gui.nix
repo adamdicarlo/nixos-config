@@ -134,8 +134,6 @@ in {
     startInBackground = true;
   };
 
-  services.polkit-gnome.enable = true;
-
   services.wlsunset = {
     enable = false;
     temperature = {
@@ -144,6 +142,14 @@ in {
     };
     latitude = "45.6";
     longitude = "-122.7";
+  };
+
+  services.udiskie = {
+    enable = true;
+    settings = {
+      program_options.file_manager = pkgs.cosmic-files;
+      notifications.timeout = 3;
+    };
   };
 
   programs.kitty = {

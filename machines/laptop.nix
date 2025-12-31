@@ -45,7 +45,6 @@ in {
   hardware.bluetooth = {
     enable = true;
   };
-  services.blueman.enable = true;
 
   hardware.keyboard.uhk.enable = true;
   users.users.adam.extraGroups = ["input"];
@@ -99,6 +98,11 @@ in {
     # enabled by default, no need to redefine it in your config for now)
     #media-session.enable = true;
     wireplumber.enable = true;
+  };
+
+  services.udisks2 = {
+    enable = true;
+    mountOnMedia = true;
   };
 
   programs.zsh.enable = true;

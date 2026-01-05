@@ -57,10 +57,12 @@ in {
       };
     }
   ];
-  programs.git.extraConfig.url."github-work:adamdicarlo0/".insteadOf = "git@github.com:adamdicarlo0/";
-  programs.git.extraConfig.url."github-work:adamdicarlo0/".pushInsteadOf = "git@github.com:adamdicarlo0/";
-  programs.git.extraConfig.url."github-work:adaptivsystems/".insteadOf = "git@github.com:adaptivsystems/";
-  programs.git.extraConfig.url."github-work:adaptivsystems/".pushInsteadOf = "git@github.com:adaptivsystems/";
+  programs.git.settings.url = {
+    "github-work:adamdicarlo0/".insteadOf = "git@github.com:adamdicarlo0/";
+    "github-work:adamdicarlo0/".pushInsteadOf = "git@github.com:adamdicarlo0/";
+    "github-work:adaptivsystems/".insteadOf = "git@github.com:adaptivsystems/";
+    "github-work:adaptivsystems/".pushInsteadOf = "git@github.com:adaptivsystems/";
+  };
 
   services.gpg-agent = {
     enable = true;

@@ -45,7 +45,7 @@
       # Exclude accesses by the clamav daemon user and root (onacc user) to
       # avoid infinite scanning loops.
       OnAccessExcludeRootUID = "yes";
-      OnAccessExcludeUname = ["clamav"];
+      OnAccessExcludeUname = "clamav";
 
       OnAccessExcludePath = [
         # The volumes in /var/lib/docker can't be watched, and fail clamonacc

@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: let
   extraEnv = {
@@ -13,9 +14,10 @@
     # TODO: don't spam all of these into environment.variables?
     BROWSER =
       if config.networking.hostName == "tiv"
-      then "zen"
-      else "zen";
+      then "google-chrome-stable"
+      else "firefox";
     # "Do not set GDK_BACKEND=wayland globally. This is known to break apps."
+    # GDK_BACKEND = "wayland";
     MOZ_ENABLE_WAYLAND = "1";
     NIXOS_OZONE_WL = "1";
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
@@ -24,7 +26,15 @@
     SDL_VIDEODRIVER = "wayland";
     TERMINAL = "kitty";
 
-    # WLR_DRM_NO_MODIFIERS = "1";
+    # Ugh: after updating to Sway 1.10, kanshi started crashing, and sway would
+    # also crash when trying to set the highest resolution on my DELL
+    # ultrawide. I had to switch from WLR_DRM_NO_ATOMIC to WLR_DRM_NO_MODIFIERS
+    # WLR_DRM_NO_ATOMIC = "1"; Enabling NO_MODIFIERS seemed to fix sway's mode
+    # setting (at least when logging in disconnected, then connecting, and
+    # manually setting the mode); kanshi still crashed, but disabling NO_ATOMIC
+    # seems to have fixed that.
+    WLR_DRM_NO_MODIFIERS = "1";
+    XDG_CURRENT_DESKTOP = "sway";
   };
 in {
   # Allow brightness control from users in the video group
@@ -36,6 +46,22 @@ in {
     ];
   };
 
+  # https://github.com/NixOS/nixpkgs/issues/143365#issuecomment-1293871094
+  security.pam.services.swaylock.text = ''
+    # Account management.
+    account required pam_unix.so
+
+    # Authentication management.
+    auth sufficient pam_unix.so   likeauth try_first_pass
+    auth required pam_deny.so
+
+    # Password management.
+    password sufficient pam_unix.so nullok sha512
+
+    # Session management.
+    session required pam_env.so conffile=/etc/pam/environment readenv=0
+    session required pam_unix.so
+  '';
   security.polkit = {
     enable = true;
   };
@@ -65,15 +91,19 @@ in {
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
   '';
 
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd}/bin/agreety --cmd ${lib.getExe pkgs.zsh}";
+      };
+    };
+  };
   services.xserver = {
     enable = true;
     dpi = 96;
   };
   services.libinput.enable = true;
-
-  services.ddccontrol = {
-    enable = true;
-  };
 
   services.fwupd = {
     enable = true;
@@ -151,6 +181,7 @@ in {
 
     libsForQt5.qt5.qtwayland
     pavucontrol
+    swayosd
     qt6.qtwayland
 
     qemu_kvm
@@ -159,7 +190,37 @@ in {
   ];
 
   programs.dconf.enable = true;
+
+  programs.sway = {
+    enable = true;
+    wrapperFeatures.gtk = true;
+  };
+
   services.dbus.enable = true;
+
+  # This was an attempt to get swayosd-libinput-backend to work properly. The
+  # service would start (though only when manually via systemctl), and dbus
+  # messages would be generated when pressing volume keys, but nothing
+  # happened, and the message send destination was null (problem or red
+  # herring?).
+  # services.udev.packages = [pkgs.swayosd];
+  # services.dbus.packages = [pkgs.swayosd];
+  # systemd.packages = [pkgs.swayosd];
+
+  services.tlp = {
+    enable = true;
+    settings = {
+      CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
+      CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
+      START_CHARGE_THRESH_BAT0 = 75;
+      STOP_CHARGE_THRESH_BAT0 = 85;
+
+      CPU_MAX_PERF_ON_AC = lib.mkDefault 100;
+      CPU_MAX_PERF_ON_BAT = lib.mkDefault 80;
+      CPU_HWP_DYN_BOOST_ON_AC = 1;
+      CPU_HWP_DYN_BOOST_ON_BAT = 0;
+    };
+  };
 
   # Enable the OpenSSH daemon.
   services.openssh = {
@@ -170,24 +231,28 @@ in {
     };
   };
 
-  # xdg.portal = {
-  #   enable = true;
-  #   wlr = {
-  #     enable = true;
-  #     settings = {
-  #       screencast = {
-  #         max_fps = 15;
-  #         chooser_type = "simple";
-  #         chooser_cmd = "${lib.getExe pkgs.slurp} -f %o -or";
-  #       };
-  #     };
-  #   };
-  #   extraPortals = [pkgs.xdg-desktop-portal-cosmic];
-  #   config.preferred = {
-  #     default = "gtk";
-  #     "org.freedesktop.impl.portal.Screencast" = "wlr";
-  #   };
-  # };
+  services.udisks2 = {
+    enable = true;
+  };
+
+  xdg.portal = {
+    enable = true;
+    wlr = {
+      enable = true;
+      settings = {
+        screencast = {
+          max_fps = 15;
+          chooser_type = "simple";
+          chooser_cmd = "${lib.getExe pkgs.slurp} -f %o -or";
+        };
+      };
+    };
+    extraPortals = [pkgs.xdg-desktop-portal-gtk];
+    config.preferred = {
+      default = "gtk";
+      "org.freedesktop.impl.portal.Screencast" = "wlr";
+    };
+  };
 
   services.printing = {
     drivers = [pkgs.splix];

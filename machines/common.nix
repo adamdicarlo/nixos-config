@@ -150,7 +150,7 @@
   users.users.adam = {
     isNormalUser = true;
     description = "Adam DiCarlo";
-    extraGroups = ["docker" "i2c" "libvirtd" "networkmanager" "video" "wheel"];
+    extraGroups = ["docker" "libvirtd" "networkmanager" "video" "wheel"];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHw1DBIi3+PCiDnWkPohhHFVKqnAcKzUUezulxxywGHa adam@bikko.org"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEbs7eDyOmFy3rZV4zCI6Pz+5srASislwVs36/XcM4sq adam@bikko.org"

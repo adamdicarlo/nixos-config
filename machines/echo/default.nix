@@ -17,10 +17,6 @@
   boot.initrd.luks.devices."luks-a86e090b-8f6a-43ee-a9df-262ffa193a88".device = "/dev/disk/by-uuid/a86e090b-8f6a-43ee-a9df-262ffa193a88";
   networking.hostName = "echo";
 
-  # Enable the GNOME Desktop Environment.
-  services.displayManager.cosmic-greeter.enable = true;
-  services.desktopManager.cosmic.enable = true;
-
   boot.kernelPackages = pkgs.linuxPackages_6_18;
 
   # Configure keymap in X11

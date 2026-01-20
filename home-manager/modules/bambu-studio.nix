@@ -1,3 +1,4 @@
+# https://discourse.nixos.org/t/bambu-studio-any-working-method/62272/26
 {
   config,
   lib,

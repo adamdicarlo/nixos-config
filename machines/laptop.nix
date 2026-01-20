@@ -12,10 +12,7 @@
     #  export XCURSOR_SIZE=24
     #  export __GL_VRR_ALLOWED=1
     # TODO: don't spam all of these into environment.variables?
-    BROWSER =
-      if config.networking.hostName == "tiv"
-      then "google-chrome-stable"
-      else "firefox";
+    BROWSER = "zen";
     # "Do not set GDK_BACKEND=wayland globally. This is known to break apps."
     # GDK_BACKEND = "wayland";
     MOZ_ENABLE_WAYLAND = "1";

@@ -102,6 +102,10 @@ in {
   };
   services.libinput.enable = true;
 
+  services.ddccontrol = {
+    enable = true;
+  };
+
   services.fwupd = {
     enable = true;
   };

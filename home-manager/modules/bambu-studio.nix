@@ -1,4 +1,3 @@
-# https://discourse.nixos.org/t/bambu-studio-any-working-method/62272/26
 {
   config,
   lib,
@@ -24,7 +23,7 @@
 
   # AppImage wrapper with full dependencies from discourse thread
   # Using Ubuntu AppImage (better compatibility than Fedora on NixOS)
-  bambu-studio = pkgs.appimageTools.wrapType2 {
+  bambu-studio = pkgs.appimageTools.wrapType2 rec {
     pname = "bambu-studio";
     inherit version;
 

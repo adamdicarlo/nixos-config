@@ -18,6 +18,13 @@
   networking.hostName = "echo";
 
   boot.kernelPackages = pkgs.linuxPackages_6_18;
+  boot.kernelParams = [
+    # Prevent display from freezing, which apparently started happening in Linux 6.12.
+    # https://gitlab.freedesktop.org/drm/amd/-/issues/4498
+    # https://community.frame.work/t/ryzen-ai-linux-mint-22-cinnamon-freezing-after-july-31st-package-updates/73948/18
+    # https://forum.endeavouros.com/t/howto-mitigate-gfx-crash-lockup-apparent-freeze-with-amdgpu/73082
+    "amdgpu.dcdebugmask=0x12"
+  ];
 
   # Configure keymap in X11
   services.xserver.xkb = {

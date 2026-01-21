@@ -78,6 +78,9 @@ in {
     [
       (inputs.zen-browser.packages."${system}".default)
 
+      # Provides org.gnome.keyring.SystemPrompter
+      gcr
+
       kitty
       kitty-img
       kitty-themes

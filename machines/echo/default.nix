@@ -26,6 +26,8 @@
     "amdgpu.dcdebugmask=0x12"
   ];
 
+  services.gnome.gnome-keyring.enable = true;
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
@@ -56,7 +58,7 @@
 
   environment.systemPackages = with pkgs; [
     nextcloud-client
-    signal-desktop
+    (signal-desktop.override {commandLineArgs = "--password-store=gnome-libsecret";})
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

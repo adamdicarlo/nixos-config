@@ -1,14 +1,18 @@
 _: {
   services.adguardhome = let
-    host = "0.0.0.0";
-    port = 5300;
+    httpHost = "127.0.0.1";
+    httpPort = 5300;
   in {
     enable = true;
     openFirewall = true;
-    inherit host port;
+    host = httpHost;
+    port = httpPort;
     settings = {
+      dns = {
+        bind_hosts = ["0.0.0.0" "::1"];
+      };
       http = {
-        address = "${host}:${builtins.toString port}";
+        address = "${httpHost}:${builtins.toString httpPort}";
       };
     };
   };

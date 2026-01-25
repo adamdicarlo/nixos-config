@@ -17,7 +17,6 @@
   age.secrets.cloudflare_api_key.file = ../../secrets/cloudflare_api_key.age;
   security.acme = {
     acceptTerms = true;
-    preliminarySelfsigned = false;
     certs."sleeping-panda.net" = {
       credentialFiles = {
         # https://go-acme.github.io/lego/dns/cloudflare/index.html#api-tokens

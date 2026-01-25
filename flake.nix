@@ -204,7 +204,7 @@
           inherit inputs;
         };
         modules = [
-          (nixpkgsConfigModule [])
+          (nixpkgsConfigModule ["unrar"])
           inputs.agenix.nixosModules.default
           ./machines/opti/default.nix
         ];

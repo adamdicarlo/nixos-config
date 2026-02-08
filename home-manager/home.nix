@@ -119,6 +119,7 @@ in {
 
     # dev
     inputs.devbox.packages.${system}.default
+    devenv
     elmPackages.elm
     elmPackages.elm-format
     elmPackages.elm-language-server

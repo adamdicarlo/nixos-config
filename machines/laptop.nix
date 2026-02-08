@@ -149,37 +149,6 @@ in {
     vulkan-tools
     xdg-utils
 
-    # fonts
-    cantarell-fonts
-    dina-font
-    fira-code
-    fira-code-symbols
-    font-awesome
-    gyre-fonts
-    inter
-    iosevka
-    jetbrains-mono
-    joypixels
-    liberation_ttf
-    monaspace # "texture healing"?
-    mplus-outline-fonts.githubRelease
-    nerd-fonts.dejavu-sans-mono
-    nerd-fonts.fira-mono
-    nerd-fonts.monaspace
-    nerd-fonts.sauce-code-pro
-    nerd-fonts.symbols-only
-    nerd-fonts.ubuntu
-    nerd-fonts.ubuntu-mono
-    noto-fonts
-    noto-fonts-cjk-sans
-    noto-fonts-color-emoji # a good fallback font
-    proggyfonts
-    twemoji-color-font
-    twitter-color-emoji
-    unifont
-    unifont_upper
-    vollkorn
-
     libsForQt5.qt5.qtwayland
     pavucontrol
     swayosd
@@ -285,5 +254,38 @@ in {
         </match>
       '';
     };
+    packages = with pkgs; [
+      cantarell-fonts
+      dejavu_fonts
+      dina-font
+      fira-code
+      fira-code-symbols
+      font-awesome
+      freefont_ttf
+      gyre-fonts
+      inter
+      iosevka
+      jetbrains-mono
+      joypixels
+      liberation_ttf
+      monaspace # "texture healing"?
+      mplus-outline-fonts.githubRelease
+      nerd-fonts.dejavu-sans-mono
+      nerd-fonts.fira-mono
+      nerd-fonts.monaspace
+      nerd-fonts.sauce-code-pro
+      nerd-fonts.symbols-only
+      nerd-fonts.ubuntu
+      nerd-fonts.ubuntu-mono
+      noto-fonts
+      noto-fonts-cjk-sans
+      noto-fonts-color-emoji # a good fallback font
+      proggyfonts
+      twemoji-color-font
+      twitter-color-emoji
+      unifont
+      unifont_upper
+      vollkorn
+    ];
   };
 }

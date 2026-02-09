@@ -152,6 +152,7 @@ in {
       # q-zandronum
 
       freecad-wayland
+      openscad
     ]);
 
   services.cliphist = {

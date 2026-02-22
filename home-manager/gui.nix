@@ -163,6 +163,15 @@ in {
     ];
   };
 
+  services.darkman = {
+    enable = true;
+    settings = {
+      lat = 45.6;
+      lng = -122.7;
+      # usegeoclue = true;
+    };
+  };
+
   services.mako = {
     enable = true;
 

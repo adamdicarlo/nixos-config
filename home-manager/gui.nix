@@ -21,7 +21,6 @@
 in {
   imports = [
     ./modules/kanshi.nix
-    ./modules/firefox.nix
     ./modules/swayosd.nix
     ./modules/waybar.nix
     ./modules/bambu-studio.nix

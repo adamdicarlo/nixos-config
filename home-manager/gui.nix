@@ -133,8 +133,8 @@ in {
       glow # markdown previewer in terminal
       nautilus
       sushi
-      ianny
       meld
+      switcheroo
 
       onlyoffice-desktopeditors
       opensnitch-ui

@@ -96,6 +96,7 @@ in {
       imv
       libappindicator-gtk3
       libnotify
+      lswt
       mako
       networkmanagerapplet
       nwg-displays

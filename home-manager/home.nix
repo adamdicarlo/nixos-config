@@ -79,6 +79,7 @@ in {
       EZA_ICONS_AUTO = "1";
       EZA_MIN_LUMINANCE = "50";
       NH_FLAKE = "/home/adam/nixos-config";
+      BEMENU_OPTS = "-H 30 --tb '#6272a4' --tf '#f8f8f2' --fb '#282a36' --ff '#f8f8f2' --nb '#282a36' --nf '#6272a4' --hb '#44475a' --hf '#50fa7b' --sb '#44475a' --sf '#50fa7b' --scb '#282a36' --scf '#ff79c6'";
     };
 
     shellAliases = {

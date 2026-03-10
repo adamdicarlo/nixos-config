@@ -82,6 +82,7 @@ in {
       kitty-themes
 
       # Wayland, GUI stuff
+      bemenu
       chayang
       cliphist
       dragon-drop

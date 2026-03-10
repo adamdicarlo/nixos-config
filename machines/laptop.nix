@@ -205,22 +205,27 @@ in {
     enable = true;
   };
 
+  # https://codeberg.org/kidsan/nixos-config/src/branch/main/nixos/modules/xdg.nix
+  systemd.user.services.xdg-desktop-portal-wlr.environment = {
+    BEMENU_OPTS = "-H 30 --tb '#6272a4' --tf '#f8f8f2' --fb '#282a36' --ff '#f8f8f2' --nb '#282a36' --nf '#6272a4' --hb '#44475a' --hf '#50fa7b' --sb '#44475a' --sf '#50fa7b' --scb '#282a36' --scf '#ff79c6'";
+  };
   xdg.portal = {
     enable = true;
+    config.common.default = "*";
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-wlr
+      xdg-desktop-portal-gtk
+    ];
     wlr = {
       enable = true;
       settings = {
         screencast = {
-          max_fps = 15;
-          chooser_type = "simple";
-          chooser_cmd = "${lib.getExe pkgs.slurp} -f %o -or";
+          exec_before = "${pkgs.mako}/bin/makoctl mode -a do-not-disturb";
+          exec_after = "${pkgs.mako}/bin/makoctl mode -r do-not-disturb";
+          chooser_type = "dmenu";
+          chooser_cmd = "${pkgs.bemenu}/bin/bemenu";
         };
       };
-    };
-    extraPortals = [pkgs.xdg-desktop-portal-gtk];
-    config.preferred = {
-      default = "gtk";
-      "org.freedesktop.impl.portal.Screencast" = "wlr";
     };
   };
 

@@ -202,7 +202,7 @@ in {
   services.network-manager-applet.enable = true;
 
   services.nextcloud-client = {
-    enable = isPersonalMachine;
+    enable = hostname == "echo";
     startInBackground = true;
   };
 

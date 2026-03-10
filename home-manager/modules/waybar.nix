@@ -3,9 +3,7 @@
   lib,
   pkgs,
   ...
-}: let
-  isPersonalMachine = hostname == "carbo";
-in {
+}: {
   home.packages = with pkgs; [
     cantarell-fonts
     font-awesome_5
@@ -43,7 +41,7 @@ in {
         # From https://github.com/Pipshag/dotfiles_nord/blob/master/.config/waybar/config
         layer = "top"; # Waybar at top layer
         position = "top"; # Waybar position (top|bottom|left|right)
-        height = 40; # Waybar height (to be removed for auto height)
+        #height = 40; # Waybar height (to be removed for auto height)
         # Archived modules
         # "custom/gpu" "bluetooth"  "custom/weather" "temperature" "sway/window"
         # Choose the order of the modules
@@ -58,18 +56,16 @@ in {
           "temperature#cpu"
           "temperature#gpu"
           "idle_inhibitor"
-          "backlight"
-          "pulseaudio"
           "privacy"
+          "pulseaudio"
           # "bluetooth"
-          "network"
           "battery"
           "tray"
           "clock"
         ];
         # Modules configuration
         "sway/workspaces" = {
-          all-outputs = true;
+          all-outputs = false;
         };
         "sway/mode" = {
           tooltip = false;
@@ -114,7 +110,7 @@ in {
         };
         "temperature#cpu" = {
           thermal-zone =
-            if isPersonalMachine
+            if hostname == "carbo"
             then 2
             else 0;
           interval = 2;
@@ -136,8 +132,10 @@ in {
             min-length = 7;
           }
           // (
-            if isPersonalMachine
+            if hostname == "carbo"
             then {thermal-zone = 1;}
+            else if hostname == "echo"
+            then {thermal-zone = 0;}
             else {hwmon-path = "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/17761776:00/hwmon/hwmon3/temp2_input";}
           );
 

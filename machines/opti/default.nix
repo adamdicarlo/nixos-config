@@ -8,10 +8,24 @@
     ./traefik.nix
   ];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    supportedFilesystems = {
+      zfs = true;
+    };
+    zfs = {
+      extraPools = ["slab"];
+      forceImportRoot = false;
+    };
+  };
 
+  networking.hostId = "7b2a446d";
   networking.hostName = "opti";
+
+  services.zfs.autoScrub.enable = true;
 
   age.secrets.cloudflare_email.file = ../../secrets/cloudflare_email.age;
   age.secrets.cloudflare_api_key.file = ../../secrets/cloudflare_api_key.age;

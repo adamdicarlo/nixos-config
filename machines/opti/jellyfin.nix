@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{config, pkgs, ...}: {
   # https://nixos.wiki/wiki/Jellyfin
   environment.systemPackages = with pkgs; [
     jellyfin
@@ -41,10 +41,24 @@
     openFirewall = true;
   };
 
+  age.secrets.sabnzbd.file = ../../secrets/sabnzbd.ini.age;
+  age.secrets.sabnzbd.owner = config.services.sabnzbd.user;
+  age.secrets.sabnzbd.group = config.services.sabnzbd.group;
   services.sabnzbd = {
     enable = true;
-    configFile = "/mnt/slab/services/sabnzbd";
+    configFile = null;
     openFirewall = true;
+    secretFiles = [config.age.secrets.sabnzbd.path];
+    settings = {
+      misc = {
+        cache_limit = "2G";
+        host_whitelist = "sabnzbd.sleeping-panda.net";
+        dirscan_dir = "/mnt/slab/downloads";
+        download_dir = "/mnt/slab/downloads/incomplete";
+        complete_dir = "/mnt/slab/downloads/complete";
+        port = 8080;
+      };
+    };
   };
 
   services.sonarr = {

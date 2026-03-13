@@ -20,4 +20,5 @@ let
 in {
   "secrets/cloudflare_email.age".publicKeys = personalKeys;
   "secrets/cloudflare_api_key.age".publicKeys = personalKeys;
+  "secrets/sabnzbd.ini.age".publicKeys = personalKeys;
 }

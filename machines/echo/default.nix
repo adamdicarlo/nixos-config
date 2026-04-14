@@ -23,6 +23,10 @@
     # https://gitlab.freedesktop.org/drm/amd/-/issues/4498
     # https://community.frame.work/t/ryzen-ai-linux-mint-22-cinnamon-freezing-after-july-31st-package-updates/73948/18
     # https://forum.endeavouros.com/t/howto-mitigate-gfx-crash-lockup-apparent-freeze-with-amdgpu/73082
+    # https://www.reddit.com/r/framework/comments/1qdfc75/comment/nzutni9/
+    "amd_pstate=active"
+
+    # Try 0x10. Try removing all params.
     "amdgpu.dcdebugmask=0x12"
   ];
 

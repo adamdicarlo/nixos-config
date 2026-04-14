@@ -103,7 +103,7 @@ in {
     jq
     imagemagick
     libwebp
-    neofetch
+    fastfetch
     procs
     ripgrep
     tmux

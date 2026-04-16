@@ -49,6 +49,7 @@ in {
       package = pkgs.flat-remix-gtk;
       name = "Flat-Remix-GTK-Grey-Darkest";
     };
+    gtk4.theme = config.gtk.theme;
     iconTheme = {
       package = pkgs.libsForQt5.breeze-icons;
       name = "breeze-dark";

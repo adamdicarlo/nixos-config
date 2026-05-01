@@ -104,6 +104,7 @@ in {
     imagemagick
     libwebp
     fastfetch
+    pdftk
     procs
     ripgrep
     tmux
@@ -128,7 +129,6 @@ in {
     gh
     lua-language-server
     nil
-    nodePackages.typescript-language-server
     nodejs_20
     shellcheck
     shfmt
@@ -137,6 +137,7 @@ in {
     terraform-ls
     tflint
     tflint-plugins.tflint-ruleset-aws
+    typescript-language-server
     vscode-langservers-extracted
 
     neovimConfigured

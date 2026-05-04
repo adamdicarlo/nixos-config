@@ -153,6 +153,7 @@ separator = '  '
 'chromium' = ''
 'firefox' = ''
 'firefoxdeveloperedition' = ''
+'zen' = ''
 
 # app
 'openaws-vpn-client' = ''

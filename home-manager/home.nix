@@ -1,19 +1,17 @@
 {
   config,
   hostname,
-  inputs,
   lib,
   pkgs,
   username,
   ...
 }: let
-  inherit (pkgs.stdenv.hostPlatform) system;
-
   isPersonalMachine = hostname == "carbo";
   isWorkMachine = !isPersonalMachine;
 
   unfreePackages =
     [
+      "claude-code"
       "discord"
       "dracula-dark-colorscheme" # firefox theme
       "fmod"
@@ -53,7 +51,6 @@
     nos = "nh os switch --ask";
   };
 
-  # neovimConfigured = inputs.my-nvf.packages.${system}.default;
   neovimConfigured = pkgs.neovim;
 in {
   imports = [
@@ -120,7 +117,7 @@ in {
     nix-output-monitor
 
     # dev
-    inputs.devbox.packages.${system}.default
+    claude-code
     devenv
     elmPackages.elm
     elmPackages.elm-format

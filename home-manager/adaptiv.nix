@@ -1,12 +1,15 @@
 {
   config,
+  inputs,
   pkgs,
   ...
 }: let
+  inherit (pkgs.stdenv.hostPlatform) system;
   home = config.home.homeDirectory;
 in {
   home.packages = with pkgs; [
     (google-chrome.override {commandLineArgs = "--ozone-platform=wayland";})
+    inputs.devbox.packages.${system}.default
     bruno
     clamav
     mu-repo

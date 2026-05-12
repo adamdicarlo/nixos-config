@@ -6,6 +6,7 @@
     ./jellyfin.nix
     ./nextcloud.nix
     ./traefik.nix
+    ./youtarr.nix
   ];
 
   boot = {

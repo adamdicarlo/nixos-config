@@ -15,6 +15,7 @@
       (simple "radarr" "http://localhost:7878/")
       (simple "sabnzbd" "http://localhost:8080/")
       (simple "sonarr" "http://localhost:8989/")
+      (simple "youtarr" "http://localhost:3087/")
       {
         router = {
           rule = "Host(`nextcloud-aio.sleeping-panda.net`)";

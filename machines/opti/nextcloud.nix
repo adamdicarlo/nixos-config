@@ -2,7 +2,6 @@
   compose = pkgs.lib.getExe' pkgs.docker-compose "docker-compose";
 in {
   virtualisation.docker.enable = true;
-
   environment.systemPackages = [pkgs.docker-compose];
 
   systemd.services.nextcloud-aio = {

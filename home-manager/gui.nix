@@ -198,6 +198,10 @@ in {
         font = "FiraCode Nerd Font Mono 15";
         on-notify = "exec ${lib.getExe pkgs.kitty} -o window_padding_width=12 --class=floating journalctl -eu clamav-daemon.service";
       };
+
+      "mode=do-not-disturb" = {
+        invisible = 1;
+      };
     };
   };
   services.network-manager-applet.enable = true;

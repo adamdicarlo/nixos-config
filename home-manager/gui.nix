@@ -146,13 +146,13 @@ in {
       lact
       lmstudio
 
+      chocolate-doom
       doomseeker
       doomretro
       gzdoom
-      lgogdownloader
-      # zandronum-alpha
-      # q-zandronum
+      zandronum
 
+      lgogdownloader
       freecad-wayland
       openscad
     ]);

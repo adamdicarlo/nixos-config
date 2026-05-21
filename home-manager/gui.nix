@@ -96,7 +96,6 @@ in {
       libappindicator-gtk3
       libnotify
       lswt
-      mako
       networkmanagerapplet
       nwg-displays
       playerctl
@@ -171,38 +170,8 @@ in {
     };
   };
 
-  services.mako = {
+  services.swaync = {
     enable = true;
-
-    settings = {
-      background-color = "${c.blue}E0";
-      border-color = c.black;
-      border-radius = 8;
-      border-size = 2;
-      font = "FiraCode/FiraCode Nerd Font Mono 10";
-      height = 120;
-      max-visible = 6;
-      padding = "12";
-      width = 360;
-      text-color = c.white;
-
-      "urgency=critical" = {
-        background-color = "${c.purple}E0";
-      };
-
-      "app-name=clamav-alert" = {
-        background-color = c.red;
-        width = "600";
-        height = "240";
-        padding = "24";
-        font = "FiraCode Nerd Font Mono 15";
-        on-notify = "exec ${lib.getExe pkgs.kitty} -o window_padding_width=12 --class=floating journalctl -eu clamav-daemon.service";
-      };
-
-      "mode=do-not-disturb" = {
-        invisible = 1;
-      };
-    };
   };
   services.network-manager-applet.enable = true;
 
@@ -463,6 +432,7 @@ in {
       up = "h";
       down = "k";
       keybindings = let
+        swaync = lib.getExe' pkgs.swaynotificationcenter "swaync-client";
         swayosd = lib.getExe' pkgs.swayosd "swayosd-client";
       in
         lib.mkOptionDefault {
@@ -472,6 +442,7 @@ in {
           "${modifier}+Shift+f" = "exec ${lib.getExe fileManager}";
           "${modifier}+y" = "exec pkill wofi || cliphist list | wofi -dmenu | cliphist decode | wl-copy";
           "${modifier}+m" = "exec pkill wofi || wofi-emoji";
+          "${modifier}+Shift+n" = "exec ${swaync} -t -sw";
 
           "--release Caps_Lock" = "exec ${swayosd} --caps-lock";
           "--locked XF86AudioRaiseVolume" = "exec ${swayosd} --output-volume raise";

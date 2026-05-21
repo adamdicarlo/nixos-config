@@ -218,10 +218,12 @@ in {
     ];
     wlr = {
       enable = true;
-      settings = {
+      settings = let
+        swaync = lib.getExe' pkgs.swaynotificationcenter "swaync-client";
+      in {
         screencast = {
-          exec_before = "${pkgs.mako}/bin/makoctl mode -a do-not-disturb";
-          exec_after = "${pkgs.mako}/bin/makoctl mode -r do-not-disturb";
+          exec_before = "${swaync} --inhibitor-add xdg-desktop-portal-wlr";
+          exec_after = "${swaync} --inhibitor-remove xdg-desktop-portal-wlr";
           chooser_type = "dmenu";
           chooser_cmd = "${pkgs.bemenu}/bin/bemenu";
         };

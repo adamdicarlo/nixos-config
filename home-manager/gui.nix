@@ -142,6 +142,10 @@ in {
     ]
     ++ (lib.lists.optionals isPersonalMachine [
       chromium
+
+      lact
+      lmstudio
+
       doomseeker
       doomretro
       gzdoom

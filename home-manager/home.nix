@@ -16,6 +16,7 @@
       "dracula-dark-colorscheme" # firefox theme
       "fmod"
       "google-chrome"
+      "lmstudio"
       "slack"
       "vivaldi"
       "zoom"

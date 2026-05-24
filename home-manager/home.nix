@@ -297,27 +297,30 @@ in {
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks = {
-      "*" = {
-        extraOptions = {
-          AddKeysToAgent = "yes";
-        };
-        setEnv = {
+    settings = {
+      "Host *" = {
+        AddKeysToAgent = "yes";
+        SetEnv = {
           TERM = "xterm-256color";
         };
       };
-      "panthalassa.net" = {
-        user = "bikko";
+      "Host oddsy" = {
+        ForwardAgent = true;
+        HostName = "10.0.0.2";
+        User = "adam";
       };
-      oddsy = {
-        hostname = "10.0.0.2";
-        user = "adam";
-        forwardAgent = true;
+      "Host opti" = {
+        ForwardAgent = true;
+        HostName = "10.0.0.5";
+        User = "adam";
       };
-      opti = {
-        hostname = "10.0.0.5";
-        user = "adam";
-        forwardAgent = true;
+      "Host github.com" = {
+        User = "git";
+        IdentityFile = "~/.ssh/id_ed25519";
+        IdentitiesOnly = true;
+      };
+      "Host panthalassa.net" = {
+        User = "bikko";
       };
     };
   };

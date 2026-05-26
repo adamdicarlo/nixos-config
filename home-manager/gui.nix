@@ -150,6 +150,7 @@ in {
       doomseeker
       doomretro
       gzdoom
+      odamex
       zandronum
 
       lgogdownloader

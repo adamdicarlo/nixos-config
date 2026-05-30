@@ -68,7 +68,7 @@
   };
 
   users.users.adam.extraGroups = ["jellyfin" "bazarr" "sabnzbd" "radarr" "sonarr" "youtarr"];
-  users.users.bazarr.extraGroups = ["radarr" "sonarr" "youtarr"];
+  users.users.bazarr.extraGroups = ["radarr" "sabnzbd" "sonarr" "youtarr"];
   users.users.radarr.extraGroups = ["sabnzbd"];
   users.users.sonarr.extraGroups = ["sabnzbd"];
   users.users.youtarr.extraGroups = ["sabnzbd"];

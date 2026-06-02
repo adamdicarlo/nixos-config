@@ -151,7 +151,6 @@ in {
 
     libsForQt5.qt5.qtwayland
     pavucontrol
-    swayosd
     qt6.qtwayland
 
     qemu_kvm
@@ -168,14 +167,9 @@ in {
 
   services.dbus.enable = true;
 
-  # This was an attempt to get swayosd-libinput-backend to work properly. The
-  # service would start (though only when manually via systemctl), and dbus
-  # messages would be generated when pressing volume keys, but nothing
-  # happened, and the message send destination was null (problem or red
-  # herring?).
-  # services.udev.packages = [pkgs.swayosd];
-  # services.dbus.packages = [pkgs.swayosd];
-  # systemd.packages = [pkgs.swayosd];
+  services.upower = {
+    enable = true;
+  };
 
   services.tlp = {
     enable = true;
@@ -219,11 +213,22 @@ in {
     wlr = {
       enable = true;
       settings = let
-        swaync = lib.getExe' pkgs.swaynotificationcenter "swaync-client";
+        wayle = lib.getExe' pkgs.wayle "wayle";
       in {
         screencast = {
-          exec_before = "${swaync} --inhibitor-add xdg-desktop-portal-wlr";
-          exec_after = "${swaync} --inhibitor-remove xdg-desktop-portal-wlr";
+          exec_before = pkgs.writeShellScriptBin "wayle-dnd-on" ''
+            notify-send "Wayle dnd on!"
+            wayle idle on
+            if ${wayle} notify status | grep 'Disturb: disabled' &>/dev/null; then
+              ${wayle} notify dnd
+            fi
+          '';
+          exec_after = pkgs.writeShellScriptBin "wayle-dnd-off" ''
+            wayle idle off
+            if ${wayle} notify status | grep 'Disturb: enabled' &>/dev/null; then
+              ${wayle} notify dnd
+            fi
+          '';
           chooser_type = "dmenu";
           chooser_cmd = "${pkgs.bemenu}/bin/bemenu";
         };

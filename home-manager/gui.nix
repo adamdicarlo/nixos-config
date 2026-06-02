@@ -21,8 +21,6 @@
 in {
   imports = [
     ./modules/kanshi.nix
-    ./modules/swayosd.nix
-    ./modules/waybar.nix
     ./modules/bambu-studio.nix
   ];
 
@@ -175,9 +173,6 @@ in {
     };
   };
 
-  services.swaync = {
-    enable = true;
-  };
   services.network-manager-applet.enable = true;
 
   services.nextcloud-client = {
@@ -260,6 +255,10 @@ in {
       text-ver-color = c.u.white;
       text-wrong-color = c.u.white;
     };
+  };
+
+  services.wayle = {
+    enable = true;
   };
 
   services.wlsunset = {
@@ -437,8 +436,8 @@ in {
       up = "h";
       down = "k";
       keybindings = let
-        swaync = lib.getExe' pkgs.swaynotificationcenter "swaync-client";
-        swayosd = lib.getExe' pkgs.swayosd "swayosd-client";
+        wayle = lib.getExe' pkgs.wayle "wayle";
+        brightnessctl = lib.getExe' pkgs.brightnessctl "brightnessctl";
       in
         lib.mkOptionDefault {
           "${modifier}+Shift+e" = "exec ${lib.getExe pkgs.wlogout} --protocol layer-shell";
@@ -447,14 +446,12 @@ in {
           "${modifier}+Shift+f" = "exec ${lib.getExe fileManager}";
           "${modifier}+y" = "exec pkill wofi || cliphist list | wofi -dmenu | cliphist decode | wl-copy";
           "${modifier}+m" = "exec pkill wofi || wofi-emoji";
-          "${modifier}+Shift+n" = "exec ${swaync} -t -sw";
 
-          "--release Caps_Lock" = "exec ${swayosd} --caps-lock";
-          "--locked XF86AudioRaiseVolume" = "exec ${swayosd} --output-volume raise";
-          "--locked XF86AudioLowerVolume" = "exec ${swayosd} --output-volume lower";
-          "--locked XF86AudioMute" = "exec ${swayosd} --output-volume mute-toggle";
-          "--locked XF86MonBrightnessUp" = "exec ${swayosd} --brightness raise";
-          "--locked XF86MonBrightnessDown" = "exec ${swayosd} --brightness lower";
+          "--locked XF86AudioRaiseVolume" = "exec ${wayle} audio output-volume +5";
+          "--locked XF86AudioLowerVolume" = "exec ${wayle} audio output-volume -5";
+          "--locked XF86AudioMute" = "exec ${wayle} audio output-mute";
+          "--locked XF86MonBrightnessUp" = "exec ${brightnessctl} set +5%";
+          "--locked XF86MonBrightnessDown" = "exec ${brightnessctl} set -5%";
         };
 
       startup =

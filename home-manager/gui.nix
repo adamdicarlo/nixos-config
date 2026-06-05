@@ -491,7 +491,7 @@ in {
           {
             command = "floating enable";
             criteria = {
-              app_id = "(?i)(?:pavucontrol|nm-connection-editor|gsimplecal|galculator)";
+              app_id = "(?i)(?:com\.wayle\.settings|pavucontrol|nm-connection-editor|gsimplecal|galculator)";
             };
           }
           {

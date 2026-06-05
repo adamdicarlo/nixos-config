@@ -167,24 +167,9 @@ in {
 
   services.dbus.enable = true;
 
-  services.upower = {
-    enable = true;
-  };
-
-  services.tlp = {
-    enable = true;
-    settings = {
-      CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
-      CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
-      START_CHARGE_THRESH_BAT0 = 75;
-      STOP_CHARGE_THRESH_BAT0 = 85;
-
-      CPU_MAX_PERF_ON_AC = lib.mkDefault 100;
-      CPU_MAX_PERF_ON_BAT = lib.mkDefault 80;
-      CPU_HWP_DYN_BOOST_ON_AC = 1;
-      CPU_HWP_DYN_BOOST_ON_BAT = 0;
-    };
-  };
+  # For Wayle
+  services.upower.enable = true;
+  services.power-profiles-daemon.enable = true;
 
   # Enable the OpenSSH daemon.
   services.openssh = {
@@ -213,24 +198,25 @@ in {
     wlr = {
       enable = true;
       settings = let
+        grep = lib.getExe pkgs.gnugrep;
         wayle = lib.getExe' pkgs.wayle "wayle";
       in {
         screencast = {
-          exec_before = pkgs.writeShellScriptBin "wayle-dnd-on" ''
+          exec_before = "${pkgs.writeShellScript "wayle-dnd-on" ''
             notify-send "Wayle dnd on!"
-            wayle idle on
-            if ${wayle} notify status | grep 'Disturb: disabled' &>/dev/null; then
+            ${wayle} idle on
+            if ${wayle} notify status | ${grep} -q 'Disturb: disabled'; then
               ${wayle} notify dnd
             fi
-          '';
-          exec_after = pkgs.writeShellScriptBin "wayle-dnd-off" ''
-            wayle idle off
-            if ${wayle} notify status | grep 'Disturb: enabled' &>/dev/null; then
+          ''}";
+          exec_after = "${pkgs.writeShellScript "wayle-dnd-off" ''
+            ${wayle} idle off
+            if ${wayle} notify status | ${grep} -q 'Disturb: enabled'; then
               ${wayle} notify dnd
             fi
-          '';
+          ''}";
           chooser_type = "dmenu";
-          chooser_cmd = "${pkgs.bemenu}/bin/bemenu";
+          chooser_cmd = lib.getExe pkgs.bemenu;
         };
       };
     };

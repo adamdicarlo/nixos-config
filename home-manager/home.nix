@@ -53,6 +53,8 @@
   };
 
   neovimConfigured = pkgs.neovim;
+
+  inherit (pkgs.stdenv.hostPlatform) system;
 in {
   imports = [
     ./modules

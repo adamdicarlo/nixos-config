@@ -1,9 +1,7 @@
-{
-  inputs,
-  system,
-  ...
-}: [
-  (final: prev: {
+{inputs, ...}: [
+  (final: prev: let
+    inherit (prev.stdenv.hostPlatform) system;
+  in {
     openvpn = inputs.openaws-vpn-client.outputs.packages.${system}.openvpn;
     openaws-vpn-client = inputs.openaws-vpn-client.outputs.packages.${system}.openaws-vpn-client;
   })

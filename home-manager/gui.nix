@@ -14,6 +14,8 @@
   isPersonalMachine = hostname == "carbo" || hostname == "echo";
   isWorkMachine = !isPersonalMachine;
 
+  inherit (pkgs.stdenv.hostPlatform) system;
+
   wallpaper =
     if isPersonalMachine
     then ./wallpaper/pexels-andy-vu-3484061.jpg
@@ -148,7 +150,6 @@ in {
       doomseeker
       doomretro
       gzdoom
-      odamex
       zandronum
 
       lgogdownloader

@@ -387,14 +387,14 @@ in {
         focusedInactive = {
           border = c.blue;
           background = c.black;
-          text = c.gray;
+          text = c.dimWhite;
           indicator = c.blue;
-          childBorder = c.black;
+          childBorder = c.blue;
         };
         unfocused = {
           border = c.blue;
           background = c.black;
-          text = c.gray;
+          text = c.dimWhite;
           indicator = c.blue;
           childBorder = c.black;
         };

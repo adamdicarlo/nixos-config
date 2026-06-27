@@ -349,6 +349,19 @@ in {
     config = {
       bars = [];
 
+      bindswitches = {
+        "lid:on" = {
+          reload = true;
+          locked = true;
+          action = "output eDP-1 disable";
+        };
+        "lid:off" = {
+          reload = true;
+          locked = true;
+          action = "output eDP-1 enable";
+        };
+      };
+
       colors = {
         #
         # man 5 sway
@@ -363,6 +376,7 @@ in {
         #   view if a new view would be opened to the right.
         # child_border: The border around the view itself.
         #
+        background = c.black;
         focused = {
           border = c.cyan;
           background = c.black;
@@ -391,7 +405,44 @@ in {
           indicator = c.red;
           childBorder = c.red;
         };
-        background = c.black;
+      };
+
+      defaultWorkspace = "1";
+
+      floating = {
+        border = 3;
+        titlebar = true;
+        criteria = [
+          {
+            app_id =
+              "(?i)(?:"
+              + (
+                builtins.concatStringsSep "|"
+                [
+                  "com\.wayle\.settings"
+                  "floating"
+                  "pavucontrol"
+                  "nm-connection-editor"
+                  "gsimplecal"
+                  "galculator"
+                ]
+              )
+              + ")";
+          }
+          {
+            app_id = "zen";
+            title = "^Extension: ";
+          }
+          {
+            class = "(?i)(?:1Password)";
+          }
+        ];
+      };
+
+      focus = {
+        mouseWarping = true;
+        newWindow = "smart";
+        wrapping = "yes";
       };
 
       fonts = {
@@ -400,7 +451,7 @@ in {
       };
 
       gaps = {
-        inner = 4;
+        inner = 6;
         outer = 0;
         smartBorders = "on";
         smartGaps = true;
@@ -436,6 +487,7 @@ in {
       right = "l";
       up = "h";
       down = "k";
+
       keybindings = let
         wayle = lib.getExe' pkgs.wayle "wayle";
         brightnessctl = lib.getExe' pkgs.brightnessctl "brightnessctl";
@@ -455,6 +507,12 @@ in {
           "--locked XF86MonBrightnessDown" = "exec ${brightnessctl} set -5%";
         };
 
+      menu = lib.getExe pkgs.fuzzel;
+
+      output = {
+        "*".bg = "${wallpaper} fill";
+      };
+
       startup =
         [
           {
@@ -468,49 +526,15 @@ in {
         ++ (lib.optionals isWorkMachine [{command = "1password --silent";}]);
 
       terminal = lib.getExe pkgs.kitty;
-      menu = lib.getExe pkgs.fuzzel;
-
-      floating = {
-        border = 2;
-        titlebar = true;
-      };
-
-      output = {
-        "*" = {
-          bg = "${wallpaper} fill";
-        };
-      };
 
       window = {
-        commands = [
-          {
-            command = "floating enable";
-            criteria = {
-              app_id = "floating";
-            };
-          }
-          {
-            command = "floating enable";
-            criteria = {
-              app_id = "(?i)(?:com\.wayle\.settings|pavucontrol|nm-connection-editor|gsimplecal|galculator)";
-            };
-          }
-          {
-            command = "border normal 2, titlebar_padding 24 16";
-            criteria = {
-              class = "(?i)(?:1Password)";
-            };
-          }
-        ];
+        commands = [];
         border = 2;
         hideEdgeBorders = "smart";
         titlebar = false;
       };
     };
     extraConfig = ''
-      set $laptop eDP-1
-      bindswitch --reload --locked lid:on output $laptop disable
-      bindswitch --reload --locked lid:off output $laptop enable
       popup_during_fullscreen smart
       titlebar_padding 12 8
       title_align center

@@ -1,6 +1,7 @@
 {
   config,
   hostname,
+  inputs,
   lib,
   pkgs,
   username,
@@ -107,6 +108,7 @@ in {
     pdftk
     procs
     ripgrep
+    vgrep
     tmux
 
     # networking tools
@@ -117,6 +119,7 @@ in {
     alejandra
     # it provides the command `nom` works just like `nix`
     # with more details log output
+    inputs.nina.outputs.packages.${system}.default
     nix-output-monitor
 
     # dev
@@ -129,7 +132,7 @@ in {
     gh
     lua-language-server
     nil
-    nodejs_20
+    nodejs_24
     shellcheck
     shfmt
     stylua

@@ -7,7 +7,7 @@
   ...
 }: let
   # q-zandronum = pkgs.callPackage (import ./modules/q-zandronum) {};
-  c = import ../lib/dracula.nix;
+  c = import ../lib/dracula.nix {inherit lib;};
 
   fileManager = pkgs.nautilus;
 

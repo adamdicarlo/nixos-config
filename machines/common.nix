@@ -190,10 +190,23 @@ in {
     };
   };
 
-  # Don't ask for password quite as often
-  security.sudo.extraConfig = ''
-    Defaults        timestamp_timeout=120
-  '';
+  security.sudo = {
+    # Don't ask for password quite as often
+    extraConfig = ''
+      Defaults        timestamp_timeout=120
+    '';
+    extraRules = [
+      {
+        groups = ["wheel"];
+        commands = [
+          {
+            command = lib.getExe' pkgs.kbd "chvt";
+            options = ["SETENV" "NOPASSWD"];
+          }
+        ];
+      }
+    ];
+  };
 
   users.users.adam = {
     isNormalUser = true;

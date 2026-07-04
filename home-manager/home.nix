@@ -117,10 +117,10 @@ in {
     # nix related
     #
     alejandra
-    # it provides the command `nom` works just like `nix`
-    # with more details log output
+    any-nix-shell
+
+    # https://nina.asha.software/
     inputs.nina.outputs.packages.${system}.default
-    nix-output-monitor
 
     # dev
     claude-code
@@ -237,6 +237,8 @@ in {
       bindkey -a "j" vi-backward-char
       bindkey -a "h" up-line-or-history
       bindkey -a "k" down-line-or-history
+
+      ${pkgs.any-nix-shell}/bin/any-nix-shell zsh | source /dev/stdin
     '';
 
     # `devbox shell` mysteriously fails to execute project init_hook if ZDOTDIR

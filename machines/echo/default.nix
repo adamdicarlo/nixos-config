@@ -15,10 +15,6 @@
     enable = true;
     package = pkgs.ollama-rocm;
   };
-  services.nextjs-ollama-llm-ui = {
-    enable = true;
-    port = 4522;
-  };
   services.lact.enable = true;
 
   # Bootloader.

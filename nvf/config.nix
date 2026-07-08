@@ -95,14 +95,10 @@
       html.enable = true;
       lua.enable = true;
       markdown.enable = true;
-      nix = {
-        enable = true;
-        lsp.options.nix.flake.autoArchive = true;
-      };
+      nix.enable = true;
       python.enable = true;
-      tailwind.enable = true;
       terraform.enable = true;
-      ts = {
+      typescript = {
         enable = true;
         extensions.ts-error-translator.enable = false;
       };
@@ -114,6 +110,12 @@
       lightbulb.enable = true;
       lspSignature.enable = true;
       trouble.enable = true;
+      presets = {
+        tailwindcss-language-server.enable = true;
+      };
+      servers = {
+        nix.flake.autoArchive = true;
+      };
     };
     mini = {
       bufremove.enable = true;

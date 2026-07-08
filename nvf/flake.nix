@@ -5,10 +5,6 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs-lib";
     };
-    flake-utils = {
-      url = "github:numtide/flake-utils";
-      inputs.systems.follows = "systems";
-    };
     nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
@@ -19,11 +15,9 @@
     # Modular, extensible and distro-agnostic NeoVim configuration framework
     # https://github.com/NotAShelf/nvf
     nvf = {
-      # url = "github:notashelf/nvf";
-      url = "github:adamdicarlo/nvf/feature-language-elm";
+      url = "github:notashelf/nvf";
       inputs = {
         flake-parts.follows = "flake-parts";
-        flake-utils.follows = "flake-utils";
         nixpkgs.follows = "nixpkgs";
         systems.follows = "systems";
       };

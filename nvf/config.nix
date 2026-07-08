@@ -118,7 +118,21 @@
       };
     };
     mini = {
+      ai.enable = true;
       bufremove.enable = true;
+      indentscope = {
+        enable = true;
+        setupOpts = lib.mkLuaInline ''
+          {
+            draw = {
+              delay = 250,
+              animation = require("mini.indentscope").gen_animation.none(),
+            }
+          }
+        '';
+      };
+
+      surround.enable = true;
     };
     options = {
       backup = true;

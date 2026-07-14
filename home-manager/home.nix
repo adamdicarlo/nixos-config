@@ -96,6 +96,7 @@ in {
   };
 
   home.packages = with pkgs; [
+    bat
     duc
     eza # A modern replacement for ‘ls’
     fd # Modern `find`
@@ -110,6 +111,7 @@ in {
     ripgrep
     vgrep
     tmux
+    xdg-user-dirs
 
     # networking tools
     aria2 # A lightweight multi-protocol & multi-source command-line download utility

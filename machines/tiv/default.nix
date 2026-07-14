@@ -234,14 +234,6 @@
     # ];
   };
 
-  services.tlp = {
-    enable = true;
-    settings = {
-      CPU_MAX_PERF_ON_AC = 90;
-      CPU_MAX_PERF_ON_BAT = 60;
-    };
-  };
-
   # throttled doesn't support i9-13900HX.
   # undervolting seems to be locked in firmware.
   services.undervolt = {

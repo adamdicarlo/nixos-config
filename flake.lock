@@ -176,6 +176,22 @@
         "type": "github"
       }
     },
+    "nina": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "narHash": "sha256-+nsZItIIrl4ruyfhJOCTNXem0/cTvw0oET5GCI8qkSM=",
+        "type": "tarball",
+        "url": "https://kepr.uk/nina/archive/b32f051a7897.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://kepr.uk/nina/archive/b32f051a7897.tar.gz"
+      }
+    },
     "nix": {
       "flake": false,
       "locked": {
@@ -317,6 +333,7 @@
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "lib-aggregate": "lib-aggregate",
+        "nina": "nina",
         "nix-eval-jobs": "nix-eval-jobs",
         "nixgl": "nixgl",
         "nixos-hardware": "nixos-hardware",

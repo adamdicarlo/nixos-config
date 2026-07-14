@@ -46,6 +46,13 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nina = {
+      # v3.1.3
+      # https://kepr.uk/nina?panel=archives
+      # https://discourse.nixos.org/t/nina-a-helper-that-makes-nixos-a-cozier-place-to-live-search-install-generations-services-flakes-multi-machine-management-etc/78070
+      url = "https://kepr.uk/nina/archive/b32f051a7897.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixgl = {
       url = "github:nix-community/nixGL";
       inputs.flake-utils.follows = "flake-utils";

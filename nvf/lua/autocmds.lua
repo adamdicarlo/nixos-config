@@ -19,6 +19,7 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
   end,
 })
 
+-- Detect filetype from `tiv` shebangs
 vim.filetype.add({
   pattern = {
     [".*"] = {

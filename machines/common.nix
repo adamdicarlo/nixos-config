@@ -3,7 +3,9 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  c = import ../lib/dracula.nix {inherit lib;};
+in {
   nix = {
     channel.enable = false;
     settings = {
@@ -70,6 +72,52 @@
   };
 
   services.avahi.enable = true;
+
+  services.kmscon = {
+    enable = true;
+    extraConfig = ''
+      dpms-timeout=300
+
+      mouse
+
+      # scrollback lines
+      sb-size=50000
+
+      xkb-repeat-delay=200
+      xkb-repeat-rate=40
+
+      palette=custom
+
+      palette-black=${c.d.black}
+      palette-red=${c.d.red}
+      palette-green=${c.d.green}
+      palette-yellow=${c.d.yellow}
+      palette-blue=${c.d.purple}
+      palette-magenta=${c.d.pink}
+      palette-cyan=${c.d.cyan}
+      palette-light-grey=${c.d.white}
+
+      palette-dark-grey=${c.d.brightBlack}
+      palette-light-red=${c.d.brightRed}
+      palette-light-green=${c.d.brightGreen}
+      palette-light-yellow=${c.d.brightYellow}
+      palette-light-blue=${c.d.brightPurple}
+      palette-light-magenta=${c.d.brightPink}
+      palette-light-cyan=${c.d.brightCyan}
+      palette-white=${c.d.brightWhite}
+
+      palette-background=${c.d.background}
+      palette-foreground=248,248,242
+    '';
+    fonts = [
+      {
+        name = "Source Code Pro";
+        package = pkgs.source-code-pro;
+      }
+    ];
+    term = "xterm-256color";
+    useXkbConfig = true;
+  };
 
   # Keyboard key map for virtual ttys.
   services.xserver = {
@@ -142,10 +190,23 @@
     };
   };
 
-  # Don't ask for password quite as often
-  security.sudo.extraConfig = ''
-    Defaults        timestamp_timeout=120
-  '';
+  security.sudo = {
+    # Don't ask for password quite as often
+    extraConfig = ''
+      Defaults        timestamp_timeout=120
+    '';
+    extraRules = [
+      {
+        groups = ["wheel"];
+        commands = [
+          {
+            command = lib.getExe' pkgs.kbd "chvt";
+            options = ["SETENV" "NOPASSWD"];
+          }
+        ];
+      }
+    ];
+  };
 
   users.users.adam = {
     isNormalUser = true;

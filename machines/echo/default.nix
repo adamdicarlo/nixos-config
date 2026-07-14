@@ -10,14 +10,29 @@
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-p14s-amd-gen5
   ];
 
+  # https://blog.thalheim.io/2022/12/31/nix-ld-a-clean-solution-for-issues-with-pre-compiled-executables-on-nixos/
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    acl
+    attr
+    bzip2
+    curl
+    libsodium
+    libssh
+    libxml2
+    openssl
+    stdenv.cc.cc
+    systemd
+    util-linux
+    xz
+    zlib
+    zstd
+  ];
+
   hardware.amdgpu.opencl.enable = true;
   services.ollama = {
     enable = true;
     package = pkgs.ollama-rocm;
-  };
-  services.nextjs-ollama-llm-ui = {
-    enable = true;
-    port = 4522;
   };
   services.lact.enable = true;
 

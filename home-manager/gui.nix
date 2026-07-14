@@ -7,12 +7,14 @@
   ...
 }: let
   # q-zandronum = pkgs.callPackage (import ./modules/q-zandronum) {};
-  c = import ../lib/dracula.nix;
+  c = import ../lib/dracula.nix {inherit lib;};
 
   fileManager = pkgs.nautilus;
 
   isPersonalMachine = hostname == "carbo" || hostname == "echo";
   isWorkMachine = !isPersonalMachine;
+
+  inherit (pkgs.stdenv.hostPlatform) system;
 
   wallpaper =
     if isPersonalMachine
@@ -21,8 +23,6 @@
 in {
   imports = [
     ./modules/kanshi.nix
-    ./modules/swayosd.nix
-    ./modules/waybar.nix
     ./modules/bambu-studio.nix
   ];
 
@@ -150,8 +150,9 @@ in {
       doomseeker
       doomretro
       gzdoom
-      odamex
       zandronum
+
+      umu-launcher
 
       lgogdownloader
       freecad-wayland
@@ -175,9 +176,6 @@ in {
     };
   };
 
-  services.swaync = {
-    enable = true;
-  };
   services.network-manager-applet.enable = true;
 
   services.nextcloud-client = {
@@ -260,6 +258,10 @@ in {
       text-ver-color = c.u.white;
       text-wrong-color = c.u.white;
     };
+  };
+
+  services.wayle = {
+    enable = true;
   };
 
   services.wlsunset = {
@@ -349,6 +351,19 @@ in {
     config = {
       bars = [];
 
+      bindswitches = {
+        "lid:on" = {
+          reload = true;
+          locked = true;
+          action = "output eDP-1 disable";
+        };
+        "lid:off" = {
+          reload = true;
+          locked = true;
+          action = "output eDP-1 enable";
+        };
+      };
+
       colors = {
         #
         # man 5 sway
@@ -363,6 +378,7 @@ in {
         #   view if a new view would be opened to the right.
         # child_border: The border around the view itself.
         #
+        background = c.black;
         focused = {
           border = c.cyan;
           background = c.black;
@@ -373,14 +389,14 @@ in {
         focusedInactive = {
           border = c.blue;
           background = c.black;
-          text = c.gray;
+          text = c.dimWhite;
           indicator = c.blue;
-          childBorder = c.black;
+          childBorder = c.blue;
         };
         unfocused = {
           border = c.blue;
           background = c.black;
-          text = c.gray;
+          text = c.dimWhite;
           indicator = c.blue;
           childBorder = c.black;
         };
@@ -391,7 +407,44 @@ in {
           indicator = c.red;
           childBorder = c.red;
         };
-        background = c.black;
+      };
+
+      defaultWorkspace = "1";
+
+      floating = {
+        border = 3;
+        titlebar = true;
+        criteria = [
+          {
+            app_id =
+              "(?i)(?:"
+              + (
+                builtins.concatStringsSep "|"
+                [
+                  "com\.wayle\.settings"
+                  "floating"
+                  "pavucontrol"
+                  "nm-connection-editor"
+                  "gsimplecal"
+                  "galculator"
+                ]
+              )
+              + ")";
+          }
+          {
+            app_id = "zen";
+            title = "^Extension: ";
+          }
+          {
+            class = "(?i)(?:1Password)";
+          }
+        ];
+      };
+
+      focus = {
+        mouseWarping = true;
+        newWindow = "smart";
+        wrapping = "yes";
       };
 
       fonts = {
@@ -400,7 +453,7 @@ in {
       };
 
       gaps = {
-        inner = 4;
+        inner = 6;
         outer = 0;
         smartBorders = "on";
         smartGaps = true;
@@ -436,9 +489,10 @@ in {
       right = "l";
       up = "h";
       down = "k";
+
       keybindings = let
-        swaync = lib.getExe' pkgs.swaynotificationcenter "swaync-client";
-        swayosd = lib.getExe' pkgs.swayosd "swayosd-client";
+        wayle = lib.getExe' pkgs.wayle "wayle";
+        brightnessctl = lib.getExe' pkgs.brightnessctl "brightnessctl";
       in
         lib.mkOptionDefault {
           "${modifier}+Shift+e" = "exec ${lib.getExe pkgs.wlogout} --protocol layer-shell";
@@ -447,15 +501,19 @@ in {
           "${modifier}+Shift+f" = "exec ${lib.getExe fileManager}";
           "${modifier}+y" = "exec pkill wofi || cliphist list | wofi -dmenu | cliphist decode | wl-copy";
           "${modifier}+m" = "exec pkill wofi || wofi-emoji";
-          "${modifier}+Shift+n" = "exec ${swaync} -t -sw";
 
-          "--release Caps_Lock" = "exec ${swayosd} --caps-lock";
-          "--locked XF86AudioRaiseVolume" = "exec ${swayosd} --output-volume raise";
-          "--locked XF86AudioLowerVolume" = "exec ${swayosd} --output-volume lower";
-          "--locked XF86AudioMute" = "exec ${swayosd} --output-volume mute-toggle";
-          "--locked XF86MonBrightnessUp" = "exec ${swayosd} --brightness raise";
-          "--locked XF86MonBrightnessDown" = "exec ${swayosd} --brightness lower";
+          "--locked XF86AudioRaiseVolume" = "exec ${wayle} audio output-volume +5";
+          "--locked XF86AudioLowerVolume" = "exec ${wayle} audio output-volume -5";
+          "--locked XF86AudioMute" = "exec ${wayle} audio output-mute";
+          "--locked XF86MonBrightnessUp" = "exec ${brightnessctl} set +5%";
+          "--locked XF86MonBrightnessDown" = "exec ${brightnessctl} set -5%";
         };
+
+      menu = lib.getExe pkgs.fuzzel;
+
+      output = {
+        "*".bg = "${wallpaper} fill";
+      };
 
       startup =
         [
@@ -470,49 +528,15 @@ in {
         ++ (lib.optionals isWorkMachine [{command = "1password --silent";}]);
 
       terminal = lib.getExe pkgs.kitty;
-      menu = lib.getExe pkgs.fuzzel;
-
-      floating = {
-        border = 2;
-        titlebar = true;
-      };
-
-      output = {
-        "*" = {
-          bg = "${wallpaper} fill";
-        };
-      };
 
       window = {
-        commands = [
-          {
-            command = "floating enable";
-            criteria = {
-              app_id = "floating";
-            };
-          }
-          {
-            command = "floating enable";
-            criteria = {
-              app_id = "(?i)(?:pavucontrol|nm-connection-editor|gsimplecal|galculator)";
-            };
-          }
-          {
-            command = "border normal 2, titlebar_padding 24 16";
-            criteria = {
-              class = "(?i)(?:1Password)";
-            };
-          }
-        ];
+        commands = [];
         border = 2;
         hideEdgeBorders = "smart";
         titlebar = false;
       };
     };
     extraConfig = ''
-      set $laptop eDP-1
-      bindswitch --reload --locked lid:on output $laptop disable
-      bindswitch --reload --locked lid:off output $laptop enable
       popup_during_fullscreen smart
       titlebar_padding 12 8
       title_align center

@@ -151,7 +151,6 @@ in {
 
     libsForQt5.qt5.qtwayland
     pavucontrol
-    swayosd
     qt6.qtwayland
 
     qemu_kvm
@@ -168,29 +167,9 @@ in {
 
   services.dbus.enable = true;
 
-  # This was an attempt to get swayosd-libinput-backend to work properly. The
-  # service would start (though only when manually via systemctl), and dbus
-  # messages would be generated when pressing volume keys, but nothing
-  # happened, and the message send destination was null (problem or red
-  # herring?).
-  # services.udev.packages = [pkgs.swayosd];
-  # services.dbus.packages = [pkgs.swayosd];
-  # systemd.packages = [pkgs.swayosd];
-
-  services.tlp = {
-    enable = true;
-    settings = {
-      CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
-      CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
-      START_CHARGE_THRESH_BAT0 = 75;
-      STOP_CHARGE_THRESH_BAT0 = 85;
-
-      CPU_MAX_PERF_ON_AC = lib.mkDefault 100;
-      CPU_MAX_PERF_ON_BAT = lib.mkDefault 80;
-      CPU_HWP_DYN_BOOST_ON_AC = 1;
-      CPU_HWP_DYN_BOOST_ON_BAT = 0;
-    };
-  };
+  # For Wayle
+  services.upower.enable = true;
+  services.power-profiles-daemon.enable = true;
 
   # Enable the OpenSSH daemon.
   services.openssh = {
@@ -219,13 +198,25 @@ in {
     wlr = {
       enable = true;
       settings = let
-        swaync = lib.getExe' pkgs.swaynotificationcenter "swaync-client";
+        grep = lib.getExe pkgs.gnugrep;
+        wayle = lib.getExe' pkgs.wayle "wayle";
       in {
         screencast = {
-          exec_before = "${swaync} --inhibitor-add xdg-desktop-portal-wlr";
-          exec_after = "${swaync} --inhibitor-remove xdg-desktop-portal-wlr";
+          exec_before = "${pkgs.writeShellScript "wayle-dnd-on" ''
+            notify-send "Wayle dnd on!"
+            ${wayle} idle on
+            if ${wayle} notify status | ${grep} -q 'Disturb: disabled'; then
+              ${wayle} notify dnd
+            fi
+          ''}";
+          exec_after = "${pkgs.writeShellScript "wayle-dnd-off" ''
+            ${wayle} idle off
+            if ${wayle} notify status | ${grep} -q 'Disturb: enabled'; then
+              ${wayle} notify dnd
+            fi
+          ''}";
           chooser_type = "dmenu";
-          chooser_cmd = "${pkgs.bemenu}/bin/bemenu";
+          chooser_cmd = lib.getExe pkgs.bemenu;
         };
       };
     };

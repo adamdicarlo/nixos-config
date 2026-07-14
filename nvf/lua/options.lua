@@ -1,8 +1,13 @@
-vim.opt.backupdir = { vim.fn.expand("$HOME/.local/state/nvim/backup//") }
-vim.opt.formatoptions:append({ "l", "n" })
-vim.opt.scrolloff = 5
-vim.opt.shiftwidth = 2
-vim.opt.showcmd = true
-vim.opt.softtabstop = 2
-vim.opt.tabstop = 2
-vim.opt.undofile = true
+local o, opt = vim.o, vim.opt
+
+o.cursorline = true
+
+o.scrolloff = 5
+o.shiftwidth = 2
+o.showcmd = true
+o.softtabstop = 2
+o.tabstop = 2
+o.undofile = true
+
+opt.backupdir = { vim.fn.expand("$HOME/.local/state/nvim/backup//") }
+opt.formatoptions:append({ "l", "n" })

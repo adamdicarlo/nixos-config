@@ -1,4 +1,4 @@
-let
+{lib, ...}: let
   colors = {
     # Dracula colors (https://spec.draculatheme.com/)
     # Hybrid of Standard and ANSI palettes.
@@ -26,9 +26,24 @@ let
     # Custom extra colors.
     dimWhite = "#B8B8B2";
   };
-  # colors plus a 'u' attribute containing the colors without the # prefix
+
+  toDecimalString = hex: builtins.toString (lib.fromHexString hex);
 in
+  # We export 'colors' plus:
+  # - a 'u' copy without the # prefix
+  # - a 'd' copy as decimal "R,G,B" strings (weird format for kmscon)
   colors
   // {
     u = builtins.mapAttrs (_name: value: builtins.substring 1 (-1) value) colors;
+    d =
+      builtins.mapAttrs (
+        _name: value:
+          builtins.concatStringsSep ","
+          [
+            (toDecimalString (builtins.substring 1 2 value))
+            (toDecimalString (builtins.substring 3 2 value))
+            (toDecimalString (builtins.substring 5 2 value))
+          ]
+      )
+      colors;
   }

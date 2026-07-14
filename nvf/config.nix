@@ -36,6 +36,8 @@
         lib.lists.map (k: mapKey mode k action desc) keys;
     in
       lib.lists.flatten [
+        (mapKey "n" "<leader>e" "<Cmd>Neotree toggle<CR>" "Neotree")
+
         (mapKey "" "<C-s>" ":w<CR>" "Save")
         (mapKey "" "<C-q>" ":q<CR>" "Quit")
 
@@ -68,9 +70,21 @@
       cheatsheet.enable = true;
     };
     git = {
-      enable = true;
       gitsigns = {
         enable = true;
+      };
+      neogit = {
+        enable = true;
+        setupOpts = {
+          mappings = {
+            status = {
+              "h" = "MoveUp";
+              "k" = "MoveDown";
+              "<c-h>" = "PeekUp";
+              "<c-k>" = "PeekDown";
+            };
+          };
+        };
       };
     };
 
@@ -95,17 +109,16 @@
       html.enable = true;
       lua.enable = true;
       markdown.enable = true;
-      nix = {
-        enable = true;
-        lsp.options.nix.flake.autoArchive = true;
-      };
+      nix.enable = true;
       python.enable = true;
-      tailwind.enable = true;
+      sql.enable = true;
       terraform.enable = true;
-      ts = {
+      typescript = {
         enable = true;
         extensions.ts-error-translator.enable = false;
       };
+      tsx.enable = true;
+      typst.enable = true;
       yaml.enable = true;
     };
     lsp = {
@@ -114,10 +127,75 @@
       lightbulb.enable = true;
       lspSignature.enable = true;
       trouble.enable = true;
+      presets = {
+        tailwindcss-language-server.enable = true;
+      };
+      servers = {
+        nix.flake.autoArchive = true;
+      };
     };
     mini = {
+      ai.enable = true;
       bufremove.enable = true;
+      hipatterns = {
+        enable = true;
+        setupOpts = lib.mkLuaInline ''
+          {
+            highlighters = {
+              -- Highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE'
+              fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'MiniHipatternsFixme' },
+              hack  = { pattern = '%f[%w]()HACK()%f[%W]',  group = 'MiniHipatternsHack'  },
+              todo  = { pattern = '%f[%w]()TODO()%f[%W]',  group = 'MiniHipatternsTodo'  },
+              note  = { pattern = '%f[%w]()NOTE()%f[%W]',  group = 'MiniHipatternsNote'  },
+
+              -- Highlight hex color strings (`#rrggbb`) using that color
+              hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
+            },
+          }
+        '';
+      };
+      indentscope = {
+        enable = true;
+        setupOpts = lib.mkLuaInline ''
+          {
+            draw = {
+              delay = 250,
+              animation = require("mini.indentscope").gen_animation.none(),
+            }
+          }
+        '';
+      };
+
+      starter.enable = true;
+      surround.enable = true;
+      trailspace.enable = true;
     };
+
+    filetree.neo-tree = {
+      enable = true;
+      setupOpts = {
+        filesystem = {
+          filtered_items = {
+            hide_by_name = ["node_modules"];
+          };
+          follow_current_file = {
+            enabled = true;
+          };
+          use_libuv_file_watcher = true;
+        };
+        sources = [
+          "filesystem"
+          "buffers"
+          "git_status"
+          "document_symbols"
+        ];
+        source_selector = {
+          winbar = true;
+          statusline = false;
+        };
+      };
+    };
+
     options = {
       backup = true;
       writebackup = true;

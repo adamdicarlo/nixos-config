@@ -1,6 +1,7 @@
 {
   config,
   hostname,
+  inputs,
   lib,
   pkgs,
   username,
@@ -53,6 +54,8 @@
   };
 
   neovimConfigured = pkgs.neovim;
+
+  inherit (pkgs.stdenv.hostPlatform) system;
 in {
   imports = [
     ./modules
@@ -93,6 +96,7 @@ in {
   };
 
   home.packages = with pkgs; [
+    bat
     duc
     eza # A modern replacement for ‘ls’
     fd # Modern `find`
@@ -105,7 +109,9 @@ in {
     pdftk
     procs
     ripgrep
+    vgrep
     tmux
+    xdg-user-dirs
 
     # networking tools
     aria2 # A lightweight multi-protocol & multi-source command-line download utility
@@ -113,9 +119,10 @@ in {
     # nix related
     #
     alejandra
-    # it provides the command `nom` works just like `nix`
-    # with more details log output
-    nix-output-monitor
+    any-nix-shell
+
+    # https://nina.asha.software/
+    inputs.nina.outputs.packages.${system}.default
 
     # dev
     claude-code
@@ -127,7 +134,7 @@ in {
     gh
     lua-language-server
     nil
-    nodejs_20
+    nodejs_24
     shellcheck
     shfmt
     stylua
@@ -232,6 +239,8 @@ in {
       bindkey -a "j" vi-backward-char
       bindkey -a "h" up-line-or-history
       bindkey -a "k" down-line-or-history
+
+      ${pkgs.any-nix-shell}/bin/any-nix-shell zsh | source /dev/stdin
     '';
 
     # `devbox shell` mysteriously fails to execute project init_hook if ZDOTDIR

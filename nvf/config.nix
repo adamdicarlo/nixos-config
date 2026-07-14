@@ -36,6 +36,8 @@
         lib.lists.map (k: mapKey mode k action desc) keys;
     in
       lib.lists.flatten [
+        (mapKey "n" "<leader>e" "<Cmd>Neotree toggle<CR>" "Neotree")
+
         (mapKey "" "<C-s>" ":w<CR>" "Save")
         (mapKey "" "<C-q>" ":q<CR>" "Quit")
 
@@ -97,11 +99,14 @@
       markdown.enable = true;
       nix.enable = true;
       python.enable = true;
+      sql.enable = true;
       terraform.enable = true;
       typescript = {
         enable = true;
         extensions.ts-error-translator.enable = false;
       };
+      tsx.enable = true;
+      typst.enable = true;
       yaml.enable = true;
     };
     lsp = {
@@ -149,8 +154,36 @@
         '';
       };
 
+      starter.enable = true;
       surround.enable = true;
+      trailspace.enable = true;
     };
+
+    filetree.neo-tree = {
+      enable = true;
+      setupOpts = {
+        filesystem = {
+          filtered_items = {
+            hide_by_name = ["node_modules"];
+          };
+          follow_current_file = {
+            enabled = true;
+          };
+          use_libuv_file_watcher = true;
+        };
+        sources = [
+          "filesystem"
+          "buffers"
+          "git_status"
+          "document_symbols"
+        ];
+        source_selector = {
+          winbar = true;
+          statusline = false;
+        };
+      };
+    };
+
     options = {
       backup = true;
       writebackup = true;

@@ -70,9 +70,21 @@
       cheatsheet.enable = true;
     };
     git = {
-      enable = true;
       gitsigns = {
         enable = true;
+      };
+      neogit = {
+        enable = true;
+        setupOpts = {
+          mappings = {
+            status = {
+              "h" = "MoveUp";
+              "k" = "MoveDown";
+              "<c-h>" = "PeekUp";
+              "<c-k>" = "PeekDown";
+            };
+          };
+        };
       };
     };
 

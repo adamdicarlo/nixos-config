@@ -152,6 +152,8 @@ in {
       gzdoom
       zandronum
 
+      umu-launcher
+
       lgogdownloader
       freecad-wayland
       openscad

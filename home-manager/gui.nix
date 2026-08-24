@@ -151,6 +151,7 @@ in {
       doomseeker
       doomretro
       gzdoom
+      ironwail # quake source port
       zandronum
 
       umu-launcher

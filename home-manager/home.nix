@@ -230,6 +230,22 @@ in {
       # don't show `nix-shell-env` in devbox shell prompt
       zstyle :prompt:pure:environment:nix-shell show no
 
+      # ...instead, show the directory the nix shell was started from. zsh is
+      # exec'd by any-nix-shell inside the dev env, so $PWD at startup is the
+      # directory `nix develop` / `nix-shell` was invoked in.
+      if [[ -n $IN_NIX_SHELL && $NIX_SHELL_ORIGIN_ENV != "''${name-}" ]]; then
+        export NIX_SHELL_ORIGIN=$PWD
+        export NIX_SHELL_ORIGIN_ENV=''${name-}
+      fi
+      if [[ -n $NIX_SHELL_ORIGIN ]]; then
+        prompt_nix_shell_origin() {
+          # pure clears psvar[12] each precmd; only fill it if unused (e.g. by
+          # an active virtualenv).
+          [[ -z $psvar[12] ]] && psvar[12]="❄ ''${NIX_SHELL_ORIGIN:t}"
+        }
+        add-zsh-hook precmd prompt_nix_shell_origin
+      fi
+
       # Bind 'v' to edit command line in EDITOR when in vi command mode.
       autoload edit-command-line
       zle -N edit-command-line

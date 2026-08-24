@@ -149,8 +149,8 @@ in {
     vulkan-tools
     xdg-utils
 
-    libsForQt5.qt5.qtwayland
     pavucontrol
+    qt5.qtwayland
     qt6.qtwayland
 
     qemu_kvm
@@ -280,6 +280,7 @@ in {
       noto-fonts-cjk-sans
       noto-fonts-color-emoji # a good fallback font
       proggyfonts
+      source-code-pro
       twemoji-color-font
       twitter-color-emoji
       unifont

@@ -29,6 +29,7 @@ in {
   bambuStudio.enable = isPersonalMachine;
 
   home.pointerCursor = {
+    enable = true;
     gtk.enable = true;
     # x11.enable = true;
     package = pkgs.quintom-cursor-theme;
@@ -90,7 +91,7 @@ in {
       drm_info
       fuzzel
       grim
-      gst_all_1.gst-vaapi
+      gst_all_1.gst-plugins-bad
       hyprpicker
       imv
       libappindicator-gtk3

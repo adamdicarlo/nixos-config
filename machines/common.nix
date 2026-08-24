@@ -75,47 +75,42 @@ in {
 
   services.kmscon = {
     enable = true;
-    extraConfig = ''
-      dpms-timeout=300
+    config = {
+      dpms-timeout = 300;
 
-      mouse
+      font-name = "Source Code Pro";
+      mouse = true;
 
       # scrollback lines
-      sb-size=50000
+      sb-size = 50000;
+      term = "xterm-256color";
 
-      xkb-repeat-delay=200
-      xkb-repeat-rate=40
+      xkb-repeat-delay = 200;
+      xkb-repeat-rate = 40;
 
-      palette=custom
+      palette = "custom";
 
-      palette-black=${c.d.black}
-      palette-red=${c.d.red}
-      palette-green=${c.d.green}
-      palette-yellow=${c.d.yellow}
-      palette-blue=${c.d.purple}
-      palette-magenta=${c.d.pink}
-      palette-cyan=${c.d.cyan}
-      palette-light-grey=${c.d.white}
+      palette-black = c.d.black;
+      palette-red = c.d.red;
+      palette-green = c.d.green;
+      palette-yellow = c.d.yellow;
+      palette-blue = c.d.purple;
+      palette-magenta = c.d.pink;
+      palette-cyan = c.d.cyan;
+      palette-light-grey = c.d.white;
 
-      palette-dark-grey=${c.d.brightBlack}
-      palette-light-red=${c.d.brightRed}
-      palette-light-green=${c.d.brightGreen}
-      palette-light-yellow=${c.d.brightYellow}
-      palette-light-blue=${c.d.brightPurple}
-      palette-light-magenta=${c.d.brightPink}
-      palette-light-cyan=${c.d.brightCyan}
-      palette-white=${c.d.brightWhite}
+      palette-dark-grey = c.d.brightBlack;
+      palette-light-red = c.d.brightRed;
+      palette-light-green = c.d.brightGreen;
+      palette-light-yellow = c.d.brightYellow;
+      palette-light-blue = c.d.brightPurple;
+      palette-light-magenta = c.d.brightPink;
+      palette-light-cyan = c.d.brightCyan;
+      palette-white = c.d.brightWhite;
 
-      palette-background=${c.d.background}
-      palette-foreground=248,248,242
-    '';
-    fonts = [
-      {
-        name = "Source Code Pro";
-        package = pkgs.source-code-pro;
-      }
-    ];
-    term = "xterm-256color";
+      palette-background = c.d.background;
+      palette-foreground = "248,248,242";
+    };
     useXkbConfig = true;
   };
 

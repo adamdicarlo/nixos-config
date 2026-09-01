@@ -74,11 +74,13 @@ in {
 
   home.packages = with pkgs;
     [
-      (inputs.zen-browser.packages."${system}".default)
+      inputs.zen-browser.packages."${system}".default
 
       # Provides org.gnome.keyring.SystemPrompter
       gcr
 
+      # development
+      inputs.claude-desktop.packages.x86_64-linux.default
       kitty
       kitty-img
       kitty-themes

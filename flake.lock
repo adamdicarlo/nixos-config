@@ -27,6 +27,26 @@
         "type": "github"
       }
     },
+    "claude-desktop": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1787953401,
+        "narHash": "sha256-Z7eXMu1hNOa90NAAU6h+CbNn7BBtw/E+1rIhkqblQUM=",
+        "owner": "tomsch",
+        "repo": "claude-desktop-nix",
+        "rev": "4d45cf1aea81cfa738990c25f3878e18670a0eab",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tomsch",
+        "repo": "claude-desktop-nix",
+        "type": "github"
+      }
+    },
     "devbox": {
       "inputs": {
         "flake-utils": [
@@ -342,6 +362,7 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "claude-desktop": "claude-desktop",
         "devbox": "devbox",
         "disko": "disko",
         "firefox-addons": "firefox-addons",

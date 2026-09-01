@@ -29,6 +29,10 @@
         systems.follows = "systems";
       };
     };
+    claude-desktop = {
+      url = "github:tomsch/claude-desktop-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     devbox = {
       url = "github:jetify-com/devbox/0.17.1";
       inputs.flake-utils.follows = "flake-utils";

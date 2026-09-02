@@ -379,6 +379,7 @@
         "openaws-vpn-client": "openaws-vpn-client",
         "rust-overlay": "rust-overlay",
         "systems": "systems",
+        "wayle": "wayle",
         "zen-browser": "zen-browser"
       }
     },
@@ -436,6 +437,70 @@
         "owner": "numtide",
         "repo": "treefmt-nix",
         "type": "github"
+      }
+    },
+    "wayle": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": [
+          "rust-overlay"
+        ],
+        "wayle-services-src": "wayle-services-src",
+        "wayle-src": "wayle-src"
+      },
+      "locked": {
+        "lastModified": 1788292836,
+        "narHash": "sha256-SgniHREgIfmpiL1JfduYEYhZLNSJtm3vIcTmZMoudV8=",
+        "ref": "refs/heads/main",
+        "rev": "074aafb0308f6a08ac8df48aa2844b93059a61c8",
+        "revCount": 8,
+        "type": "git",
+        "url": "https://git.sr.ht/~adamdicarlo/wayle-sway"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.sr.ht/~adamdicarlo/wayle-sway"
+      }
+    },
+    "wayle-services-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788287635,
+        "narHash": "sha256-PtpSG0X/Zj5g5wHN0zJGH4OqBizIdmXyJu3nbNMQteg=",
+        "ref": "feat/wayle-sway",
+        "rev": "4d4da89430a858a26b414b739d22ada2bf44e02a",
+        "revCount": 139,
+        "submodules": true,
+        "type": "git",
+        "url": "https://git.sr.ht/~adamdicarlo/wayle-services"
+      },
+      "original": {
+        "ref": "feat/wayle-sway",
+        "submodules": true,
+        "type": "git",
+        "url": "https://git.sr.ht/~adamdicarlo/wayle-services"
+      }
+    },
+    "wayle-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788198149,
+        "narHash": "sha256-RDEzZ/VQL06gegt6lgFaQfvThKY+Rek4sXZLudyATMY=",
+        "ref": "feat/sway-workspaces",
+        "rev": "f1563df18ec212a995658a696142b84accdd201a",
+        "revCount": 543,
+        "type": "git",
+        "url": "https://git.sr.ht/~adamdicarlo/wayle"
+      },
+      "original": {
+        "ref": "feat/sway-workspaces",
+        "type": "git",
+        "url": "https://git.sr.ht/~adamdicarlo/wayle"
       }
     },
     "zen-browser": {

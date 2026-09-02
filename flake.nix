@@ -108,6 +108,13 @@
     #   };
     # };
 
+    wayle = {
+      url = "git+https://git.sr.ht/~adamdicarlo/wayle-sway";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.rust-overlay.follows = "rust-overlay";
+    };
+
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs-lib";

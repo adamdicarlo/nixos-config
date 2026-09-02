@@ -266,6 +266,7 @@ in {
 
   services.wayle = {
     enable = true;
+    package = inputs.wayle.packages.${system}.default;
   };
 
   services.wlsunset = {

@@ -198,7 +198,12 @@
           inherit inputs;
         };
         modules = [
-          (nixpkgsConfigModule [])
+          (nixpkgsConfigModule [
+            "steam"
+            "steam-original"
+            "steam-unwrapped"
+            "steam-run"
+          ])
           inputs.agenix.nixosModules.default
           inputs.disko.nixosModules.disko
           ./machines/echo/default.nix

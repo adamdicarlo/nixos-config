@@ -31,7 +31,9 @@
         "1password-cli"
         "1password-gui"
       ]
-      else ["signal-desktop"]
+      else [
+        "signal-desktop"
+      ]
     );
 
   ezaFlags = "--group-directories-first";

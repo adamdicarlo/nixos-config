@@ -57,16 +57,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1774981212,
-        "narHash": "sha256-WwNbbrBm3/iWNCdHh0f+ey06BlibCPkCRXgBoyaJffU=",
+        "lastModified": 1790358492,
+        "narHash": "sha256-4qW4jVBYap1WH3I77fDH8HI0yRJc1EVHzheqQQwClI4=",
         "owner": "jetify-com",
         "repo": "devbox",
-        "rev": "ea03d2d8686321820a49725eb5796135921cb22e",
+        "rev": "ed729044dcdaaa379c3ac98a64efc2d68ba97c76",
         "type": "github"
       },
       "original": {
         "owner": "jetify-com",
-        "ref": "0.17.1",
+        "ref": "0.18.4",
         "repo": "devbox",
         "type": "github"
       }

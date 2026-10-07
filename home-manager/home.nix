@@ -128,6 +128,7 @@ in {
 
     # dev
     claude-code
+    inputs.devbox.outputs.packages.${system}.default
     devenv
     elmPackages.elm
     elmPackages.elm-format

@@ -47,13 +47,13 @@ in {
   gtk = {
     enable = true;
     theme = {
-      package = pkgs.flat-remix-gtk;
-      name = "Flat-Remix-GTK-Grey-Darkest";
+      package = pkgs.dracula-theme;
+      name = "Dracula";
     };
     gtk4.theme = config.gtk.theme;
     iconTheme = {
-      package = pkgs.kdePackages.breeze-icons;
-      name = "breeze-dark";
+      package = pkgs.dracula-theme;
+      name = "Dracula";
     };
     font = {
       name = "Sans";
@@ -77,7 +77,7 @@ in {
       inputs.zen-browser.packages."${system}".default
 
       # Provides org.gnome.keyring.SystemPrompter
-      gcr
+      gcr_4
 
       # development
       inputs.claude-desktop.packages.x86_64-linux.default

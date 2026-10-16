@@ -14,6 +14,7 @@
     [
       "claude-code"
       "discord"
+      "discord-unwrapped"
       "dracula-dark-colorscheme" # firefox theme
       "fmod"
       "google-chrome"
@@ -31,9 +32,7 @@
         "1password-cli"
         "1password-gui"
       ]
-      else [
-        "signal-desktop"
-      ]
+      else []
     );
 
   ezaFlags = "--group-directories-first";

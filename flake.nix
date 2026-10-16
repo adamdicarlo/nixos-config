@@ -23,10 +23,7 @@
     agenix = {
       url = "github:ryantm/agenix";
       inputs = {
-        darwin.follows = "";
-        home-manager.follows = "home-manager";
         nixpkgs.follows = "nixpkgs";
-        systems.follows = "systems";
       };
     };
     claude-desktop = {
@@ -92,7 +89,6 @@
     nix-eval-jobs = {
       url = "github:nix-community/nix-eval-jobs";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-parts.follows = "flake-parts";
     };
 
     # My NeoVim configuration

@@ -67,10 +67,9 @@
     openFirewall = true;
   };
 
-  users.users.adam.extraGroups = ["jellyfin" "bazarr" "sabnzbd" "radarr" "sonarr" "youtarr"];
-  users.users.bazarr.extraGroups = ["radarr" "sabnzbd" "sonarr" "youtarr"];
+  users.users.adam.extraGroups = ["jellyfin" "bazarr" "sabnzbd" "radarr" "sonarr"];
+  users.users.bazarr.extraGroups = ["radarr" "sabnzbd" "sonarr"];
   users.users.radarr.extraGroups = ["sabnzbd"];
   users.users.sonarr.extraGroups = ["sabnzbd"];
-  users.users.youtarr.extraGroups = ["sabnzbd"];
-  users.users.jellyfin.extraGroups = ["sabnzbd" "bazarr" "radarr" "sonarr" "youtarr"];
+  users.users.jellyfin.extraGroups = ["sabnzbd" "bazarr" "radarr" "sonarr"];
 }

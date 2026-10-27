@@ -91,6 +91,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    sentinelone = {
+      url = "github:devusb/sentinelone-nix";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # My NeoVim configuration
     # my-nvf = {
     #   url = "path:./nvf";

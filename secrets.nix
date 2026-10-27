@@ -11,14 +11,16 @@ let
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDAmnxtjriZ/yJPYaVjT4INvuf5n6/SAzoRgqnQoopEj" # adam@opti
   ];
   personalKeys = personalUsers ++ personalMachines;
-  # tiv = ["..."];
-  # workMachines = tiv;
-  # workUsers = [
-  #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJHuKcZZc8H73Brm6B7wIcGuInLH5t48ezXRDw4rurAi"
-  # ];
-  # workKeys = workUsers ++ workMachines;
+
+  naryKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDfGCziT8Dl41xDwDM3MkXPlaGbOXxfbUCiPPhISYH9j root@nary"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINsDwj67j3w/SMTLiS8b/d5Tn2LvSp09ks1PTBYlLNVe adam@nary"
+  ];
 in {
   "secrets/cloudflare_email.age".publicKeys = personalKeys;
   "secrets/cloudflare_api_key.age".publicKeys = personalKeys;
   "secrets/sabnzbd.ini.age".publicKeys = personalKeys;
+
+  "secrets/s1_mgmt_token.age".publicKeys = naryKeys;
+  "secrets/s1_customer_id.age".publicKeys = naryKeys;
 }

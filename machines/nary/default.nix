@@ -1,15 +1,19 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
-{ config, inputs, lib, pkgs, ... }:
-
 {
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}: {
   imports = [
     ../common.nix
     ../laptop.nix
     ./hardware.nix
     inputs.nixos-hardware.nixosModules.system76
+    inputs.sentinelone.nixosModules.sentinelone
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -63,6 +67,18 @@
         }
       })
     '';
+  };
+
+  age.secrets.s1_mgmt_token.file = ../../secrets/s1_mgmt_token.age;
+  age.secrets.s1_customer_id.file = ../../secrets/s1_customer_id.age;
+  services.sentinelone = {
+    enable = true;
+    sentinelOneManagementTokenPath = config.age.secrets.s1_mgmt_token.path;
+    customerId = config.age.secrets.s1_customer_id.path;
+    package = pkgs.sentinelone.overrideAttrs (old: {
+      version = "26.1.3.2";
+      src = ./SentinelAgent_linux_x86_64_v26_1_3_2.deb;
+    });
   };
 
   # Copy the NixOS configuration file and link it from the resulting system

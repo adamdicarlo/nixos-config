@@ -7,7 +7,7 @@
   username,
   ...
 }: let
-  isPersonalMachine = hostname == "carbo";
+  isPersonalMachine = hostname == "carbo" || hostname == "echo";
   isWorkMachine = !isPersonalMachine;
 
   unfreePackages =
@@ -19,6 +19,7 @@
       "fmod"
       "google-chrome"
       "lmstudio"
+      "obsidian"
       "slack"
       "vivaldi"
       "zoom"
@@ -27,7 +28,6 @@
     ++ (
       if isWorkMachine
       then [
-        # tiv
         "1password"
         "1password-cli"
         "1password-gui"
@@ -96,59 +96,66 @@ in {
     executable = true; # make all files executable
   };
 
-  home.packages = with pkgs; [
-    bat
-    duc
-    eza # A modern replacement for ‘ls’
-    fd # Modern `find`
-    fzf # A command-line fuzzy finder
-    jujutsu
-    jq
-    imagemagick
-    libwebp
-    fastfetch
-    pdftk
-    procs
-    ripgrep
-    vgrep
-    tmux
-    xdg-user-dirs
+  home.packages = with pkgs;
+    [
+      bat
+      duc
+      eza # A modern replacement for ‘ls’
+      fd # Modern `find`
+      fzf # A command-line fuzzy finder
+      jujutsu
+      jq
+      imagemagick
+      libwebp
+      fastfetch
+      pdftk
+      procs
+      ripgrep
+      vgrep
+      tmux
+      xdg-user-dirs
 
-    # networking tools
-    aria2 # A lightweight multi-protocol & multi-source command-line download utility
+      # networking tools
+      aria2 # A lightweight multi-protocol & multi-source command-line download utility
 
-    # nix related
-    #
-    alejandra
-    any-nix-shell
+      # nix related
+      #
+      alejandra
+      any-nix-shell
 
-    # https://nina.asha.software/
-    inputs.nina.outputs.packages.${system}.default
+      # https://nina.asha.software/
+      inputs.nina.outputs.packages.${system}.default
 
-    # dev
-    claude-code
-    inputs.devbox.outputs.packages.${system}.default
-    devenv
-    elmPackages.elm
-    elmPackages.elm-format
-    elmPackages.elm-language-server
-    elmPackages.elm-review
-    gh
-    lua-language-server
-    nil
-    nodejs_24
-    shellcheck
-    shfmt
-    stylua
-    tailwindcss-language-server
-    terraform-ls
-    tflint
-    tflint-plugins.tflint-ruleset-aws
-    typescript-language-server
-    vscode-langservers-extracted
+      # dev
+      claude-code
+      inputs.devbox.outputs.packages.${system}.default
+      devenv
+      elmPackages.elm
+      elmPackages.elm-format
+      elmPackages.elm-language-server
+      elmPackages.elm-review
+      gh
+      lua-language-server
+      nil
+      nodejs_24
+      shellcheck
+      shfmt
+      stylua
+      tailwindcss-language-server
+      terraform-ls
+      tflint
+      tflint-plugins.tflint-ruleset-aws
+      typescript-language-server
+      vscode-langservers-extracted
 
-    neovimConfigured
-  ];
+      neovimConfigured
+      obsidian
+    ]
+    ++ (
+      if isWorkMachine
+      then with pkgs; [codex]
+      else []
+    );
 
   programs.difftastic.enable = true;
 

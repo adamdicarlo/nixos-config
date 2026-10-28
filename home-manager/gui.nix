@@ -426,6 +426,7 @@ in {
               + (
                 builtins.concatStringsSep "|"
                 [
+                  "annotate_toolbar" # Zoom pen icon
                   "com\.wayle\.settings"
                   "floating"
                   "pavucontrol"

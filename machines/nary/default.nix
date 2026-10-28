@@ -7,7 +7,17 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  sentinelonePath =
+    "/opt/sentinelone/bin:"
+    + lib.makeBinPath [
+      pkgs.coreutils
+      pkgs.gawk
+      pkgs.gnugrep
+      pkgs.gnused
+      config.systemd.package
+    ];
+in {
   imports = [
     ../common.nix
     ../laptop.nix
@@ -71,11 +81,40 @@
 
   age.secrets.s1_mgmt_token.file = ../../secrets/s1_mgmt_token.age;
   age.secrets.s1_customer_id.file = ../../secrets/s1_customer_id.age;
+  # Agent-generated transient services execute /opt/sentinelone/bin/sentinelctl
+  # directly, bypassing the upstream FHS wrapper. Keep the signed binary intact:
+  # patching its ELF loader makes the agent reject its control connection.
+  programs.nix-ld.enable = true;
+
+  # The report command invokes sentinelctl and shell utilities by name. The
+  # signed binary can now run directly, without upstream's FHS wrapper.
+  environment.systemPackages = [
+    (lib.hiPrio (pkgs.writeShellApplication {
+      name = "sentinelctl";
+      text = ''
+        if [ "$EUID" -ne 0 ]; then
+          echo "$0 must be run with root privileges" >&2
+          exit 1
+        fi
+        export PATH=${lib.escapeShellArg sentinelonePath}
+        exec /opt/sentinelone/bin/sentinelctl "$@"
+      '';
+    }))
+  ];
+
+  # systemd also applies this prefix drop-in to sentinel-agent-task-<id>.service.
+  systemd.units."sentinel-agent-task-.service" = {
+    overrideStrategy = "asDropin";
+    text = ''
+      [Service]
+      Environment="PATH=${sentinelonePath}"
+    '';
+  };
+
   services.sentinelone = {
     enable = true;
     sentinelOneManagementTokenPath = config.age.secrets.s1_mgmt_token.path;
-    customerId = config.age.secrets.s1_customer_id.path;
-    package = pkgs.sentinelone.overrideAttrs (old: {
+    package = pkgs.sentinelone.overrideAttrs (_old: {
       version = "26.1.3.2";
       src = ./SentinelAgent_linux_x86_64_v26_1_3_2.deb;
     });

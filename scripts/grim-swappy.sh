@@ -2,8 +2,10 @@
 
 stamp=$(date +%Y%m%d-%H%M%S)
 whole_screen=$(mktemp "/tmp/grim-swappy-${stamp}.XXXX.png")
-output=$HOME/Sync/Screenshots/$stamp.png
-output_edited=$HOME/Sync/Screenshots/${stamp}-edited.png
+screenshots_root=$HOME/Sync/Screenshots
+output=${screenshots_root}/${stamp}-raw.png
+
+mkdir -p "$screenshots_root"
 
 # "Freeze" the screen by first capturing it, then showing it in fullscreen.
 grim -c -l 1 "$whole_screen"
@@ -27,7 +29,7 @@ if area=$(slurp -d -f '{"w":%W,"h":%H,"x":%X,"y":%Y}'); then
   rm "$whole_screen"
   notify-send --transient -t 2500 "Wrote: ${stamp}.png"
 
-  exec swappy -f "$output" --output-file "$output_edited"
+  exec swappy -f "$output"
 else
   notify-send --transient -t 2000 "Canceled screenshot"
   imv-msg $imv_pid quit

@@ -57,8 +57,6 @@
     "amdgpu.dcdebugmask=0x12"
   ];
 
-  services.gnome.gnome-keyring.enable = true;
-
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";

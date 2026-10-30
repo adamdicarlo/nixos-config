@@ -91,6 +91,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    drata = {
+      url = "github:adamdicarlo0/drata.flake";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     sentinelone = {
       url = "github:devusb/sentinelone-nix";
       inputs.flake-parts.follows = "flake-parts";

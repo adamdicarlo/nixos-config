@@ -17,6 +17,19 @@
       pkgs.gnused
       config.systemd.package
     ];
+  sentinelonePkg = lib.hiPrio (pkgs.writeShellApplication {
+    name = "sentinelctl";
+    text = ''
+      if [ "$EUID" -ne 0 ]; then
+        echo "$0 must be run with root privileges" >&2
+        exit 1
+      fi
+      export PATH=${lib.escapeShellArg sentinelonePath}
+      exec /opt/sentinelone/bin/sentinelctl "$@"
+    '';
+  });
+
+  inherit (pkgs.stdenv.hostPlatform) system;
 in {
   imports = [
     ../common.nix
@@ -89,17 +102,9 @@ in {
   # The report command invokes sentinelctl and shell utilities by name. The
   # signed binary can now run directly, without upstream's FHS wrapper.
   environment.systemPackages = [
-    (lib.hiPrio (pkgs.writeShellApplication {
-      name = "sentinelctl";
-      text = ''
-        if [ "$EUID" -ne 0 ]; then
-          echo "$0 must be run with root privileges" >&2
-          exit 1
-        fi
-        export PATH=${lib.escapeShellArg sentinelonePath}
-        exec /opt/sentinelone/bin/sentinelctl "$@"
-      '';
-    }))
+    inputs.drata.packages.${system}.drata-agent
+
+    sentinelonePkg
   ];
 
   # systemd also applies this prefix drop-in to sentinel-agent-task-<id>.service.
@@ -109,6 +114,14 @@ in {
       [Service]
       Environment="PATH=${sentinelonePath}"
     '';
+  };
+
+  system.autoUpgrade = {
+    enable = true;
+    flake = "/home/adam/nixos-config";
+    flags = ["--print-build-logs"];
+    dates = "16:15";
+    randomizedDelaySec = "15min";
   };
 
   services.sentinelone = {

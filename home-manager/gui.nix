@@ -132,6 +132,7 @@ in {
       evince
       gimp3
       glow # markdown previewer in terminal
+      gnome-disk-utility
       nautilus
       sushi
       meld
@@ -162,6 +163,14 @@ in {
       freecad-wayland
       openscad
     ]);
+
+  services.home-manager.autoUpgrade = {
+    enable = true;
+    useFlake = true;
+    flakeDir = "/home/adam/nixos-config";
+    frequency = "15:30";
+    preSwitchCommands = ["nix flake update"];
+  };
 
   services.cliphist = {
     enable = true;
@@ -531,7 +540,12 @@ in {
           }
         ]
         ++ [{command = lib.getExe pkgs.opensnitch-ui;}]
-        ++ (lib.optionals isWorkMachine [{command = "1password --silent";}]);
+        ++ (
+          lib.optionals isWorkMachine [
+            {command = "1password --silent";}
+            {command = lib.getExe inputs.drata.packages.${system}.drata-agent;}
+          ]
+        );
 
       terminal = lib.getExe pkgs.kitty;
 

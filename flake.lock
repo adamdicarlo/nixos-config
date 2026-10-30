@@ -84,6 +84,29 @@
         "type": "github"
       }
     },
+    "drata": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793317425,
+        "narHash": "sha256-oCaA7U6odcfGr7VNvuUPFmCwin4hCPG2QmV9yd153Do=",
+        "owner": "adamdicarlo0",
+        "repo": "drata.flake",
+        "rev": "ad969fb5ae46ea038bd507a325330ca426bc916c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "adamdicarlo0",
+        "repo": "drata.flake",
+        "type": "github"
+      }
+    },
     "firefox-addons": {
       "inputs": {
         "nixpkgs": [
@@ -355,6 +378,7 @@
         "claude-desktop": "claude-desktop",
         "devbox": "devbox",
         "disko": "disko",
+        "drata": "drata",
         "firefox-addons": "firefox-addons",
         "flake-parts": "flake-parts",
         "flake-utils": "flake-utils",

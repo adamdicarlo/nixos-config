@@ -118,10 +118,11 @@ in {
 
   system.autoUpgrade = {
     enable = true;
-    flake = "/home/adam/nixos-config";
-    flags = ["--print-build-logs"];
-    dates = "16:15";
-    randomizedDelaySec = "15min";
+    # https://discourse.nixos.org/t/best-practices-for-auto-upgrades-of-flake-enabled-nixos-systems/31255/18
+    flake = "path:${config.users.users.adam.home}/nixos-config#${config.networking.hostName}";
+    dates = "Mon,Wed,Fri 15:00";
+    persistent = true;
+    randomizedDelaySec = "1min";
   };
 
   services.sentinelone = {

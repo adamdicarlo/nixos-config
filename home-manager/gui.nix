@@ -167,8 +167,8 @@ in {
     enable = true;
     useFlake = true;
     flakeDir = "/home/adam/nixos-config";
-    frequency = "15:30";
-    preSwitchCommands = ["nix flake update"];
+    frequency = "Mon,Wed,Fri 16:00";
+    preSwitchCommands = [];
   };
 
   services.cliphist = {

@@ -105,7 +105,6 @@ in {
       slurp
       swappy
       swaybg
-      swayest-workstyle
       swayidle
       swaylock
       swaynag-battery
@@ -132,6 +131,7 @@ in {
       evince
       gimp3
       glow # markdown previewer in terminal
+      gnome-disk-utility
       nautilus
       sushi
       meld
@@ -162,6 +162,14 @@ in {
       freecad-wayland
       openscad
     ]);
+
+  services.home-manager.autoUpgrade = {
+    enable = true;
+    useFlake = true;
+    flakeDir = "/home/adam/nixos-config";
+    frequency = "Mon,Wed,Fri 16:00";
+    preSwitchCommands = [];
+  };
 
   services.cliphist = {
     enable = true;
@@ -315,6 +323,25 @@ in {
     enable = true;
   };
 
+  xdg.configFile."swappy/config" = {
+    text = ''
+      [Default]
+      save_dir=$HOME/Sync/Screenshots
+      save_filename_format=Y%m%d-%H%M%S.png
+      show_panel=true
+      line_size=3
+      text_size=20
+      text_font=sans-serif
+      paint_mode=brush
+      early_exit=false
+      fill_shape=false
+      auto_save=false
+      custom_color=rgba(192,125,17,1)
+      transparent=false
+      transparency=50
+    '';
+  };
+
   xdg.configFile."wlogout/layout" = {
     text = ''
       {
@@ -426,6 +453,7 @@ in {
               + (
                 builtins.concatStringsSep "|"
                 [
+                  "annotate_toolbar" # Zoom pen icon
                   "com\.wayle\.settings"
                   "floating"
                   "pavucontrol"
@@ -530,7 +558,12 @@ in {
           }
         ]
         ++ [{command = lib.getExe pkgs.opensnitch-ui;}]
-        ++ (lib.optionals isWorkMachine [{command = "1password --silent";}]);
+        ++ (
+          lib.optionals isWorkMachine [
+            {command = "1password --silent";}
+            {command = lib.getExe inputs.drata.packages.${system}.drata-agent;}
+          ]
+        );
 
       terminal = lib.getExe pkgs.kitty;
 

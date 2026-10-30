@@ -43,6 +43,8 @@ in {
     ];
   };
 
+  services.gnome.gnome-keyring.enable = true;
+
   # https://github.com/NixOS/nixpkgs/issues/143365#issuecomment-1293871094
   security.pam.services.swaylock.text = ''
     # Account management.

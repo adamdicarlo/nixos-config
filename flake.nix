@@ -91,6 +91,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    drata = {
+      url = "github:adamdicarlo0/drata.flake";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    sentinelone = {
+      url = "github:devusb/sentinelone-nix";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # My NeoVim configuration
     # my-nvf = {
     #   url = "path:./nvf";
@@ -156,6 +167,10 @@
       "uhk-udev-rules"
     ];
     tivUnfreePackages = [
+      "1password"
+      "1password-cli"
+    ];
+    naryUnfreePackages = [
       "1password"
       "1password-cli"
     ];
@@ -226,6 +241,17 @@
           (nixpkgsConfigModule ["unrar"])
           inputs.agenix.nixosModules.default
           ./machines/opti/default.nix
+        ];
+      };
+
+      nary = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs;
+        };
+        modules = [
+          (nixpkgsConfigModule naryUnfreePackages)
+          inputs.agenix.nixosModules.default
+          ./machines/nary/default.nix
         ];
       };
 
@@ -302,6 +328,7 @@
       // mkHome "adam" "oddsy" []
       // mkHome "adam" "opti" []
       // mkHome "adam" "tiv" [./home-manager/gui.nix ./home-manager/adaptiv.nix]
+      // mkHome "adam" "nary" [./home-manager/gui.nix]
       // mkHome "adam" "carbo" [./home-manager/gui.nix]
       // mkHome "adam" "echo" [./home-manager/gui.nix];
   };

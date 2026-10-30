@@ -208,7 +208,8 @@
     spellcheck = {
       enable = true;
       ignoredFiletypes = ["checkhealth"];
-      programmingWordlist.enable = true;
+      # https://github.com/NotAShelf/nvf/issues/1797
+      # programmingWordlist.enable = true;
       extraSpellWords = import ./spellcheck-extrawords.nix;
     };
     tabline.nvimBufferline.enable = true;

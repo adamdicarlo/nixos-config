@@ -372,6 +372,24 @@ in {
     '';
   };
 
+  # All this to pass a parameter to Signal.
+  # https://discourse.nixos.org/t/how-to-add-flags-to-an-existing-program-desktop/79114
+  xdg.dataFile."applications/signal.desktop" = {
+    enable = true;
+    text = ''
+      [Desktop Entry]
+      Categories=Network;InstantMessaging;Chat
+      Comment=Private messaging from your desktop
+      Exec=signal-desktop --password-store=gnome-libsecret %U
+      Icon=signal-desktop
+      MimeType=x-scheme-handler/sgnl;x-scheme-handler/signalcaptcha
+      Name=Signal
+      StartupWMClass=signal
+      Terminal=false
+      Type=Application
+    '';
+  };
+
   wayland.windowManager.sway = let
     # Mod1: Alt
     # Mod4: Super

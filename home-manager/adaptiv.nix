@@ -8,7 +8,7 @@
   home = config.home.homeDirectory;
 in {
   home.packages = with pkgs; [
-    (google-chrome.override {commandLineArgs = "--ozone-platform=wayland";})
+    google-chrome
     inputs.devbox.packages.${system}.default
     bruno
     clamav

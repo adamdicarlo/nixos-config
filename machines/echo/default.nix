@@ -87,7 +87,7 @@
 
   environment.systemPackages = with pkgs; [
     nextcloud-client
-    (signal-desktop.override {commandLineArgs = "--password-store=gnome-libsecret";})
+    signal-desktop
   ];
 
   programs.steam.enable = true;

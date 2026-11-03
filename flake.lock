@@ -20,6 +20,26 @@
         "type": "github"
       }
     },
+    "camera-webhook": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793722286,
+        "narHash": "sha256-wWXiBpqBjQEe4L0KDiTxmEsEN9O0/8KkTZs+7Siet+E=",
+        "ref": "refs/heads/main",
+        "rev": "920093e225870e1f76a5f66cf912ce2273bb9720",
+        "revCount": 3,
+        "type": "git",
+        "url": "https://git.sr.ht/~adamdicarlo/camera-webhook"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.sr.ht/~adamdicarlo/camera-webhook"
+      }
+    },
     "claude-desktop": {
       "inputs": {
         "nixpkgs": [
@@ -375,6 +395,7 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "camera-webhook": "camera-webhook",
         "claude-desktop": "claude-desktop",
         "devbox": "devbox",
         "disko": "disko",

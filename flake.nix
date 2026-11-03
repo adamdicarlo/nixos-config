@@ -54,6 +54,10 @@
       url = "https://kepr.uk/nina/archive/b32f051a7897.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    camera-webhook = {
+      url = "git+https://git.sr.ht/~adamdicarlo/camera-webhook";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixgl = {
       url = "github:nix-community/nixGL";
       inputs.flake-utils.follows = "flake-utils";

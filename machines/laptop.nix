@@ -1,5 +1,5 @@
 {
-  config,
+  inputs,
   pkgs,
   lib,
   ...
@@ -34,6 +34,8 @@
     XDG_CURRENT_DESKTOP = "sway";
   };
 in {
+  imports = [inputs.camera-webhook.nixosModules.default];
+
   # Allow brightness control from users in the video group
   hardware.brillo.enable = true;
   hardware.graphics = {
@@ -42,6 +44,8 @@ in {
       libva-vdpau-driver
     ];
   };
+
+  services.camera-webhook.enable = true;
 
   services.gnome.gnome-keyring.enable = true;
 

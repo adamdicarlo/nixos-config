@@ -123,6 +123,10 @@ in {
     dates = "Mon,Wed,Fri 15:00";
     persistent = true;
     randomizedDelaySec = "1min";
+
+    # The default value, `true`, is only applicable for channel-based
+    # installations, not flake-based, and generates a warning for flake setups.
+    upgrade = false;
   };
 
   services.sentinelone = {

@@ -114,11 +114,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793318470,
-        "narHash": "sha256-ppcmN/b3edyWS6f+n4eL/kMYPsndwlgT4wt89exlBH8=",
+        "lastModified": 1793750915,
+        "narHash": "sha256-EF+E39YNmJ+73ySItdrfz4jIRwAfsvl2SKBn+C2G8QY=",
         "owner": "adamdicarlo0",
         "repo": "drata.flake",
-        "rev": "c349def6543285904013569d6cf486cc30aa8cf2",
+        "rev": "5304bcd73a114b8ea9d26eee5117434a9473cd39",
         "type": "github"
       },
       "original": {

@@ -49,16 +49,6 @@ in {
   boot.initrd.luks.devices."luks-98e30c24-6e36-4d00-a444-2adc1d41580d".device = "/dev/disk/by-uuid/98e30c24-6e36-4d00-a444-2adc1d41580d";
   networking.hostName = "nary"; # Define your hostname.
 
-  # throttled doesn't support i9-13900HX.
-  # undervolting seems to be locked in firmware.
-  services.undervolt = {
-    enable = false;
-    tempBat = 75;
-    tempAc = 80;
-    p2.limit = 90;
-    p2.window = 1;
-  };
-
   programs._1password = {
     enable = true;
   };

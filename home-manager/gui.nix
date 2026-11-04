@@ -327,7 +327,7 @@ in {
     text = ''
       [Default]
       save_dir=$HOME/Sync/Screenshots
-      save_filename_format=Y%m%d-%H%M%S.png
+      save_filename_format=%Y-%m-%d_%H-%M-%S.png
       show_panel=true
       line_size=3
       text_size=20

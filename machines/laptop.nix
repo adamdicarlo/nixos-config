@@ -71,6 +71,14 @@ in {
 
   services.logind.settings.Login.HandleLidSwitchExternalPower = "ignore";
 
+  # Allow waking from suspend via an external keyboard while docked in
+  # clamshell mode. The keyboard has wakeup enabled by default, but its wake
+  # signal only reaches the controller if every hub in between (dock, monitor)
+  # also has wakeup enabled, and hubs default to disabled.
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{bDeviceClass}=="09", TEST=="power/wakeup", ATTR{power/wakeup}="enabled"
+  '';
+
   hardware.bluetooth = {
     enable = true;
   };

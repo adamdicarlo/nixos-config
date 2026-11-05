@@ -46,11 +46,13 @@ def parse_local(date, time):
 def fetch_agenda():
     start = now() - timedelta(hours=4)
     end = now() + timedelta(days=1)
+    calendar = os.environ.get("MEETINGS_CALENDAR")
     out = subprocess.run(
         [
             "gcalcli", "--nocolor", "agenda", "--tsv", "--nodeclined",
             "--details", "id", "--details", "url",
             "--details", "conference", "--details", "location",
+            *(["--calendar", calendar] if calendar else []),
             start.strftime("%Y-%m-%dT%H:%M"), end.strftime("%Y-%m-%dT%H:%M"),
         ],
         check=True, capture_output=True, text=True,

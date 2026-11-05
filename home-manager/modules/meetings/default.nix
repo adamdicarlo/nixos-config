@@ -16,6 +16,10 @@
     map (q: lib.fixedWidthNumber 2 (lib.mod (q - leadMinutes + 60) 60))
     [0 15 30 45];
 
+  # Only alert for (and show) events on this calendar: the primary one, not
+  # the subscribed ones.
+  calendar = "Luminary";
+
   python = pkgs.python3.withPackages (ps: [ps.pygobject3]);
 
   meetings = pkgs.stdenv.mkDerivation {
@@ -37,6 +41,7 @@
         --set MEETINGS_LAYER_SHELL_LIB ${pkgs.gtk4-layer-shell}/lib/libgtk4-layer-shell.so
         --set MEETINGS_SELF $out/bin/meetings
         --set MEETINGS_LEAD_MINUTES ${toString leadMinutes}
+        --set MEETINGS_CALENDAR ${lib.escapeShellArg calendar}
       )
     '';
   };

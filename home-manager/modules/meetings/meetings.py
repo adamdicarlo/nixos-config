@@ -181,7 +181,10 @@ def cmd_bar(_args):
 
     event = current_or_next(events, t)
     if event is None or event["start"].date() != t.date() and event["start"] > t:
-        print("")  # nothing more today: hide-if-empty
+        tooltip = f"Next: {event['start']:%a %H:%M}  {event['title']}" if event else ""
+        print(json.dumps({
+            "text": "No more meetings today", "tooltip": tooltip, "alt": "none",
+        }))
         return
 
     if event["start"] <= t:
@@ -211,7 +214,8 @@ def cmd_join(_args):
     # Prefer a meeting about to start over one that is wrapping up.
     soon = [e for e in events if t < e["start"] <= t + timedelta(minutes=5)]
     event = soon[0] if soon else current_or_next(events, t)
-    if event and event["url"]:
+    # Don't join tomorrow's meeting from a bar that says there are none today.
+    if event and event["url"] and event["start"].date() == t.date():
         open_url(event["url"])
     else:
         open_url("https://calendar.google.com/")

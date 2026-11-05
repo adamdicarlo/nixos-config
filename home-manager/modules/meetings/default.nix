@@ -100,7 +100,6 @@ in {
         id = "meeting";
         command = "${meetingsBin} bar";
         interval-ms = 30000;
-        hide-if-empty = true;
         icon-name = "tb-calendar-time-symbolic";
         icon-map = {
           now = "ld-clock-symbolic";

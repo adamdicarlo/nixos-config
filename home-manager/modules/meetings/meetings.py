@@ -261,7 +261,7 @@ def focused_output():
 
 CSS = """
 window.backdrop { background-color: rgba(17, 17, 27, 0.8); }
-.card {
+.meeting-card {
   background-color: #1e1e2e;
   border: 3px solid #f38ba8;
   border-radius: 18px;
@@ -270,7 +270,7 @@ window.backdrop { background-color: rgba(17, 17, 27, 0.8); }
 .heading { color: #f38ba8; font-size: 18px; font-weight: bold; letter-spacing: 2px; }
 .title { color: #cdd6f4; font-size: 34px; font-weight: bold; }
 .when { color: #f9e2af; font-size: 20px; }
-.card button { font-size: 18px; padding: 10px 28px; }
+.meeting-card button { font-size: 18px; padding: 10px 28px; }
 """
 
 
@@ -312,7 +312,7 @@ def cmd_alert(args):
     def card(close):
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14,
                       halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
-        box.add_css_class("card")
+        box.add_css_class("meeting-card")
 
         heading = Gtk.Label(label="MEETING")
         heading.add_css_class("heading")
@@ -358,9 +358,12 @@ def cmd_alert(args):
     def activate(_app):
         provider = Gtk.CssProvider()
         provider.load_from_string(CSS)
+        # Above USER: ~/.config/gtk-4.0/gtk.css imports the GTK theme at USER
+        # priority, and the Dracula theme's `* { padding: 0 }` would otherwise
+        # win over our padding regardless of selector specificity.
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(), provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+            Gtk.STYLE_PROVIDER_PRIORITY_USER + 1,
         )
 
         monitors = list(Gdk.Display.get_default().get_monitors())

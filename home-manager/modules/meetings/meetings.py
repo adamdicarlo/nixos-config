@@ -34,6 +34,9 @@ ALERTED = STATE_DIR / "alerted"
 
 URL_RE = re.compile(r"https?://\S+")
 
+# Exit status for misconfiguration, which retrying won't fix.
+CONFIG_ERROR = 2
+
 
 def now():
     return datetime.now().astimezone()
@@ -64,7 +67,11 @@ def fetch_agenda():
         sys.exit(f"gcalcli failed (exit {result.returncode}): {lines[-1]}")
 
     lines = result.stdout.splitlines()
-    if not lines:
+    if len(lines) <= 1:
+        # gcalcli treats a calendar name that matches nothing as an empty
+        # agenda, which would silently mean no reminders. Rule that out.
+        if calendar:
+            check_calendar_exists(calendar)
         return []
     header = lines[0].split("\t")
     events = []
@@ -81,6 +88,21 @@ def fetch_agenda():
         })
     events.sort(key=lambda e: e["start"])
     return events
+
+
+def check_calendar_exists(name):
+    result = subprocess.run(["gcalcli", "--nocolor", "list"],
+                            capture_output=True, text=True)
+    if result.returncode != 0:
+        return  # can't tell; an empty agenda is the safer assumption
+    # Skip the "Access  Title" header and its underline.
+    titles = [line.split(None, 1)[1] for line in result.stdout.splitlines()[2:]
+              if len(line.split(None, 1)) == 2]
+    # Same matching as gcalcli: exact title, else case-insensitive regex.
+    if not any(t == name or re.search(name, t, flags=re.I) for t in titles):
+        print(f"No calendar matches MEETINGS_CALENDAR={name!r}; "
+              f"available: {', '.join(titles)}", file=sys.stderr)
+        sys.exit(CONFIG_ERROR)
 
 
 def meeting_url(row):

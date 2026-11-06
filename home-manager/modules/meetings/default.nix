@@ -63,6 +63,8 @@ in {
       # network yet after resume) while there's still time to alert.
       Restart = "on-failure";
       RestartSec = "20s";
+      # meetings.py's CONFIG_ERROR (e.g. no such calendar): retrying won't help.
+      RestartPreventExitStatus = 2;
       ExecStart = "${meetingsBin} check";
     };
   };

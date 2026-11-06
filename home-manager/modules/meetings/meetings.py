@@ -3,7 +3,7 @@
 
 Subcommands:
   check  Fetch the agenda, cache it, and raise an alert for imminent meetings.
-         Run every minute by a systemd user timer.
+         Run four times per hour by a systemd user timer.
   bar    Print the next meeting as JSON for a Wayle custom module.
   join   Open the video link of the current (or next) meeting.
   alert  Show the modal overlay. Spawned by `check`.

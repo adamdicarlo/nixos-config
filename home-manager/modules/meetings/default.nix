@@ -50,11 +50,17 @@ in {
   home.packages = [pkgs.gcalcli meetings];
 
   systemd.user.services.meetings-check = {
-    Unit.Description = "Check Google Calendar for upcoming meetings";
+    Unit = {
+      Description = "Check Google Calendar for upcoming meetings";
+      # Give up after 3 retries (about a minute) rather than retrying every
+      # 20s until the next check, e.g. when gcalcli isn't authorized.
+      StartLimitIntervalSec = "120s";
+      StartLimitBurst = 4;
+    };
     Service = {
       Type = "oneshot";
-      # With only one check per quarter hour, retry a failed fetch (e.g. a
-      # network blip) while there's still time to alert.
+      # With only one check per quarter hour, retry a failed fetch (e.g. no
+      # network yet after resume) while there's still time to alert.
       Restart = "on-failure";
       RestartSec = "20s";
       ExecStart = "${meetingsBin} check";

@@ -47,7 +47,7 @@ def fetch_agenda():
     start = now() - timedelta(hours=4)
     end = now() + timedelta(days=1)
     calendar = os.environ.get("MEETINGS_CALENDAR")
-    out = subprocess.run(
+    result = subprocess.run(
         [
             "gcalcli", "--nocolor", "agenda", "--tsv", "--nodeclined",
             "--details", "id", "--details", "url",
@@ -55,10 +55,15 @@ def fetch_agenda():
             *(["--calendar", calendar] if calendar else []),
             start.strftime("%Y-%m-%dT%H:%M"), end.strftime("%Y-%m-%dT%H:%M"),
         ],
-        check=True, capture_output=True, text=True,
-    ).stdout
+        capture_output=True, text=True,
+    )
+    if result.returncode != 0:
+        # Expected now and then (e.g. no network yet after resume). gcalcli
+        # reports even that with a full traceback; its last line is the error.
+        lines = result.stderr.strip().splitlines() or ["(no output)"]
+        sys.exit(f"gcalcli failed (exit {result.returncode}): {lines[-1]}")
 
-    lines = out.splitlines()
+    lines = result.stdout.splitlines()
     if not lines:
         return []
     header = lines[0].split("\t")

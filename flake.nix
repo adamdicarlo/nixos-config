@@ -332,7 +332,7 @@
       // mkHome "adam" "oddsy" []
       // mkHome "adam" "opti" []
       // mkHome "adam" "tiv" [./home-manager/gui.nix ./home-manager/adaptiv.nix]
-      // mkHome "adam" "nary" [./home-manager/gui.nix]
+      // mkHome "adam" "nary" [./home-manager/gui.nix ./home-manager/modules/meetings]
       // mkHome "adam" "carbo" [./home-manager/gui.nix]
       // mkHome "adam" "echo" [./home-manager/gui.nix];
   };

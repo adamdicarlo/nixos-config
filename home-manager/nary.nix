@@ -8,6 +8,7 @@
   home = config.home.homeDirectory;
 in {
   home.packages = with pkgs; [
+    amp-desktop
   ];
   xdg.configFile."gcalcli/config.toml" = {
     text = ''

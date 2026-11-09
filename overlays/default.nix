@@ -6,6 +6,10 @@
     openaws-vpn-client = inputs.openaws-vpn-client.outputs.packages.${system}.openaws-vpn-client;
   })
 
+  (final: prev: {
+    amp-desktop = final.callPackage ../pkgs/amp-desktop/package.nix {};
+  })
+
   (final: prev: let
     version = "1128dbdaf85584a519f0ee7a4d06df892cd5e849";
   in {

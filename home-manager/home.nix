@@ -31,6 +31,7 @@
         "1password"
         "1password-cli"
         "1password-gui"
+        "amp-desktop"
       ]
       else []
     );

@@ -21,10 +21,12 @@
     then ./wallpaper/pexels-andy-vu-3484061.jpg
     else ./wallpaper/pexels-eberhard-grossgasteiger-1062249.jpg;
 in {
-  imports = [
-    ./modules/kanshi.nix
-    ./modules/bambu-studio.nix
-  ];
+  imports =
+    [
+      ./modules/kanshi.nix
+      ./modules/bambu-studio.nix
+    ]
+    ++ lib.lists.optionals isWorkMachine [./nary.nix];
 
   bambuStudio.enable = isPersonalMachine;
 

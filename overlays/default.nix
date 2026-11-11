@@ -8,6 +8,7 @@
 
   (final: prev: {
     amp-desktop = final.callPackage ../pkgs/amp-desktop/package.nix {};
+    linear-desktop = final.callPackage ../pkgs/linear-desktop/package.nix {electron = final.electron_44;};
   })
 
   (final: prev: let

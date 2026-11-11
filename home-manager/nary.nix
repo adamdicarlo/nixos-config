@@ -9,6 +9,7 @@
 in {
   home.packages = with pkgs; [
     amp-desktop
+    linear-desktop
   ];
   xdg.configFile."gcalcli/config.toml" = {
     text = ''

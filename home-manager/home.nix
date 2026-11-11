@@ -32,6 +32,7 @@
         "1password-cli"
         "1password-gui"
         "amp-desktop"
+        "linear-desktop"
       ]
       else []
     );

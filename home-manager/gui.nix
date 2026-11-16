@@ -489,7 +489,7 @@ in {
             title = "^Extension: ";
           }
           {
-            class = "(?i)(?:1Password)";
+            class = "(?i)(?:1Password|zoom)";
           }
         ];
       };

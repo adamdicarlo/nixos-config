@@ -1,13 +1,10 @@
 # Amp desktop app, repackaged from the upstream Debian repository at
 # https://static.ampcode.com/linux/.
 #
-# The app's built-in self-updater can't work on NixOS, so upgrade manually:
-#   1. Find the latest version in
-#      https://static.ampcode.com/linux/dists/stable/main/binary-amd64/Packages
-#   2. Update `version` below.
-#   3. Get the new hash with
-#        nix store prefetch-file https://static.ampcode.com/linux/<version>/amp-desktop-<version>-amd64.deb
-#      and update `hash` below.
+# The app's built-in self-updater can't work on NixOS, so upgrade by running
+# ./update.sh, which writes the latest version and hash from
+# https://static.ampcode.com/linux/dists/stable/main/binary-amd64/Packages
+# to version.json.
 {
   lib,
   stdenv,
@@ -49,13 +46,16 @@
   vulkan-loader,
   xdg-utils,
 }:
+let
+  release = lib.importJSON ./version.json;
+in
 stdenv.mkDerivation (finalAttrs: {
   pname = "amp-desktop";
-  version = "0.1.29901961";
+  inherit (release) version;
 
   src = fetchurl {
     url = "https://static.ampcode.com/linux/${finalAttrs.version}/amp-desktop-${finalAttrs.version}-amd64.deb";
-    hash = "sha256-79Kghhg5YlZAE1Z3/P/irAzNlB08OmClGTOkj0ATpW0=";
+    inherit (release) hash;
   };
 
   nativeBuildInputs = [

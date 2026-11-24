@@ -126,10 +126,6 @@ in {
       wtype
 
       # productivity
-      (vivaldi.overrideAttrs (_oldAttrs: {
-        inherit vivaldi-ffmpeg-codecs;
-      }))
-
       evince
       gimp3
       glow # markdown previewer in terminal
